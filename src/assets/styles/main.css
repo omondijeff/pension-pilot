@@ -6,4 +6,4 @@
 @tailwind utilities;
 
 /* Custom fonts and styles */
-@import './fonts.css'; /* if you are using custom fonts */
+@import './fonts.css'; /* Import the custom font definitions */

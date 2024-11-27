@@ -1,7 +1,42 @@
-/* Move this to the very top */
-@import url("https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700&display=swap");
+/* src/assets/styles/fonts.css */
 
-/* Now you can add your custom styles */
+/* Gilroy Font Definitions */
+@font-face {
+  font-family: 'Gilroy-Regular';
+  src: url('@/assets/fonts/Gilroy-Regular.woff2') format('woff2'),
+       url('@/assets/fonts/Gilroy-Regular.woff') format('woff'),
+       url('@/assets/fonts/Gilroy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gilroy-Bold';
+  src: url('@/assets/fonts/Gilroy-Bold.woff2') format('woff2'),
+       url('@/assets/fonts/Gilroy-Bold.woff') format('woff'),
+       url('@/assets/fonts/Gilroy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gilroy-Medium';
+  src: url('@/assets/fonts/Gilroy-Medium.woff2') format('woff2'),
+       url('@/assets/fonts/Gilroy-Medium.woff') format('woff'),
+       url('@/assets/fonts/Gilroy-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Additional font styles */
 body {
-  font-family: "Gilroy", sans-serif;
+  font-family: 'Gilroy-Regular', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Gilroy-Bold', sans-serif;
+}
+
+p {
+  font-family: 'Gilroy-Regular', sans-serif;
 }

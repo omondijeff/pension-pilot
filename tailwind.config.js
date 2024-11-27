@@ -17,8 +17,9 @@ module.exports = {
         sm: "6px",
       },
       fontFamily: {
-        gilroy: ['"Gilroy-Regular"', "sans-serif"],
-        gilroyBold: ['"Gilroy-Bold"', "sans-serif"],
+        gilroy: ["Gilroy-Regular", "sans-serif"],
+        "gilroy-bold": ["Gilroy-Bold", "sans-serif"],
+        "gilroy-light": ["Gilroy-Light", "sans-serif"],
       },
       fontSize: {
         heading: "48px",

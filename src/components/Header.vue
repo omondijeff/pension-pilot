@@ -13,8 +13,8 @@
         <div class="flex items-center space-x-6 w-full justify-between">
           <!-- Menu Items (Hidden on mobile) -->
           <nav class="menu flex space-x-6 justify-end w-full">
-            <a href="/" class="menu-item">Home</a>
-            <a href="/about" class="menu-item">About</a>
+            
+            <a href="/about" class="menu-item">Why PensionPilot</a>
             <a href="/services" class="menu-item">Help and Knowledge</a>
           </nav>
   
