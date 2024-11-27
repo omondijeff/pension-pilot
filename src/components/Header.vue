@@ -6,7 +6,9 @@
       <div class="container mx-auto flex justify-between items-center px-6 py-4">
         <!-- Logo -->
         <div class="logo">
+
           <img src="@/assets/logo-pension-pilot.png" alt="Logo" class="h-8" />
+
         </div>
   
         <!-- Navigation Menu and Buttons Wrapper -->
