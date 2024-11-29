@@ -1,9 +1,8 @@
-/* src/assets/styles/main.css */
+@import './fonts.css'; /* Import the custom font definitions */
 
 /* Tailwind Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom fonts and styles */
-@import './fonts.css'; /* Import the custom font definitions */
+/* Custom styles */
