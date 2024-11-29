@@ -7,6 +7,7 @@ import LoginPage from '@/views/LoginPage.vue';
 import SignUpPage from '@/views/SignUp.vue';
 import ForgotPassword from '@/views/ForgotPassword.vue';
 import KycPage from '@/views/KycPage.vue';
+import PensionPage from '@/views/PensionPage.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
@@ -17,6 +18,7 @@ const routes = [
   { path: '/signup', name: 'SignUp', component: SignUpPage },
   { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
   { path: '/about-you', name: 'AboutYou', component: KycPage },
+  { path: '/add-pension', name: 'AddPension', component: PensionPage },
 ];
 
 const router = createRouter({

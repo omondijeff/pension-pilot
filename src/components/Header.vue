@@ -3,19 +3,33 @@
     <div class="container mx-auto flex items-center justify-between px-6 py-4">
       <!-- Logo -->
       <div class="logo">
-        <img src="@/assets/logo-pension-pilot.png" alt="PensionPilot Logo" class="h-8" />
+        <a href="/" class="flex items-center">
+          <img src="@/assets/logo-pension-pilot.png" alt="PensionPilot Logo" class="h-12" />
+        </a>
       </div>
 
-      <!-- Desktop Navigation (Aligned to the right) -->
+      <!-- Desktop Navigation -->
       <nav class="hidden lg:flex space-x-8 justify-end w-full">
-        <a href="/about" class="menu-item">Why PensionPilot</a>
-        <a href="/services" class="menu-item">Help and Knowledge</a>
+        <a href="/about" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+          Why PensionPilot
+        </a>
+        <a href="/services" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+          Help and Knowledge
+        </a>
       </nav>
 
       <!-- Buttons for Desktop -->
       <div class="hidden lg:flex space-x-4">
-        <button class="button-login">Login</button>
-        <button class="button-start">Get Started</button>
+        <a href="/login">
+          <button class="w-28 h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
+            Login
+          </button>
+        </a>
+        <a href="/get-started">
+          <button class="w-28 h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
+            Get Started
+          </button>
+        </a>
       </div>
 
       <!-- Hamburger Button for Mobile -->
@@ -45,11 +59,23 @@
       v-show="menuOpen"
       class="lg:hidden absolute top-full left-0 w-full bg-white shadow-md py-4 px-6 space-y-4 text-lg"
     >
-      <a href="/about" class="menu-item block">Why PensionPilot</a>
-      <a href="/services" class="menu-item block">Help and Knowledge</a>
+      <a href="/about" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+        Why PensionPilot
+      </a>
+      <a href="/services" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+        Help and Knowledge
+      </a>
       <div class="flex flex-col space-y-2">
-        <button class="button-login-mobile">Login</button>
-        <button class="button-start-mobile">Get Started</button>
+        <a href="/login">
+          <button class="w-full h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
+            Login
+          </button>
+        </a>
+        <a href="/get-started">
+          <button class="w-full h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
+            Get Started
+          </button>
+        </a>
       </div>
     </div>
   </header>
@@ -58,17 +84,21 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
+// State for sticky header and mobile menu
 const scrolled = ref(true);
 const menuOpen = ref(false);
 
+// Handle scroll behavior
 const handleScroll = () => {
   scrolled.value = window.scrollY < 50;
 };
 
+// Toggle mobile menu
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
+// Add/remove scroll event listener
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
 });
@@ -79,73 +109,18 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Sticky Header */
-header {
-  font-family: 'Gilroy', sans-serif;
-  transition: transform 0.3s ease-in-out;
+/* Logo Styling */
+.logo img {
+  height: 3rem; /* Enlarged logo height */
+  transition: transform 0.3s ease;
 }
 
-/* Menu Items - Right-aligned */
-.menu-item {
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  color: #000000;
-  transition: color 0.3s ease;
+.logo:hover img {
+  transform: scale(1.1); /* Slight zoom effect on hover */
 }
 
-.menu-item:hover {
+/* Primary color for hover */
+.text-primary {
   color: #4569ae;
-}
-
-/* Buttons */
-.button-login,
-.button-login-mobile {
-  width: 120px;
-  height: 40px;
-  background: white;
-  border: 1px solid black;
-  color: black;
-  border-radius: 6px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.button-login:hover,
-.button-login-mobile:hover {
-  background-color: #f5f5f5;
-}
-
-.button-start,
-.button-start-mobile {
-  width: 120px;
-  height: 40px;
-  background: linear-gradient(263.24deg, #4569ae 0.74%, #3f9fd7 100%);
-  border-radius: 6px;
-  color: white;
-  transition: opacity 0.3s ease;
-}
-
-.button-start:hover,
-.button-start-mobile:hover {
-  opacity: 0.9;
-}
-
-/* Mobile Menu */
-@media (max-width: 1024px) {
-  .menu-item {
-    font-size: 14px;
-  }
-}
-
-/* Adjust Mobile Styles */
-@media (max-width: 768px) {
-  .menu-item {
-    font-size: 14px;
-  }
-
-  .button-login-mobile,
-  .button-start-mobile {
-    width: 100%;
-  }
 }
 </style>
