@@ -58,7 +58,7 @@
           </form>
           <!-- Sign Up Link -->
           <p class="text-center mt-4 text-gray-600 font-gilroy-light">
-            Don't have an account? <a href="#" class="text-blue-600 hover:underline">Sign Up</a>
+            Don't have an account? <a href="/signup" class="text-blue-600 hover:underline">Sign Up</a>
           </p>
         </div>
       </div>
