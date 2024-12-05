@@ -25,7 +25,7 @@
             Login
           </button>
         </a>
-        <a href="/get-started">
+        <a href="/add-pension">
           <button class="w-28 h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
             Get Started
           </button>
