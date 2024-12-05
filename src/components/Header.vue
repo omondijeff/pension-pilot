@@ -11,10 +11,16 @@
       <!-- Desktop Navigation -->
       <nav class="hidden lg:flex space-x-8 justify-end w-full">
         <a href="/about" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
-          Why PensionPilot
+          About Us
         </a>
         <a href="/services" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+          Services
+        </a>
+        <a href="#" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
           Help and Knowledge
+        </a>
+        <a href="/contact" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+          Contact Us
         </a>
       </nav>
 
