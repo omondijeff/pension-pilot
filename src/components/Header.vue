@@ -9,14 +9,14 @@
       </div>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex space-x-8 justify-end w-full">
+      <nav class="hidden lg:flex space-x-8 justify-end w-full pr-4">
         <a href="/about" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
           About Us
         </a>
         <a href="/services" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
           Services
         </a>
-        <a href="#" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+        <a href="/knowledge" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
           Help and Knowledge
         </a>
         <a href="/contact" class="text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
@@ -66,10 +66,16 @@
       class="lg:hidden absolute top-full left-0 w-full bg-white shadow-md py-4 px-6 space-y-4 text-lg"
     >
       <a href="/about" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
-        Why PensionPilot
+        About Us
       </a>
       <a href="/services" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+        Services
+      </a>
+      <a href="/knowledge" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
         Help and Knowledge
+      </a>
+      <a href="/contact" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+        Contact Us
       </a>
       <div class="flex flex-col space-y-2">
         <a href="/login">
@@ -77,7 +83,7 @@
             Login
           </button>
         </a>
-        <a href="/get-started">
+        <a href="/add-pension">
           <button class="w-full h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
             Get Started
           </button>
