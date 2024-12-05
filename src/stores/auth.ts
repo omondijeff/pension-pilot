@@ -15,6 +15,21 @@ export const useAuthStore = defineStore('auth', () => {
   // Computed property for checking if the user is logged in
   const isLoggedIn = computed(() => user.value !== null)
 
+  // Initialize user from localStorage and validate session
+  const initializeAuth = async () => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      user.value = JSON.parse(storedUser)
+
+      // Validate session with Supabase
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      if (!session || sessionError) {
+        user.value = null
+        localStorage.removeItem('user')
+      }
+    }
+  }
+
   // Function to fetch the current user profile
   const fetchProfile = async () => {
     loading.value = true
@@ -27,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
     const { data, error: fetchError } = await supabase
       .from('users')
       .select('*')
-      .eq('id', user.value.id) // Ensure `id` is not undefined
+      .eq('id', user.value.id)
       .single()
 
     if (fetchError) {
@@ -37,13 +52,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     user.value = data
+    localStorage.setItem('user', JSON.stringify(user.value))
     loading.value = false
   }
 
   // Function to register a new user
   const register = async (email: string, password: string, name: string) => {
     loading.value = true
-    error.value = null // Clear previous errors
+    error.value = null
     const { data: { user: newUser }, error: registerError } = await supabase.auth.signUp({
       email,
       password,
@@ -61,13 +77,12 @@ export const useAuthStore = defineStore('auth', () => {
       return
     }
 
-    // Insert the new user into your database (assuming there's a 'users' table)
     const { error: insertError } = await supabase
       .from('users')
       .insert([
         {
-          id: newUser?.id,
-          email: newUser?.email,
+          id: newUser.id,
+          email: newUser.email,
           name,
           created_at: new Date().toISOString(),
         },
@@ -80,13 +95,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     user.value = { ...newUser, name }
+    localStorage.setItem('user', JSON.stringify(user.value))
     loading.value = false
   }
 
   // Function to login an existing user
   const login = async (email: string, password: string) => {
     loading.value = true
-    error.value = null // Clear previous errors
+    error.value = null
     const { data: { user: loggedInUser }, error: loginError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -99,15 +115,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     user.value = loggedInUser
-    loading.value = false
     localStorage.setItem('user', JSON.stringify(user.value))
-    
+    loading.value = false
   }
 
   // Function to logout the current user
   const logout = async () => {
     loading.value = true
-    error.value = null // Clear previous errors
+    error.value = null
     const { error: logoutError } = await supabase.auth.signOut()
 
     if (logoutError) {
@@ -117,33 +132,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     user.value = null
-    loading.value = false
-    localStorage.setItem('user', JSON.stringify(user.value))
-  }
-
-  // Function to update the user profile
-  const updateProfile = async (name: string, email: string) => {
-    loading.value = true
-    error.value = null // Clear previous errors
-    if (!user.value?.id) {
-      error.value = 'User ID is missing'
-      loading.value = false
-      return
-    }
-
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ name, email })
-      .eq('id', user.value.id) // Ensure `id` is not undefined
-
-    if (updateError) {
-      error.value = updateError.message
-      loading.value = false
-      return
-    }
-
-    // Update the user object in state without overwriting other fields
-    user.value = { ...user.value, name, email }
+    localStorage.removeItem('user')
     loading.value = false
   }
 
@@ -152,10 +141,10 @@ export const useAuthStore = defineStore('auth', () => {
     error,
     loading,
     isLoggedIn,
+    initializeAuth,
     fetchProfile,
     register,
     login,
     logout,
-    updateProfile,
   }
 })
