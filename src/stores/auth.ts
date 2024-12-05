@@ -3,7 +3,6 @@ import { supabase } from '@/lib/supabase'
 import { ref, computed } from 'vue'
 import type { User } from '@supabase/supabase-js'
 
-
 // Adjust the CustomUser type to allow `id` to be undefined
 type CustomUser = User & { name?: string; id?: string }
 
@@ -44,6 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Function to register a new user
   const register = async (email: string, password: string, name: string) => {
     loading.value = true
+    error.value = null // Clear previous errors
     const { data: { user: newUser }, error: registerError } = await supabase.auth.signUp({
       email,
       password,
@@ -86,6 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Function to login an existing user
   const login = async (email: string, password: string) => {
     loading.value = true
+    error.value = null // Clear previous errors
     const { data: { user: loggedInUser }, error: loginError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -99,11 +100,14 @@ export const useAuthStore = defineStore('auth', () => {
 
     user.value = loggedInUser
     loading.value = false
+    localStorage.setItem('user', JSON.stringify(user.value))
+    
   }
 
   // Function to logout the current user
   const logout = async () => {
     loading.value = true
+    error.value = null // Clear previous errors
     const { error: logoutError } = await supabase.auth.signOut()
 
     if (logoutError) {
@@ -114,11 +118,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     user.value = null
     loading.value = false
+    localStorage.setItem('user', JSON.stringify(user.value))
   }
 
   // Function to update the user profile
   const updateProfile = async (name: string, email: string) => {
     loading.value = true
+    error.value = null // Clear previous errors
     if (!user.value?.id) {
       error.value = 'User ID is missing'
       loading.value = false
@@ -136,7 +142,7 @@ export const useAuthStore = defineStore('auth', () => {
       return
     }
 
-    // Update the user object in state
+    // Update the user object in state without overwriting other fields
     user.value = { ...user.value, name, email }
     loading.value = false
   }
