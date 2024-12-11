@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 z-50 bg-white shadow-sm transition-transform duration-300 ease-in-out" :class="{ 'translate-y-0': scrolled, '-translate-y-full': !scrolled }">
+  <header class="sticky top-0 z-50 bg-white shadow-sm transition-transform duration-75 ease-in-out" :class="{ 'translate-y-0': scrolled, '-translate-y-full': !scrolled }">
     <div class="container mx-auto flex items-center justify-between px-6 py-4">
       <!-- Logo -->
       <div class="logo">
@@ -25,17 +25,39 @@
       </nav>
 
       <!-- Buttons for Desktop -->
-      <div class="hidden lg:flex space-x-4">
-        <a href="/login">
-          <button class="w-28 h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
-            Login
-          </button>
-        </a>
-        <a href="/add-pension">
-          <button class="w-28 h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
-            Get Started
-          </button>
-        </a>
+      <div class="hidden lg:flex items-center space-x-4">
+        <template v-if="isLoggedIn">
+          <div class="flex items-center space-x-4">
+            <a href="/profile" class="text-primary hover:opacity-80 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5.121 17.804A7.962 7.962 0 0112 16c2.21 0 4.21.896 5.879 2.36M12 14a4 4 0 100-8 4 4 0 000 8zm7.878 5.362a9.966 9.966 0 01-15.756 0"
+                />
+              </svg>
+            </a>
+            <button
+              @click="handleLogout"
+              class="w-28 h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100"
+            >
+              Logout
+            </button>
+          </div>
+        </template>
+        <template v-else>
+          <a href="/login">
+            <button class="w-28 h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
+              Login
+            </button>
+          </a>
+          <a href="/add-pension">
+            <button class="w-28 h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
+              Get Started
+            </button>
+          </a>
+        </template>
       </div>
 
       <!-- Hamburger Button for Mobile -->
@@ -78,16 +100,36 @@
         Contact Us
       </a>
       <div class="flex flex-col space-y-2">
-        <a href="/login">
-          <button class="w-full h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
-            Login
+        <template v-if="isLoggedIn">
+          <a href="/profile" class="flex items-center justify-center text-primary hover:opacity-80 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5.121 17.804A7.962 7.962 0 0112 16c2.21 0 4.21.896 5.879 2.36M12 14a4 4 0 100-8 4 4 0 000 8zm7.878 5.362a9.966 9.966 0 01-15.756 0"
+              />
+            </svg>
+          </a>
+          <button
+            @click="handleLogout"
+            class="w-full h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100"
+          >
+            Logout
           </button>
-        </a>
-        <a href="/add-pension">
-          <button class="w-full h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
-            Get Started
-          </button>
-        </a>
+        </template>
+        <template v-else>
+          <a href="/login">
+            <button class="w-full h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
+              Login
+            </button>
+          </a>
+          <a href="/add-pension">
+            <button class="w-full h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
+              Get Started
+            </button>
+          </a>
+        </template>
       </div>
     </div>
   </header>
@@ -95,6 +137,8 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 // State for sticky header and mobile menu
 const scrolled = ref(true);
@@ -118,21 +162,22 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
+
+// Authentication state
+const authStore = useAuthStore();
+const { isLoggedIn, logout } = authStore;
+const router = useRouter();
+
+// Logout with Header Redraw
+const handleLogout = async () => {
+  await logout();
+  router.push('/login');
+};
 </script>
 
 <style scoped>
-/* Logo Styling */
-.logo img {
-  height: 3rem; /* Enlarged logo height */
-  transition: transform 0.3s ease;
-}
-
-.logo:hover img {
-  transform: scale(1.1); /* Slight zoom effect on hover */
-}
-
-/* Primary color for hover */
 .text-primary {
   color: #4569ae;
+  font-weight: bold;
 }
 </style>

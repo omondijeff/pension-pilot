@@ -15,7 +15,7 @@
     <div class="form-section">
       <!-- Heading -->
       <h2 class="text-2xl font-gilroy-bold text-gray-800 text-center md:text-left">
-        Sign Up
+        Check and combine your pensions
       </h2>
       <!-- Sign Up Form -->
       <form @submit.prevent="handleSignUp" class="space-y-4 mt-6">

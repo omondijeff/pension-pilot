@@ -1,140 +1,145 @@
-import { defineStore } from 'pinia'
-import { supabase } from '@/lib/supabase'
-import { ref, computed } from 'vue'
-import type { User } from '@supabase/supabase-js'
+import { defineStore } from 'pinia';
+import { supabase } from '@/lib/supabase';
+import { ref, computed } from 'vue';
+import type { User } from '@/lib/database.types'; // Import User type from database.types.ts
 
-// Adjust the CustomUser type to allow `id` to be undefined
-type CustomUser = User & { name?: string; id?: string }
+// Adjust CustomUser to make 'email' optional
+type CustomUser = User & { email?: string; id?: string };
 
 export const useAuthStore = defineStore('auth', () => {
   // Reactive state
-  const user = ref<CustomUser | null>(null)
-  const error = ref<string | null>(null)
-  const loading = ref<boolean>(false)
+  const user = ref<CustomUser | null>(null); // Use the CustomUser type here
+  const error = ref<string | null>(null);
+  const loading = ref<boolean>(false);
 
   // Computed property for checking if the user is logged in
-  const isLoggedIn = computed(() => user.value !== null)
+  const isLoggedIn = computed(() => user.value !== null);
 
   // Initialize user from localStorage and validate session
   const initializeAuth = async () => {
-    const storedUser = localStorage.getItem('user')
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      user.value = JSON.parse(storedUser)
+      user.value = JSON.parse(storedUser);
 
       // Validate session with Supabase
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (!session || sessionError) {
-        user.value = null
-        localStorage.removeItem('user')
+        user.value = null;
+        localStorage.removeItem('user');
       }
     }
-  }
+  };
 
-  // Function to fetch the current user profile
+  // Fetch the current user's profile from the `users` table
   const fetchProfile = async () => {
-    loading.value = true
-    if (!user.value?.id) {
-      error.value = 'User ID is missing'
-      loading.value = false
-      return
+    loading.value = true;
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.value?.id)
+        .single();
+
+      if (fetchError) throw new Error(fetchError.message);
+
+      user.value = data;
+      localStorage.setItem('user', JSON.stringify(user.value));
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch user profile';
+    } finally {
+      loading.value = false;
     }
+  };
 
-    const { data, error: fetchError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', user.value.id)
-      .single()
-
-    if (fetchError) {
-      error.value = fetchError.message
-      loading.value = false
-      return
-    }
-
-    user.value = data
-    localStorage.setItem('user', JSON.stringify(user.value))
-    loading.value = false
-  }
-
-  // Function to register a new user
+  // Register a new user and insert their profile into the `users` table
   const register = async (email: string, password: string, name: string) => {
-    loading.value = true
-    error.value = null
-    const { data: { user: newUser }, error: registerError } = await supabase.auth.signUp({
-      email,
-      password,
-    })
+    loading.value = true;
+    error.value = null;
+    try {
+      const { data: { user: newUser }, error: registerError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (registerError) {
-      error.value = registerError.message
-      loading.value = false
-      return
+      if (registerError) throw new Error(registerError.message);
+      if (!newUser?.id || !newUser.email) throw new Error('Registration failed: Missing user ID or email');
+
+      const { error: insertError } = await supabase
+        .from('users')
+        .insert([
+          {
+            id: newUser.id,
+            email: newUser.email ?? '', // Handle the possibility of undefined email
+            name,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+
+      if (insertError) throw new Error(insertError.message);
+
+      const userProfile = {
+        id: newUser.id,
+        name,
+        email: newUser.email ?? '',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      user.value = userProfile;
+      localStorage.setItem('user', JSON.stringify(user.value));
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to register user';
+    } finally {
+      loading.value = false;
     }
+  };
 
-    if (!newUser?.id) {
-      error.value = 'Registration failed: No user ID'
-      loading.value = false
-      return
-    }
-
-    const { error: insertError } = await supabase
-      .from('users')
-      .insert([
-        {
-          id: newUser.id,
-          email: newUser.email,
-          name,
-          created_at: new Date().toISOString(),
-        },
-      ])
-
-    if (insertError) {
-      error.value = insertError.message
-      loading.value = false
-      return
-    }
-
-    user.value = { ...newUser, name }
-    localStorage.setItem('user', JSON.stringify(user.value))
-    loading.value = false
-  }
-
-  // Function to login an existing user
+  // Login an existing user
   const login = async (email: string, password: string) => {
-    loading.value = true
-    error.value = null
-    const { data: { user: loggedInUser }, error: loginError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    loading.value = true;
+    error.value = null;
+    try {
+      const { data: { user: loggedInUser }, error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (loginError) {
-      error.value = loginError.message
-      loading.value = false
-      return
+      if (loginError) throw new Error(loginError.message);
+
+      const { data, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', loggedInUser?.id)
+        .single();
+
+      if (fetchError) throw new Error(fetchError.message);
+
+      user.value = data;
+      localStorage.setItem('user', JSON.stringify(user.value));
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to log in';
+    } finally {
+      loading.value = false;
     }
+  };
 
-    user.value = loggedInUser
-    localStorage.setItem('user', JSON.stringify(user.value))
-    loading.value = false
-  }
-
-  // Function to logout the current user
+  // Logout the current user
   const logout = async () => {
-    loading.value = true
-    error.value = null
-    const { error: logoutError } = await supabase.auth.signOut()
+    loading.value = true;
+    error.value = null;
+    try {
+      const { error: logoutError } = await supabase.auth.signOut();
 
-    if (logoutError) {
-      error.value = logoutError.message
-      loading.value = false
-      return
+      if (logoutError) throw new Error(logoutError.message);
+
+      user.value = null;
+      localStorage.removeItem('user');
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to log out';
+    } finally {
+      loading.value = false;
     }
-
-    user.value = null
-    localStorage.removeItem('user')
-    loading.value = false
-  }
+  };
 
   return {
     user,
@@ -146,5 +151,5 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     login,
     logout,
-  }
-})
+  };
+});

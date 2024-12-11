@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.46.2",
+    "aos": "^2.3.4",
     "pinia": "^2.2.8",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/node": "^22.9.3",
     "@vitejs/plugin-vue": "^5.1.4",
     "autoprefixer": "^10.4.20",
