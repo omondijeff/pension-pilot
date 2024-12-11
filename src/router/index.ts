@@ -12,6 +12,8 @@ const ForgotPassword = () => import('@/views/ForgotPassword.vue');
 const KycPage = () => import('@/views/KycPage.vue');
 const PensionPage = () => import('@/views/PensionPage.vue');
 const UserProfile = () => import('@/views/UserProfile.vue');
+const FaqPage = () => import('@/views/FaqPage.vue');
+
 
 // Define routes
 const routes = [
@@ -21,6 +23,7 @@ const routes = [
   { path: '/contact', name: 'Contact', component: ContactPage },
   { path: '/login', name: 'LogIn', component: LoginPage },
   { path: '/signup', name: 'SignUp', component: SignUpPage },
+  { path: '/knowledge', name: 'Faq', component: FaqPage },
   { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
   {
     path: '/about-you',

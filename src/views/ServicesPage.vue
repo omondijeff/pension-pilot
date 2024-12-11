@@ -1,11 +1,186 @@
 <template>
-    <div class="container mx-auto py-8">
-      <h1 class="text-heading font-gilroy text-primary">Our Services</h1>
-      <ul class="list-disc list-inside text-lg font-gilroy text-secondary mt-4">
-        <li>Retirement planning</li>
-        <li>Investment consulting</li>
-        <li>Financial management</li>
-      </ul>
+  <section class="our-plans-page bg-white">
+    <!-- Banner Section -->
+    <div class="banner w-full h-48 md:h-64">
+      <img
+        src="@/assets/plans-banner.png"
+        alt="Our Plans Banner"
+        class="w-full h-full object-cover"
+      />
     </div>
-  </template>
-  
+
+    <!-- Intro Section -->
+    <div class="intro-section max-w-5xl mx-auto mt-12 px-4 text-center">
+      <h1 class="text-4xl font-gilroy-bold text-gray-800">
+        Our Plans
+      </h1>
+      <p class="text-gray-600 font-gilroy-light text-lg mt-4">
+        Choose a plan that suits your needs and investment goals. Whether you're looking for low risk or high growth, we have options for you.
+      </p>
+    </div>
+
+    <!-- Plans Section -->
+    <div class="plans-section max-w-5xl mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Low Risk Plan -->
+      <div class="plan-card text-center">
+        <img
+          src="@/assets/low-risk-icon.png"
+          alt="Low Risk Plan Icon"
+          class="w-20 h-20 mx-auto"
+        />
+        <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Low Risk Plan</h3>
+        <p class="text-gray-600 font-gilroy-light mt-2">
+          Ideal for those who prefer stability and preservation of capital while achieving modest growth.
+        </p>
+        <button class="gradient-button w-40 px-6 py-2 rounded-lg mt-6 mx-auto">
+          Select
+        </button>
+      </div>
+
+      <!-- Medium Risk Plan -->
+      <div class="plan-card text-center">
+        <img
+          src="@/assets/medium-risk-icon.png"
+          alt="Medium Risk Plan Icon"
+          class="w-20 h-20 mx-auto"
+        />
+        <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Medium Risk Plan</h3>
+        <p class="text-gray-600 font-gilroy-light mt-2">
+          Perfect for individuals looking for a balance between growth and security.
+        </p>
+        <button class="gradient-button w-40 px-6 py-2 rounded-lg mt-6 mx-auto">
+          Select
+        </button>
+      </div>
+
+      <!-- High Risk Plan -->
+      <div class="plan-card text-center">
+        <img
+          src="@/assets/high-risk-icon.png"
+          alt="High Risk Plan Icon"
+          class="w-20 h-20 mx-auto"
+        />
+        <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">High Risk Plan</h3>
+        <p class="text-gray-600 font-gilroy-light mt-2">
+          For those who seek high growth potential and are comfortable with greater market volatility.
+        </p>
+        <button class="gradient-button w-40 px-6 py-2 rounded-lg mt-6 mx-auto">
+          Select
+        </button>
+      </div>
+    </div>
+
+    <!-- Fees Coverage Section -->
+    <div class="fees-coverage-section max-w-5xl mx-auto mt-20 px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div>
+        <h2 class="text-3xl font-gilroy-bold text-gray-800 mb-6">Fees Coverage</h2>
+        <p class="text-gray-600 font-gilroy-light text-lg mb-4">
+          Joining PensionPilot is completely free! We charge a simple and highly competitive annual fee based on your pension savings.
+        </p>
+        <ul class="list-disc pl-5 text-gray-600 font-gilroy-light space-y-2">
+          <li><strong>No charges for:</strong></li>
+          <li>Consolidating your pension.</li>
+          <li>Transferring your pension to PensionPilot or moving it elsewhere.</li>
+          <li>Switching to a different plan within the PensionPilot.</li>
+          <li>Adding funds to your pension.</li>
+        </ul>
+        <h3 class="text-xl font-gilroy-bold text-gray-800 mt-6">Fees</h3>
+        <p class="text-gray-600 font-gilroy-light mb-4">Minimum of £250 fee a year</p>
+        <div class="fees-categories flex space-x-6 items-center">
+          <!-- Standard Plan -->
+          <div class="text-center">
+            <img
+              src="@/assets/standard-fee-icon.png"
+              alt="Standard Plan"
+              class="w-20 h-20 mx-auto"
+            />
+            <p class="text-gray-600 font-gilroy-light mt-2">&lt; £100k</p>
+            <p class="text-sm font-bold text-gray-700">Standard</p>
+          </div>
+          <!-- Premium Plan -->
+          <div class="text-center">
+            <img
+              src="@/assets/premium-fee-icon.png"
+              alt="Premium Plan"
+              class="w-20 h-20 mx-auto"
+            />
+            <p class="text-gray-600 font-gilroy-light mt-2">&gt; £500k</p>
+            <p class="text-sm font-bold text-gray-700">Premium</p>
+          </div>
+          <!-- Exclusive Plan -->
+          <div class="text-center">
+            <img
+              src="@/assets/exclusive-fee-icon.png"
+              alt="Exclusive Plan"
+              class="w-20 h-20 mx-auto"
+            />
+            <p class="text-gray-600 font-gilroy-light mt-2">&gt; £1m</p>
+            <p class="text-sm font-bold text-gray-700">Exclusive</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img
+          src="@/assets/fees-coverage-illustration.png"
+          alt="Fees Illustration"
+          class="w-full h-auto"
+        />
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+// No additional logic required for this static page.
+</script>
+
+<style scoped>
+/* Banner Section */
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Intro Section */
+.intro-section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* Plans Section */
+.plans-section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.plan-card img {
+  max-height: 80px;
+}
+
+/* Fees Coverage Section */
+.fees-coverage-section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+/* Gradient Button Style */
+.gradient-button {
+  background: linear-gradient(263.24deg, #4569AE 0.74%, #3F9FD7 100%);
+  color: #FFFFFF;
+  font-family: 'Gilroy-Medium';
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  line-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.gradient-button:hover {
+  background: linear-gradient(263.24deg, #3F9FD7 0.74%, #4569AE 100%);
+}
+</style>

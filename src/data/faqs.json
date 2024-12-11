@@ -1,0 +1,27 @@
+[
+  {
+    "question": "What is PensionPilot?",
+    "answer": "PensionPilot is a platform designed to help you manage, consolidate, and grow your pensions effortlessly.",
+    "category": "General"
+  },
+  {
+    "question": "How do I transfer my pension?",
+    "answer": "To transfer your pension, simply log in to your account, go to 'Add Pension,' and follow the instructions.",
+    "category": "General"
+  },
+  {
+    "question": "Is PensionPilot secure?",
+    "answer": "Yes, we prioritize the security of your personal and financial information. All data is encrypted and handled with care.",
+    "category": "Security"
+  },
+  {
+    "question": "Are there any fees?",
+    "answer": "We charge a simple annual fee based on your pension savings. For more details, please check our Fees Coverage section.",
+    "category": "Fees"
+  },
+  {
+    "question": "Can I change my investment plan later?",
+    "answer": "Yes, you can switch your plan at any time without additional charges.",
+    "category": "Plans"
+  }
+]
