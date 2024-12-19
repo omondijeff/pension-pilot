@@ -70,7 +70,7 @@
           ></textarea>
           <button
             type="submit"
-            class="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white p-3 rounded-lg font-gilroy-bold"
+            class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90"
           >
             Submit
           </button>
@@ -79,21 +79,19 @@
     </div>
 
     <!-- Location Section -->
-    <div class="location-section max-w-5xl mx-auto mt-12 px-4">
-      <h2 class="text-3xl font-gilroy-bold text-gray-800">Our Location</h2>
-      <div class="mt-6">
-        <img src="@/assets/location-map.png" alt="Location Map" class="w-full rounded-lg" />
-        <div class="mt-4 text-gray-600 font-gilroy-light">
-          <p>PensionPilot</p>
-          <p>Street: 11 Caradon Hill</p>
-          <p>City: Tyle-garw</p>
-          <p>Zip code: CF72 4HN</p>
-          <p>Country: United Kingdom</p>
-        </div>
+    <div class="location-section max-w-5xl mx-auto mt-12 px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <img src="@/assets/location-map.png" alt="Location Map" class="w-full rounded-lg" />
+      <div class="text-gray-600 font-gilroy-light">
+        <p class="text-lg font-gilroy-bold text-gray-800">PensionPilot</p>
+        <p>Street: 11 Caradon Hill</p>
+        <p>City: Tyle-garw</p>
+        <p>Zip code: CF72 4HN</p>
+        <p>Country: United Kingdom</p>
       </div>
     </div>
   </section>
 </template>
+
 
 <script setup>
 // No additional logic needed

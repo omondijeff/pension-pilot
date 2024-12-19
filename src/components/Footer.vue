@@ -4,13 +4,15 @@
       <!-- Footer Content Wrapper -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
         
-        <!-- About Section -->
-        <div>
-          <h3 class="text-xl font-gilroy-bold mb-4">About PensionPilot</h3>
-          <p class="text-sm leading-relaxed font-gilroy-light">
-            PensionPilot helps you secure your future with easy and reliable pension management tools. We're committed to helping individuals navigate their pension journeys with transparency and ease.
-          </p>
-        </div>
+    <!-- About Section -->
+<div>
+  
+  <img src="@/assets/footer-logo.png" alt="PensionPilot Logo" class="mb-4 mx-auto md:mx-0 w-32 h-auto" />
+  <p class="text-sm leading-relaxed font-gilroy-light">
+    PensionPilot helps you secure your future with easy and reliable pension management tools. We're committed to helping individuals navigate their pension journeys with transparency and ease.
+  </p>
+</div>
+
 
         <!-- Quick Links -->
         <div>
@@ -40,20 +42,21 @@
             Subscribe to our mailing list for updates and tips on managing your pension.
           </p>
           <form @submit.prevent="handleSubscription" class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-2">
-            <input
-              type="email"
-              v-model="subscriberEmail"
-              placeholder="Enter your email"
-              class="w-full p-3 border border-gray-300 rounded-lg md:flex-1 font-gilroy-light"
-              required
-            />
-            <button
-              type="submit"
-              class="w-full md:w-auto bg-gradient-to-r from-blue-500 to-blue-700 text-white p-3 rounded-lg font-gilroy-bold"
-            >
-              Subscribe
-            </button>
-          </form>
+  <input
+    type="email"
+    v-model="subscriberEmail"
+    placeholder="Enter your email"
+    class="w-full p-3 border border-gray-300 rounded-lg md:flex-1 font-gilroy-light"
+    required
+  />
+  <button
+    type="submit"
+    class="w-full md:w-auto py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90"
+  >
+    Subscribe
+  </button>
+</form>
+
         </div>
       </div>
 

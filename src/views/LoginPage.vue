@@ -42,7 +42,7 @@
               v-model="password"
               required
             />
-            <a href="#" class="text-sm text-blue-600 hover:underline mt-2 block">
+            <a href="/forgot-password" class="text-sm text-blue-600 hover:underline mt-2 block">
               Forgot Password?
             </a>
           </div>

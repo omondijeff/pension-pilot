@@ -1,75 +1,108 @@
+// src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/stores/auth'; // Import the auth store
+import { useAuthStore } from '@/stores/auth';
 
-// Lazy-load route components for better performance
-const HomePage = () => import('@/views/HomePage.vue');
-const AboutPage = () => import('@/views/AboutPage.vue');
-const ServicesPage = () => import('@/views/ServicesPage.vue');
-const ContactPage = () => import('@/views/ContactPage.vue');
-const LoginPage = () => import('@/views/LoginPage.vue');
-const SignUpPage = () => import('@/views/SignUp.vue');
-const ForgotPassword = () => import('@/views/ForgotPassword.vue');
-const KycPage = () => import('@/views/KycPage.vue');
-const PensionPage = () => import('@/views/PensionPage.vue');
-const UserProfile = () => import('@/views/UserProfile.vue');
-const FaqPage = () => import('@/views/FaqPage.vue');
+// Import layouts
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
+import DashboardLayout from '@/layouts/DashboardLayout.vue';
 
-
-// Define routes
 const routes = [
-  { path: '/', name: 'Home', component: HomePage },
-  { path: '/about', name: 'About', component: AboutPage },
-  { path: '/services', name: 'Services', component: ServicesPage },
-  { path: '/contact', name: 'Contact', component: ContactPage },
-  { path: '/login', name: 'LogIn', component: LoginPage },
-  { path: '/signup', name: 'SignUp', component: SignUpPage },
-  { path: '/knowledge', name: 'Faq', component: FaqPage },
-  { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword },
   {
-    path: '/about-you',
-    name: 'AboutYou',
-    component: KycPage,
-    meta: { requiresAuth: true }, // Requires authentication
+    path: '/',
+    component: DefaultLayout,
+    children: [
+      { 
+        path: '', // This is for the home page
+        name: 'Home',
+        component: () => import('@/views/HomePage.vue')
+      },
+      { 
+        path: 'about',
+        name: 'About',
+        component: () => import('@/views/AboutPage.vue')
+      },
+      { 
+        path: 'services',
+        name: 'Services',
+        component: () => import('@/views/ServicesPage.vue')
+      },
+      { 
+        path: 'contact',
+        name: 'Contact',
+        component: () => import('@/views/ContactPage.vue')
+      },
+      { 
+        path: 'login',
+        name: 'LogIn',
+        component: () => import('@/views/LoginPage.vue')
+      },
+      { 
+        path: 'signup',
+        name: 'SignUp',
+        component: () => import('@/views/SignUp.vue')
+      },
+      { 
+        path: 'knowledge',
+        name: 'Faq',
+        component: () => import('@/views/FaqPage.vue')
+      },
+      { 
+        path: 'forgot-password',
+        name: 'ForgotPassword',
+        component: () => import('@/views/ForgotPassword.vue')
+      },
+      { 
+        path: 'profile',
+        name: 'UserProfile',
+        component: () => import('@/views/UserProfile.vue')
+      },
+    ]
   },
   {
-    path: '/add-pension',
-    name: 'AddPension',
-    component: PensionPage,
-    meta: { requiresAuth: true }, // Requires authentication
+    path: '/dashboard',
+    component: DashboardLayout,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/DashboardHome.vue')
+      },
+      {
+        path: 'about-you',
+        name: 'AboutYou',
+        component: () => import('@/views/KycPage.vue')
+      },
+      {
+        path: 'add-pension',
+        name: 'AddPension',
+        component: () => import('@/views/PensionPage.vue')
+      },
+      {
+        path: 'admin-profile',
+        name: 'UserProfile',
+        component: () => import('@/views/UserProfile.vue')
+      },
+    ]
   },
+  // Catch-all route for undefined paths
   {
-    path: '/profile',
-    name: 'UserProfile',
-    component: UserProfile,
-    meta: { requiresAuth: true }, // Requires authentication
-  },
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
+  }
 ];
 
-// Create router instance
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
-// Navigation guard to check authentication
 router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
 
-  // Log the route being accessed and the authentication status
-  console.log('Navigating to:', to.name);
-  console.log('User authentication status:', authStore.isLoggedIn);
-
-  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    // Log the redirect action for debugging
-    console.log('User not authenticated, redirecting to login page');
-
-    // Show an alert to the user (for debugging purposes)
-    alert('You need to be logged in to access this page.');
-
-    // Redirect to the login page
+  if (to.matched.some(record => record.meta.requiresAuth) && !authStore.isLoggedIn) {
     next({ name: 'LogIn' });
   } else {
-    // Proceed to the route
     next();
   }
 });

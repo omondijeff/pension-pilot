@@ -109,11 +109,13 @@
         Join thousands who are already building a brighter tomorrow with us.
       </p>
       <router-link to="/add-pension">
-        <button 
-          class="px-6 py-3 mt-8 bg-gradient-to-r from-blue-600 to-blue-400 text-white border-none rounded-lg text-center font-gilroy">
-          Add Pension
-        </button>
-      </router-link>
+  <button
+    class="px-6 py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90"
+  >
+    Add Pension
+  </button>
+</router-link>
+
     </div>
   </div>
 </section>
