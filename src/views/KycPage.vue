@@ -169,13 +169,15 @@
         </div>
 
         <!-- Next Button -->
-        <button
-          type="submit"
-          class="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white p-3 rounded-lg font-gilroy-bold"
-          :disabled="!isFormValid || loading"
-        >
-          {{ loading ? 'Saving...' : 'Next' }}
-        </button>
+       <!-- Next Button -->
+<button
+  type="submit"
+  class="w-full bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white p-3 rounded-lg font-gilroy-bold hover:opacity-90 shadow-lg transition-transform hover:scale-105"
+  :disabled="!isFormValid || loading"
+>
+  {{ loading ? 'Saving...' : 'Next' }}
+</button>
+
       </form>
     </div>
   </section>
@@ -185,10 +187,12 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useKycProfileStore } from '@/stores/kycProfile';
 import { useAuthStore } from '@/stores/auth';
+import { usePensionSubmissionsStore } from '@/stores/pensionSubmissions'; // Import the pensions store
 import { useRouter } from 'vue-router';
 
 const kycStore = useKycProfileStore();
 const authStore = useAuthStore();
+const pensionStore = usePensionSubmissionsStore(); // Initialize the pensions store
 const router = useRouter();
 
 // Loading, error, and form states
@@ -259,17 +263,14 @@ const isFormValid = computed(() => {
 // Address finder method
 const findAddress = () => {
   if (isPostcodeValid.value) {
-    // Implement address lookup logic here
     console.log("Finding address for postcode:", form.postcode);
   }
 };
 
 // Form submission handler
 const handleNextStep = async () => {
-  // Reset previous errors
   error.value = null;
 
-  // Validate all fields before submission
   validateMobileNumber();
   validatePostcode();
 
@@ -277,14 +278,12 @@ const handleNextStep = async () => {
     try {
       loading.value = true;
 
-      // Ensure we have a user
       if (!authStore.user?.id) {
         throw new Error('User not authenticated');
       }
 
-      // Prepare data for store update
       const kycData = {
-        id: '', // This will be automatically handled by Supabase
+        id: '',
         user_id: authStore.user.id,
         dob_day: form.dob.day,
         dob_month: form.dob.month,
@@ -293,14 +292,21 @@ const handleNextStep = async () => {
         mobile_country: form.mobile.country,
         mobile_number: form.mobile.number,
         national_insurance: form.nationalInsurance,
-        postcode: form.postcode
+        postcode: form.postcode,
       };
 
-      // Call store method to update KYC profile
+      // Update KYC profile
       await kycStore.updateKycProfile(kycData.user_id, kycData);
 
-      // Navigate to next step or dashboard
-      router.push('/dashboard'); // Adjust route as needed
+      // Fetch pension submissions
+      await pensionStore.fetchSubmissions(authStore.user.id);
+
+      // Redirect based on submissions
+      if (pensionStore.submissions.length === 0) {
+        router.push('/add-pension'); // Redirect to add-pension if no submissions
+      } else {
+        router.push('/profile'); // Redirect to profile if submissions exist
+      }
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to save KYC profile';
       console.error('KYC profile save error:', error.value);
@@ -314,17 +320,14 @@ const handleNextStep = async () => {
 
 // Fetch and populate existing profile data when component mounts
 onMounted(async () => {
-  // Redirect if user is not authenticated
   if (!authStore.isLoggedIn) {
     router.push('/login');
     return;
   }
 
   try {
-    // Fetch existing KYC profile
     await kycStore.fetchKycProfile(authStore.user.id);
-    
-    // Populate form with existing data if available
+
     const existingProfile = kycStore.kycProfile;
     if (existingProfile) {
       form.dob.day = existingProfile.dob_day;
@@ -341,6 +344,7 @@ onMounted(async () => {
   }
 });
 </script>
+
 
 <style scoped>
 /* Banner Section */

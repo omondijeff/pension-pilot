@@ -65,33 +65,56 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { usePensionSubmissionsStore } from '@/stores/pensionSubmissions';
+import { useKycProfileStore } from '@/stores/kycProfile'; // Import the KYC profile store
 
 const router = useRouter();
-const email = ref('')
-const password = ref('')
+const email = ref('');
+const password = ref('');
 
-// Access the auth store
-const authStore = useAuthStore()
+// Access the stores
+const authStore = useAuthStore();
+const pensionStore = usePensionSubmissionsStore();
+const kycStore = useKycProfileStore();
 
 // Handle login
 const handleLogin = async () => {
   try {
-    await authStore.login(email.value, password.value)
+    await authStore.login(email.value, password.value);
+
     if (authStore.isLoggedIn) {
-      // Redirect user after successful login, you can use vue-router for this
-      console.log('Login successful!')
-      router.push('/profile');
-      // Example: use router.push('/') to navigate to home
+      console.log('Login successful!');
+
+      // Fetch KYC profile
+      await kycStore.fetchKycProfile(authStore.user.id);
+
+      if (!kycStore.kycProfile) {
+        console.warn('No KYC profile found. Redirecting to /about-you.');
+        router.push('/about-you'); // Redirect if KYC profile is missing
+        return;
+      }
+
+      // Fetch pension submissions
+      await pensionStore.fetchSubmissions(authStore.user.id);
+
+      // Redirect based on submissions
+      if (pensionStore.submissions.length > 0) {
+        router.push('/profile'); // Redirect to profile if pensions exist
+      } else {
+        router.push('/add-pension'); // Redirect to add-pension if no submissions
+      }
     } else {
-      console.error('Login failed', authStore.error)
+      console.error('Login failed', authStore.error);
     }
   } catch (error) {
-    console.error('Error during login', error)
+    console.error('Error during login:', error);
   }
-}
+};
 </script>
+
+
 
 <style scoped>
 /* Ensure proper layout for both mobile and desktop */

@@ -22,6 +22,11 @@ const routes = [
         component: () => import('@/views/AboutPage.vue')
       },
       { 
+        path: 'add-pension',
+        name: 'AddPension',
+        component: () => import('@/views/PensionPage.vue')
+      },
+      { 
         path: 'services',
         name: 'Services',
         component: () => import('@/views/ServicesPage.vue')
@@ -51,6 +56,16 @@ const routes = [
         name: 'ForgotPassword',
         component: () => import('@/views/ForgotPassword.vue')
       },
+      {
+        path: 'about-you',
+        name: 'AboutYou',
+        component: () => import('@/views/KycPage.vue')
+      },
+      {
+        path: 'add-pension',
+        name: 'AddPension',
+        component: () => import('@/views/PensionPage.vue')
+      },
       { 
         path: 'profile',
         name: 'UserProfile',
@@ -69,27 +84,27 @@ const routes = [
         component: () => import('@/views/dashboard/DashboardHome.vue')
       },
       {
-        path: 'about-you',
-        name: 'AboutYou',
+        path: 'admin-about-you',
+        name: 'AdminAboutYou',
         component: () => import('@/views/KycPage.vue')
       },
       {
-        path: 'add-pension',
-        name: 'AddPension',
+        path: 'admin-add-pension',
+        name: 'AdminAddPension',
         component: () => import('@/views/PensionPage.vue')
       },
       {
         path: 'admin-profile',
-        name: 'UserProfile',
+        name: 'AdminProfile',
         component: () => import('@/views/UserProfile.vue')
       },
     ]
   },
   // Catch-all route for undefined paths
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: '/'
-  }
+  // {
+  //   path: '/:pathMatch(.*)*',
+  //   redirect: '/'
+  // }
 ];
 
 const router = createRouter({

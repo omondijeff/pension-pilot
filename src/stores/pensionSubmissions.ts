@@ -26,6 +26,36 @@ export const usePensionSubmissionsStore = defineStore('pensionSubmissions', () =
   };
 
   /**
+   * Fetch all pension submissions for all users.
+   */
+  const fetchAllSubmissions = async () => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      logger.info(`Fetching all pension submissions`);
+
+      const { data, error: fetchError } = await supabase
+        .from('pension_submissions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (fetchError) {
+        logger.error(`Error fetching all submissions`, fetchError);
+        throw fetchError;
+      }
+
+      submissions.value = data || [];
+      logger.info(`Fetched ${data?.length || 0} submissions.`);
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch all submissions.';
+      logger.error(`Failed to fetch submissions`, { error: error.value });
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  /**
    * Fetch all pension submissions for a specific user.
    * @param userId The ID of the user to fetch submissions for.
    */
@@ -165,5 +195,6 @@ export const usePensionSubmissionsStore = defineStore('pensionSubmissions', () =
     addSubmission,
     updateSubmission,
     deleteSubmission,
+    fetchAllSubmissions,
   };
 });
