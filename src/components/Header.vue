@@ -29,14 +29,7 @@
         <template v-if="isLoggedIn">
           <div class="flex items-center space-x-4">
             <a href="/profile" class="text-primary hover:opacity-80 transition-opacity">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5.121 17.804A7.962 7.962 0 0112 16c2.21 0 4.21.896 5.879 2.36M12 14a4 4 0 100-8 4 4 0 000 8zm7.878 5.362a9.966 9.966 0 01-15.756 0"
-                />
-              </svg>
+              <i class="fas fa-user-circle text-lg"></i>
             </a>
             <button
               @click="handleLogout"
@@ -65,20 +58,7 @@
         class="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white"
         @click="toggleMenu"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          />
-        </svg>
+        <i class="fas fa-bars text-lg"></i>
       </button>
     </div>
 
@@ -86,30 +66,40 @@
     <div
       v-show="menuOpen"
       class="lg:hidden absolute top-full left-0 w-full bg-white shadow-md py-4 px-6 space-y-4 text-lg"
+      @click.self="closeMenu"
     >
-      <a href="/about" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+      <a
+        href="/about"
+        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        @click="menuClick"
+      >
         About Us
       </a>
-      <a href="/services" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+      <a
+        href="/services"
+        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        @click="menuClick"
+      >
         Services
       </a>
-      <a href="/knowledge" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+      <a
+        href="/knowledge"
+        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        @click="menuClick"
+      >
         Help and Knowledge
       </a>
-      <a href="/contact" class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200">
+      <a
+        href="/contact"
+        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        @click="menuClick"
+      >
         Contact Us
       </a>
       <div class="flex flex-col space-y-2">
         <template v-if="isLoggedIn">
           <a href="/profile" class="flex items-center justify-center text-primary hover:opacity-80 transition-opacity">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5.121 17.804A7.962 7.962 0 0112 16c2.21 0 4.21.896 5.879 2.36M12 14a4 4 0 100-8 4 4 0 000 8zm7.878 5.362a9.966 9.966 0 01-15.756 0"
-              />
-            </svg>
+            <i class="fas fa-user-circle text-lg"></i>
           </a>
           <button
             @click="handleLogout"
@@ -147,6 +137,7 @@ const menuOpen = ref(false);
 // Handle scroll behavior
 const handleScroll = () => {
   scrolled.value = window.scrollY < 50;
+  if (menuOpen.value) closeMenu(); // Close menu on scroll
 };
 
 // Toggle mobile menu
@@ -154,13 +145,30 @@ const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
-// Add/remove scroll event listener
+// Close menu when clicking outside
+const closeMenu = () => {
+  menuOpen.value = false;
+};
+
+// Handle menu item click with feedback
+const menuClick = () => {
+  closeMenu();
+};
+
+// Close menu when clicking outside the header
 onMounted(() => {
+  document.addEventListener('click', (e) => {
+    const header = document.querySelector('header');
+    if (menuOpen.value && !header.contains(e.target)) {
+      closeMenu();
+    }
+  });
   window.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
+  document.removeEventListener('click', closeMenu);
 });
 
 // Authentication state
@@ -179,5 +187,9 @@ const handleLogout = async () => {
 .text-primary {
   color: #4569ae;
   font-weight: bold;
+}
+
+.bg-primary {
+  background-color: #4569ae;
 }
 </style>
