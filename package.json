@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@supabase/supabase-js": "^2.46.2",
     "aos": "^2.3.4",
     "pinia": "^2.2.8",

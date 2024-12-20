@@ -123,47 +123,89 @@
       </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <div class="testimonials-section py-16 bg-white">
-      <div class="max-w-5xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-gilroy-bold text-gray-800 mb-10">
-          What our clients say about us.
-        </h2>
-        <swiper
-          :slides-per-view="1"
-          :space-between="16"
-          :breakpoints="{
-            640: { slidesPerView: 1.2 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }"
-        >
-          <swiper-slide>
-            <div class="testimonial-card p-6 rounded-lg border border-blue-300 shadow-md">
-              <img
-                src="@/assets/client-1.jpg"
-                alt="James Pattinson"
-                class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
-              />
-              <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">James Pattinson</h3>
-              <div class="flex justify-center text-blue-500 mb-4">
-                <i v-for="star in 5" :key="star" class="fas fa-star"></i>
-              </div>
-              <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
-                "Lobortis leo pretium facilisis amet nisl at nec. Scelerisque risus tortor donec ipsum consequat semper consequat adipiscing ultrices."
-              </p>
-            </div>
-          </swiper-slide>
-          <!-- Additional testimonials -->
-        </swiper>
-      </div>
-    </div>
+<!-- Testimonials Section -->
+<div class="testimonials-section py-16 bg-white">
+  <div class="max-w-5xl mx-auto px-4 text-center">
+    <h2 class="text-4xl font-gilroy-bold text-gray-800 mb-10">
+      What our clients say about us.
+    </h2>
+    <swiper
+      :slides-per-view="1"
+      :space-between="16"
+      loop="true"
+      :breakpoints="{
+        640: { slidesPerView: 1.2 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      }"
+    >
+      <!-- Testimonial 1 -->
+      <swiper-slide>
+        <div class="testimonial-card p-6 rounded-lg border border-blue-300 shadow-md">
+          <img
+            src="@/assets/client-1.jpg"
+            alt="James Pattinson"
+            class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
+          />
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">James Pattinson</h3>
+          <div class="flex justify-center text-gold mb-4">
+            <i v-for="star in 5" :key="star" class="fas fa-star"></i>
+          </div>
+          <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
+            "Lobortis leo pretium facilisis amet nisl at nec. Scelerisque risus tortor donec ipsum consequat semper consequat adipiscing ultrices."
+          </p>
+        </div>
+      </swiper-slide>
+
+      <!-- Testimonial 2 -->
+      <swiper-slide>
+        <div class="testimonial-card p-6 rounded-lg border border-blue-300 shadow-md">
+          <img
+            src="@/assets/client-2.jpg"
+            alt="Annabelle"
+            class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
+          />
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Annabelle</h3>
+          <div class="flex justify-center text-gold mb-4">
+            <i v-for="star in 5" :key="star" class="fas fa-star"></i>
+          </div>
+          <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
+            "Vestibulum, cum nam non amet consectetur morbi aenean condimentum eget. Ultricies integer nunc neque accumsan laoreet. Viverra nibh ultrices."
+          </p>
+        </div>
+      </swiper-slide>
+
+      <!-- Testimonial 3 -->
+      <swiper-slide>
+        <div class="testimonial-card p-6 rounded-lg border border-blue-300 shadow-md">
+          <img
+            src="@/assets/client-3.jpg"
+            alt="Trevor Mitchell"
+            class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
+          />
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Trevor Mitchell</h3>
+          <div class="flex justify-center text-gold mb-4">
+            <i v-for="star in 5" :key="star" class="fas fa-star"></i>
+          </div>
+          <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
+            "Ut tristique viverra sed porttitor senectus. A facilisis metus pretium ut habitant lorem. Velit vel bibendum eget aliquet sem nec."
+          </p>
+        </div>
+      </swiper-slide>
+    </swiper>
+  </div>
+</div>
+
+
   </section>
 </template>
 
 <script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
+import '@fortawesome/fontawesome-free/css/all.css';
+import '@fortawesome/fontawesome-free/js/all.js';
+
 
 import bannerImage from '@/assets/about-us-banner.png';
 import ctaImageDesktop from '@/assets/cta-desktop.jpg';
@@ -179,6 +221,11 @@ const ctaBackgroundStyle = {
 </script>
 
 <style scoped>
+
+.text-gold {
+  color: #FFD700; /* Gold color for stars */
+}
+
 .cta-section {
   background-size: cover;
   background-position: center;
