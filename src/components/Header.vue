@@ -55,66 +55,66 @@
 
       <!-- Hamburger Button for Mobile -->
       <button
-        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white"
+        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-primary hover:bg-[#3F9FD7] transition-colors"
         @click="toggleMenu"
       >
-        <i class="fas fa-bars text-lg"></i>
+        <i class="fas fa-bars hamburger-icon"></i>
       </button>
     </div>
 
     <!-- Mobile Navigation -->
     <div
       v-show="menuOpen"
-      class="lg:hidden absolute top-full left-0 w-full bg-white shadow-md py-4 px-6 space-y-4 text-lg"
+      class="lg:hidden absolute top-full left-0 w-full bg-white shadow-md py-4 px-6 text-lg"
       @click.self="closeMenu"
     >
       <a
         href="/about"
-        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        class="block text-base font-gilroy-light text-black hover:text-primary transition-colors duration-200"
         @click="menuClick"
       >
         About Us
       </a>
       <a
         href="/services"
-        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        class="block text-base font-gilroy-light text-black hover:text-primary transition-colors duration-200"
         @click="menuClick"
       >
         Services
       </a>
       <a
         href="/knowledge"
-        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        class="block text-base font-gilroy-light text-black hover:text-primary transition-colors duration-200"
         @click="menuClick"
       >
         Help and Knowledge
       </a>
       <a
         href="/contact"
-        class="block text-sm font-gilroy-light text-black hover:text-primary transition-colors duration-200"
+        class="block text-base font-gilroy-light text-black hover:text-primary transition-colors duration-200"
         @click="menuClick"
       >
         Contact Us
       </a>
-      <div class="flex flex-col space-y-2">
+      <div class="flex flex-row items-center justify-between mt-4">
         <template v-if="isLoggedIn">
           <a href="/profile" class="flex items-center justify-center text-primary hover:opacity-80 transition-opacity">
             <i class="fas fa-user-circle text-lg"></i>
           </a>
           <button
             @click="handleLogout"
-            class="w-full h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100"
+            class="h-10 flex-1 mx-1 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100"
           >
             Logout
           </button>
         </template>
         <template v-else>
-          <a href="/login">
+          <a href="/login" class="flex-1 mx-1">
             <button class="w-full h-10 bg-white border border-black text-black rounded-md font-gilroy-bold hover:bg-gray-100">
               Login
             </button>
           </a>
-          <a href="/add-pension">
+          <a href="/add-pension" class="flex-1 mx-1">
             <button class="w-full h-10 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-md font-gilroy-bold hover:opacity-90">
               Get Started
             </button>
@@ -191,5 +191,14 @@ const handleLogout = async () => {
 
 .bg-primary {
   background-color: #4569ae;
+}
+
+.hamburger-icon {
+  color: white; /* Ensures icon is always white */
+  font-size: 1.5rem; /* Adjust icon size for consistency */
+}
+
+button:hover .hamburger-icon {
+  color: white; /* Keeps icon white on hover */
 }
 </style>
