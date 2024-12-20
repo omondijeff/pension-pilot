@@ -12,6 +12,7 @@
     "@supabase/supabase-js": "^2.46.2",
     "aos": "^2.3.4",
     "pinia": "^2.2.8",
+    "swiper": "^11.1.15",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },
