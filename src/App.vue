@@ -20,7 +20,7 @@
 import { onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import BasePreloader from '@/components/BasePreloader.vue';
-import router, { isLoading } from '@/router';
+// import router, { isLoading } from '@/router';
 
 const authStore = useAuthStore();
 
