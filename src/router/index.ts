@@ -116,7 +116,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   // Scroll behavior
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
     }
@@ -125,7 +125,7 @@ const router = createRouter({
 });
 
 // Navigation guard
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   // Start loading
   isLoading.value = true;
 
@@ -165,7 +165,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 // After navigation complete
-router.afterEach(() => {
+router.afterEach((_to, _from) => {
   // Ensure loading is false after navigation
   setTimeout(() => {
     isLoading.value = false;
