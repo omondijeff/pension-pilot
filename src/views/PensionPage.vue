@@ -1,5 +1,15 @@
+
 <template>
   <section class="pension-page bg-white">
+    <!-- Banner Section -->
+    <div class="banner w-full h-48 md:h-64">
+      <img
+        src="@/assets/pension-banner.png"
+        alt="Add a Pension"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
     <!-- Form Section -->
     <div class="form-section max-w-xl mx-auto mt-8 px-4">
       <!-- Title -->
@@ -93,6 +103,7 @@
           Add another pension
         </button>
 
+      
         <!-- Signature Section -->
         <div class="signature-box border border-gray-300 rounded-lg p-4">
           <div class="signature-pad-container">
@@ -135,15 +146,44 @@
               </div>
             </div>
 
-            <!-- Show saved signature if exists -->
-            <div v-if="signatureImage" class="mt-4 border-t border-gray-200 pt-4">
-              <p class="text-sm text-gray-600 mb-2">Your saved signature:</p>
-              <img 
-                :src="signatureImage" 
-                alt="Saved signature" 
-                class="border border-gray-200 rounded p-2 bg-white max-h-20 object-contain"
-              />
+            <!-- Debug Info -->
+            <div class="mt-2 text-xs text-gray-500">
+              Status: {{ hasSignature ? 'Drawing detected' : 'No drawing' }} | 
+              Saved: {{ signatureImage ? 'Yes' : 'No' }}
             </div>
+          </div>
+          
+          <!-- <div class="flex justify-between items-center mt-2">
+            <div class="text-sm text-gray-600">
+              {{ hasSignature ? 'Signature detected' : 'Please sign above' }}
+            </div>
+            <div class="flex space-x-2">
+              <button 
+                type="button"
+                @click="clearSignature"
+                class="px-4 py-2 text-sm text-red-600 hover:text-red-800 border border-red-200 rounded"
+              >
+                Clear
+              </button>
+              <button 
+                type="button"
+                @click="saveSignature"
+                class="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+                :disabled="!hasSignature"
+              >
+                Save Signature
+              </button>
+            </div>
+          </div> -->
+
+          <!-- Show saved signature if exists -->
+          <div v-if="signatureImage" class="mt-4 border-t border-gray-200 pt-4">
+            <p class="text-sm text-gray-600 mb-2">Your saved signature:</p>
+            <img 
+              :src="signatureImage" 
+              alt="Saved signature" 
+              class="border border-gray-200 rounded p-2 bg-white max-h-20 object-contain"
+            />
           </div>
         </div>
 
@@ -151,7 +191,7 @@
         <div class="mt-6">
           <label class="flex items-start space-x-2 text-gray-600 font-gilroy-light cursor-pointer">
             <input type="checkbox" v-model="confirmAgreement" class="mt-1" />
-            <span>I agree to transfer the pension balance(s) to the PensionPilot Tailored Plan. I'm aware I can change my plan at any time..</span>
+            <span>I agree to transfer the pension balance(s) to the PensionPilot Tailored Plan. I'm aware I can change my plan at any time.</span>
           </label>
           <label class="flex items-start space-x-2 text-gray-600 font-gilroy-light mt-4 cursor-pointer">
             <input type="checkbox" v-model="confirmTerms" class="mt-1" />
@@ -201,23 +241,35 @@ const hasSignature = ref(false);
 const signatureImage = ref(null);
 
 // Watch for signature pad events
+// Signature handlers
 const onSignatureStart = () => {
+  console.log('Drawing started');
   hasSignature.value = true;
 };
 
 const onSignatureEnd = () => {
+  console.log('Drawing ended');
   saveCurrentSignature();
 };
 
 const saveCurrentSignature = () => {
-  if (!signaturePad.value) return;
+  if (!signaturePad.value) {
+    console.error('No signature pad reference');
+    return;
+  }
 
   try {
+    // Get the canvas element
     const canvas = signaturePad.value.$el.getElementsByTagName('canvas')[0];
-    if (!canvas) return;
+    if (!canvas) {
+      console.error('Canvas not found');
+      return;
+    }
 
+    // Get the image data
     const imageData = canvas.toDataURL('image/png');
     signatureImage.value = imageData;
+    console.log('Signature saved:', !!imageData);
   } catch (error) {
     console.error('Failed to save signature:', error);
   }
@@ -230,12 +282,14 @@ const clearSignature = () => {
     signaturePad.value.clear();
     signatureImage.value = null;
     hasSignature.value = false;
+    console.log('Signature cleared');
   } catch (error) {
     console.error('Failed to clear signature:', error);
   }
 };
 
 const saveSignature = () => {
+  console.log('Manual save triggered');
   saveCurrentSignature();
 };
 
