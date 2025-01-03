@@ -1,19 +1,40 @@
+// src/stores/auth.ts
 import { defineStore } from 'pinia';
 import { supabase } from '@/lib/supabase';
 import { ref, computed } from 'vue';
-import type { User } from '@/lib/database.types'; // Import User type from database.types.ts
+import type { User } from '@/lib/database.types';
 
-// Adjust CustomUser to make 'email' optional
 type CustomUser = User & { email?: string; id?: string };
 
 export const useAuthStore = defineStore('auth', () => {
-  // Reactive state
-  const user = ref<CustomUser | null>(null); // Use the CustomUser type here
+  const user = ref<CustomUser | null>(null);
   const error = ref<string | null>(null);
   const loading = ref<boolean>(false);
-
-  // Computed property for checking if the user is logged in
   const isLoggedIn = computed(() => user.value !== null);
+
+  // Check if a user exists without attempting login
+  const checkUserExists = async (email: string): Promise<boolean> => {
+    try {
+      const { data, error: queryError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', email)
+        .single();
+
+      if (queryError) {
+        if (queryError.code === 'PGRST116') {
+          // PGRST116 is the error code for no rows returned
+          return false;
+        }
+        throw new Error(queryError.message);
+      }
+
+      return !!data;
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Error checking user existence';
+      return false;
+    }
+  };
 
   // Initialize user from localStorage and validate session
   const initializeAuth = async () => {
@@ -21,7 +42,6 @@ export const useAuthStore = defineStore('auth', () => {
     if (storedUser) {
       user.value = JSON.parse(storedUser);
 
-      // Validate session with Supabase
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (!session || sessionError) {
         user.value = null;
@@ -30,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  // Fetch the current user's profile from the `users` table
+  // Fetch the current user's profile
   const fetchProfile = async () => {
     loading.value = true;
     try {
@@ -51,11 +71,18 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  // Register a new user and insert their profile into the `users` table
+  // Register a new user
   const register = async (email: string, password: string, name: string) => {
     loading.value = true;
     error.value = null;
     try {
+      // First check if user already exists
+      const userExists = await checkUserExists(email);
+      if (userExists) {
+        error.value = 'user_already_exists';
+        return false;
+      }
+
       const { data: { user: newUser }, error: registerError } = await supabase.auth.signUp({
         email,
         password,
@@ -69,7 +96,7 @@ export const useAuthStore = defineStore('auth', () => {
         .insert([
           {
             id: newUser.id,
-            email: newUser.email ?? '', // Handle the possibility of undefined email
+            email: newUser.email,
             name,
             created_at: new Date().toISOString(),
           },
@@ -80,15 +107,17 @@ export const useAuthStore = defineStore('auth', () => {
       const userProfile = {
         id: newUser.id,
         name,
-        email: newUser.email ?? '',
+        email: newUser.email,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
 
       user.value = userProfile;
       localStorage.setItem('user', JSON.stringify(user.value));
+      return true;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to register user';
+      return false;
     } finally {
       loading.value = false;
     }
@@ -99,12 +128,26 @@ export const useAuthStore = defineStore('auth', () => {
     loading.value = true;
     error.value = null;
     try {
+      // First check if user exists
+      const userExists = await checkUserExists(email);
+      if (!userExists) {
+        error.value = 'user_not_found';
+        return false;
+      }
+
       const { data: { user: loggedInUser }, error: loginError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (loginError) throw new Error(loginError.message);
+      if (loginError) {
+        // Handle incorrect password specifically
+        if (loginError.message.includes('Invalid login credentials')) {
+          error.value = 'invalid_password';
+          return false;
+        }
+        throw new Error(loginError.message);
+      }
 
       const { data, error: fetchError } = await supabase
         .from('users')
@@ -116,8 +159,10 @@ export const useAuthStore = defineStore('auth', () => {
 
       user.value = data;
       localStorage.setItem('user', JSON.stringify(user.value));
+      return true;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to log in';
+      return false;
     } finally {
       loading.value = false;
     }
@@ -134,8 +179,10 @@ export const useAuthStore = defineStore('auth', () => {
 
       user.value = null;
       localStorage.removeItem('user');
+      return true;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to log out';
+      return false;
     } finally {
       loading.value = false;
     }
@@ -146,6 +193,7 @@ export const useAuthStore = defineStore('auth', () => {
     error,
     loading,
     isLoggedIn,
+    checkUserExists,
     initializeAuth,
     fetchProfile,
     register,

@@ -1,9 +1,14 @@
+// src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { ref } from 'vue';
 
 // Import layouts
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
+
+// Create and export the loading state
+export const isLoading = ref(false);
 
 const routes = [
   {
@@ -33,12 +38,14 @@ const routes = [
       { 
         path: 'login', 
         name: 'LogIn', 
-        component: () => import('@/views/LoginPage.vue') 
+        component: () => import('@/views/LoginPage.vue'),
+        meta: { requiresGuest: true }
       },
       { 
         path: 'signup', 
         name: 'SignUp', 
-        component: () => import('@/views/SignUp.vue') 
+        component: () => import('@/views/SignUp.vue'),
+        meta: { requiresGuest: true }
       },
       { 
         path: 'knowledge', 
@@ -48,7 +55,8 @@ const routes = [
       { 
         path: 'forgot-password', 
         name: 'ForgotPassword', 
-        component: () => import('@/views/ForgotPassword.vue') 
+        component: () => import('@/views/ForgotPassword.vue'),
+        meta: { requiresGuest: true }
       },
       { 
         path: 'about-you', 
@@ -107,22 +115,61 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // Scroll behavior
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { top: 0 };
+  },
 });
 
 // Navigation guard
-router.beforeEach((to, _from, next) => {
-  const authStore = useAuthStore();
+router.beforeEach(async (to, from, next) => {
+  // Start loading
+  isLoading.value = true;
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // If not logged in, redirect to login
-    if (!authStore.isLoggedIn) {
-      next({ name: 'LogIn', query: { redirect: to.fullPath } });
-    } else {
-      next();
+  try {
+    const authStore = useAuthStore();
+
+    // Handle auth required routes
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!authStore.isLoggedIn) {
+        next({
+          name: 'LogIn',
+          query: { redirect: to.fullPath }
+        });
+        return;
+      }
     }
-  } else {
+
+    // Handle guest-only routes (login, signup, forgot password)
+    if (to.matched.some(record => record.meta.requiresGuest)) {
+      if (authStore.isLoggedIn) {
+        next({ name: 'UserProfile' });
+        return;
+      }
+    }
+
+    // Proceed with navigation
     next();
+  } catch (error) {
+    console.error('Navigation error:', error);
+    next({ name: 'Home' });
+  } finally {
+    // Add a small delay to prevent flickering on fast loads
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 300);
   }
+});
+
+// After navigation complete
+router.afterEach(() => {
+  // Ensure loading is false after navigation
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 300);
 });
 
 export default router;
