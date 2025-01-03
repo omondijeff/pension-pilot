@@ -2,7 +2,7 @@
 <template>
   <div id="app" class="flex flex-col min-h-screen">
     <!-- Global preloader -->
-    <BasePreloader :show="isLoading" />
+    <BasePreloader :show="loading" />
     
     <!-- Main content -->
     <router-view v-slot="{ Component }">
@@ -17,16 +17,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import BasePreloader from '@/components/BasePreloader.vue';
-// import router, { isLoading } from '@/router';
 
 const authStore = useAuthStore();
+const loading = ref(false);
 
 // Initialize auth on app mount
 onMounted(async () => {
-  await authStore.initializeAuth();
+  loading.value = true;
+  try {
+    await authStore.initializeAuth();
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
