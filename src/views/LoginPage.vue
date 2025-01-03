@@ -1,4 +1,4 @@
-//src/views/LoginPage.vue
+<!-- src/views/LoginPage.vue -->
 <template>
   <section class="login-page flex flex-col md:flex-row h-screen">
     <!-- Left Column (Image) -->
@@ -110,7 +110,6 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const showPassword = ref(false);
-// Use the loading state from the auth store
 const isLoading = computed(() => authStore.loading);
 
 // Notification state
@@ -151,7 +150,7 @@ const handleLogin = async () => {
   try {
     await authStore.login(email.value, password.value);
 
-    if (authStore.isLoggedIn) {
+    if (authStore.isLoggedIn && authStore.user) {
       showNotificationMessage('success', 'Welcome back!', 'Successfully logged in.');
 
       // Fetch KYC profile
