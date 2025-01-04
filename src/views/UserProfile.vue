@@ -127,6 +127,8 @@
     </div>
   </section>
 </template>
+
+
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 import { 
@@ -151,11 +153,7 @@ interface KycProfile {
   mobile_country: string;
   mobile_number: string;
   postcode: string;
-  national_insurance?: string;
-}
-
-interface KycProfileUpdate extends Omit<KycProfile, 'id'> {
-  id?: string;
+  national_insurance: string | null;
 }
 
 interface PensionSubmission {
