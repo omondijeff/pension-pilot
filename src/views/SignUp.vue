@@ -238,12 +238,8 @@ const handleSignUp = async () => {
       showNotificationMessage(
         'success',
         'Registration Successful',
-        'Please check your email to verify your account. Redirecting to login...'
+        'Please check your email to verify your account.'
       );
-      
-      setTimeout(() => {
-        router.push('/login');
-      }, 3000);
     } else {
       // Handle specific error cases
       switch (authStore.error) {
