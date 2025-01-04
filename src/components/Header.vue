@@ -29,7 +29,7 @@
         <template v-if="isLoggedIn">
           <div class="flex items-center space-x-4">
             <a href="/profile" class="text-primary hover:opacity-80 transition-opacity">
-              <i class="fas fa-user-circle text-lg"></i>
+              <UserCircleIcon class="h-6 w-6" />
             </a>
             <button
               @click="handleLogout"
@@ -58,7 +58,7 @@
         class="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-primary hover:bg-[#3F9FD7] transition-colors"
         @click="toggleMenu"
       >
-        <i class="fas fa-bars hamburger-icon"></i>
+        <Bars3Icon class="h-6 w-6 text-white" />
       </button>
     </div>
 
@@ -99,7 +99,7 @@
       <div class="flex flex-row items-center justify-between mt-4">
         <template v-if="isLoggedIn">
           <a href="/profile" class="flex items-center justify-center text-primary hover:opacity-80 transition-opacity">
-            <i class="fas fa-user-circle text-lg"></i>
+            <UserCircleIcon class="h-6 w-6" />
           </a>
           <button
             @click="handleLogout"
@@ -126,9 +126,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { UserCircleIcon, Bars3Icon } from '@heroicons/vue/24/outline';
 
 // State for sticky header and mobile menu
 const scrolled = ref(true);
@@ -173,8 +175,21 @@ onUnmounted(() => {
 
 // Authentication state
 const authStore = useAuthStore();
-const { isLoggedIn, logout } = authStore;
 const router = useRouter();
+
+// Use storeToRefs for reactive auth state
+const { isLoggedIn } = storeToRefs(authStore);
+const { logout } = authStore;
+
+// Watch for changes in authentication state
+watch(isLoggedIn, (newValue, oldValue) => {
+  if (oldValue === true && newValue === false) {
+    // Force a header re-render when user logs out
+    nextTick(() => {
+      scrolled.value = window.scrollY < 50;
+    });
+  }
+});
 
 // Logout with Header Redraw
 const handleLogout = async () => {
@@ -191,14 +206,5 @@ const handleLogout = async () => {
 
 .bg-primary {
   background-color: #4569ae;
-}
-
-.hamburger-icon {
-  color: white; /* Ensures icon is always white */
-  font-size: 1.5rem; /* Adjust icon size for consistency */
-}
-
-button:hover .hamburger-icon {
-  color: white; /* Keeps icon white on hover */
 }
 </style>

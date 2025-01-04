@@ -238,7 +238,7 @@ const handleSignUp = async () => {
       showNotificationMessage(
         'success',
         'Registration Successful',
-        'Please check your email to verify your account.'
+        'Please check your email to verify your account, then log in.'
       );
     } else {
       // Handle specific error cases
