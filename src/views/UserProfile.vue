@@ -127,7 +127,6 @@
     </div>
   </section>
 </template>
-
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 import { 
@@ -155,14 +154,18 @@ interface KycProfile {
   national_insurance?: string;
 }
 
+interface KycProfileUpdate extends Omit<KycProfile, 'id'> {
+  id?: string;
+}
+
 interface PensionSubmission {
   id: string;
   user_id: string;
   provider: string;
-  policy_number: string | undefined;
+  policy_number: string | null;
   current_employer: boolean;
   signature_provided: boolean;
-  created_at: string | undefined;
+  created_at: string | null;
 }
 
 interface ProfileForm {
@@ -233,7 +236,7 @@ const form = reactive<ProfileForm>({
 });
 
 // Methods
-function formatDate(date: string | undefined): string {
+function formatDate(date: string | null): string {
   if (!date) return 'N/A';
   return new Date(date).toLocaleDateString('en-GB', {
     day: 'numeric',
@@ -286,8 +289,7 @@ async function handleSubmit() {
   if (!authStore.user?.id || !userProfile.value) return;
 
   try {
-    const updatedProfile: Partial<KycProfile> = {
-      id: userProfile.value.id,
+    const updatedProfile: KycProfileUpdate = {
       dob_day: form.dob.day,
       dob_month: form.dob.month,
       dob_year: form.dob.year,
@@ -298,7 +300,14 @@ async function handleSubmit() {
     };
 
     await kycStore.updateKycProfile(authStore.user.id, updatedProfile);
-    userProfile.value = { ...userProfile.value, ...updatedProfile };
+    
+    if (userProfile.value) {
+      userProfile.value = { 
+        ...userProfile.value, 
+        ...updatedProfile
+      };
+    }
+    
     closeEditModal();
   } catch (error) {
     console.error('Failed to update profile:', error);
