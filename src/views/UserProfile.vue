@@ -144,6 +144,7 @@ import bannerImage from '@/assets/profile-banner.png';
 
 // Type definitions
 interface KycProfile {
+  id: string;
   dob_day: string;
   dob_month: string;
   dob_year: string;
@@ -156,10 +157,12 @@ interface KycProfile {
 
 interface PensionSubmission {
   id: string;
+  user_id: string;
   provider: string;
-  policy_number?: string;
+  policy_number: string | undefined;
   current_employer: boolean;
-  created_at: string;
+  signature_provided: boolean;
+  created_at: string | undefined;
 }
 
 interface ProfileForm {
@@ -217,9 +220,9 @@ const profileInfo = computed(() => [
   }
 ]);
 
-const bannerBackgroundStyle = {
+const bannerBackgroundStyle = computed(() => ({
   backgroundImage: `url(${bannerImage})`
-};
+}));
 
 // Form state
 const form = reactive<ProfileForm>({
@@ -230,7 +233,8 @@ const form = reactive<ProfileForm>({
 });
 
 // Methods
-function formatDate(date: string): string {
+function formatDate(date: string | undefined): string {
+  if (!date) return 'N/A';
   return new Date(date).toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',
@@ -241,16 +245,24 @@ function formatDate(date: string): string {
 async function fetchUserProfile() {
   if (!authStore.user?.id) return;
   
-  await kycStore.fetchKycProfile(authStore.user.id);
-  userProfile.value = kycStore.kycProfile;
-  userName.value = authStore.user?.name || 'User';
+  try {
+    await kycStore.fetchKycProfile(authStore.user.id);
+    userProfile.value = kycStore.kycProfile;
+    userName.value = authStore.user?.name || 'User';
+  } catch (error) {
+    console.error('Failed to fetch user profile:', error);
+  }
 }
 
 async function fetchPensions() {
   if (!authStore.user?.id) return;
 
-  await pensionStore.fetchSubmissions(authStore.user.id);
-  pensions.value = pensionStore.submissions;
+  try {
+    await pensionStore.fetchSubmissions(authStore.user.id);
+    pensions.value = pensionStore.submissions;
+  } catch (error) {
+    console.error('Failed to fetch pensions:', error);
+  }
 }
 
 function openEditModal() {
@@ -271,10 +283,11 @@ function closeEditModal() {
 }
 
 async function handleSubmit() {
-  if (!authStore.user?.id) return;
+  if (!authStore.user?.id || !userProfile.value) return;
 
   try {
-    const updatedProfile: KycProfile = {
+    const updatedProfile: Partial<KycProfile> = {
+      id: userProfile.value.id,
       dob_day: form.dob.day,
       dob_month: form.dob.month,
       dob_year: form.dob.year,
@@ -311,6 +324,7 @@ onMounted(async () => {
   }
 });
 </script>
+
 
 <style scoped>
 .user-profile-page {
