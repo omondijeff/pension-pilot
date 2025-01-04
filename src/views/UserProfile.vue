@@ -142,6 +142,40 @@ import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import bannerImage from '@/assets/profile-banner.png';
 
+// Type definitions
+interface KycProfile {
+  dob_day: string;
+  dob_month: string;
+  dob_year: string;
+  gender: string;
+  mobile_country: string;
+  mobile_number: string;
+  postcode: string;
+  national_insurance?: string;
+}
+
+interface PensionSubmission {
+  id: string;
+  provider: string;
+  policy_number?: string;
+  current_employer: boolean;
+  created_at: string;
+}
+
+interface ProfileForm {
+  dob: {
+    day: string;
+    month: string;
+    year: string;
+  };
+  gender: string;
+  mobile: {
+    country: string;
+    number: string;
+  };
+  postcode: string;
+}
+
 // Store instances
 const kycStore = useKycProfileStore();
 const pensionStore = usePensionSubmissionsStore();
@@ -188,7 +222,7 @@ const bannerBackgroundStyle = {
 };
 
 // Form state
-const form = reactive({
+const form = reactive<ProfileForm>({
   dob: { day: '', month: '', year: '' },
   gender: '',
   mobile: { country: 'UK', number: '' },
@@ -240,7 +274,7 @@ async function handleSubmit() {
   if (!authStore.user?.id) return;
 
   try {
-    const updatedProfile = {
+    const updatedProfile: KycProfile = {
       dob_day: form.dob.day,
       dob_month: form.dob.month,
       dob_year: form.dob.year,
