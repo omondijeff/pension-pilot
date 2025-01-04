@@ -153,7 +153,7 @@ interface KycProfile {
   mobile_country: string;
   mobile_number: string;
   postcode: string;
-  national_insurance: string | null;
+  national_insurance: string;
 }
 
 interface PensionSubmission {
@@ -295,7 +295,8 @@ async function handleSubmit() {
       gender: form.gender,
       mobile_country: form.mobile.country,
       mobile_number: form.mobile.number,
-      postcode: form.postcode
+      postcode: form.postcode,
+      national_insurance: userProfile.value.national_insurance || ''
     };
 
     await kycStore.updateKycProfile(authStore.user.id, updatedProfile);
