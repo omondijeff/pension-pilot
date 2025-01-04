@@ -289,7 +289,8 @@ async function handleSubmit() {
   if (!authStore.user?.id || !userProfile.value) return;
 
   try {
-    const updatedProfile: KycProfileUpdate = {
+    const updatedProfile: KycProfile = {
+      ...userProfile.value,
       dob_day: form.dob.day,
       dob_month: form.dob.month,
       dob_year: form.dob.year,
