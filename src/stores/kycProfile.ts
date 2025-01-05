@@ -75,10 +75,10 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
     
     loading.value = true;
     try {
-      // First, get the user's email and name
+      // First, get the user's email and full name
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('email, first_name, last_name')
+        .select('email, name')
         .eq('id', userId)
         .single();
 
@@ -87,7 +87,7 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
         throw new Error(userError.message);
       }
 
-      if (!userData?.email || !userData?.first_name || !userData?.last_name) {
+      if (!userData?.email || !userData?.name) {
         logger.error('Missing user data', { userId });
         throw new Error('Missing user data');
       }
@@ -118,7 +118,7 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
       kycProfile.value = kycData;
 
       // Send confirmation email
-      const userName = `${userData.first_name} ${userData.last_name}`;
+      const userName = userData.name;
       try {
         await EmailService.sendKycUpdateConfirmation(userData.email, userName);
         logger.info('KYC update confirmation email sent', { 
