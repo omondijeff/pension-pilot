@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { supabase } from '@/lib/supabase';
 import { ref, computed } from 'vue';
 import type { User } from '@/lib/database.types';
+import { EmailService } from '@/lib/services/emailService';
 
 type CustomUser = User & { email?: string; id?: string };
 
@@ -111,6 +112,15 @@ export const useAuthStore = defineStore('auth', () => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
+
+       // Send welcome email
+    try {
+      console.log("sending...")
+      await EmailService.sendWelcomeEmail(email, name);
+    } catch (emailError) {
+      // Log the error but don't fail the registration
+      console.error('Failed to send welcome email:', emailError);
+    }
 
       user.value = userProfile;
       localStorage.setItem('user', JSON.stringify(user.value));

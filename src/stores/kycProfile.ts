@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { supabase } from '@/lib/supabase';
+import { EmailService } from '@/lib/services/emailService';
 import { ref } from 'vue';
 
-// Existing KycProfile type remains the same
 type KycProfile = {
   id: string;
   dob_day: string;
@@ -15,7 +15,6 @@ type KycProfile = {
   postcode: string;
 };
 
-// Add a simple logging utility
 const logger = {
   info: (message: string, data?: any) => {
     console.log(`[KYC Profile Store] INFO: ${message}`, data || '');
@@ -33,13 +32,11 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
   const loading = ref<boolean>(false);
   const error = ref<string | null>(null);
 
-  // Fetch KYC profile for the current user with enhanced logging
   const fetchKycProfile = async (userId: string) => {
     logger.info(`Fetching KYC profile for user`, { userId });
     
     loading.value = true;
     try {
-      // Change the query to be more flexible
       const { data, error: fetchError } = await supabase
         .from('kyc_profile')
         .select('*')
@@ -50,14 +47,12 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
         throw new Error(fetchError.message);
       }
   
-      // Handle case where no profile is found
       if (!data || data.length === 0) {
         logger.warn('No KYC profile found', { userId });
         kycProfile.value = null;
         return;
       }
   
-      // Take the first profile if multiple exist
       logger.info('KYC profile successfully fetched', { 
         profileId: data[0].id, 
         profileCount: data.length 
@@ -75,12 +70,28 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
     }
   };
 
-  // Update the KYC profile in Supabase with enhanced logging
   const updateKycProfile = async (userId: string, kycData: KycProfile) => {
     logger.info('Updating KYC profile', { userId, kycData });
     
     loading.value = true;
     try {
+      // First, get the user's email and name
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email, first_name, last_name')
+        .eq('id', userId)
+        .single();
+
+      if (userError) {
+        logger.error('Failed to fetch user data', userError);
+        throw new Error(userError.message);
+      }
+
+      if (!userData?.email || !userData?.first_name || !userData?.last_name) {
+        logger.error('Missing user data', { userId });
+        throw new Error('Missing user data');
+      }
+
       logger.info('Upserting KYC profile to Supabase');
       const { error: updateError } = await supabase
         .from('kyc_profile')
@@ -105,10 +116,25 @@ export const useKycProfileStore = defineStore('kycProfile', () => {
       
       logger.info('KYC profile successfully updated', { userId });
       kycProfile.value = kycData;
+
+      // Send confirmation email
+      const userName = `${userData.first_name} ${userData.last_name}`;
+      try {
+        await EmailService.sendKycUpdateConfirmation(userData.email, userName);
+        logger.info('KYC update confirmation email sent', { 
+          email: userData.email,
+          userName
+        });
+      } catch (emailError) {
+        logger.error('Failed to send KYC update confirmation email', emailError);
+        // Don't throw here - profile is still updated even if email fails
+      }
+
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update KYC profile';
       logger.error(errorMessage, err);
       error.value = errorMessage;
+      throw err;
     } finally {
       loading.value = false;
     }
