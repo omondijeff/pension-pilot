@@ -217,6 +217,7 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { usePensionSubmissionsStore } from '@/stores/pensionSubmissions';
 import { useAuthStore } from '@/stores/auth';
 import VueSignature from 'vue3-signature';
+import { EmailService } from '@/lib/services/emailService';
 
 const pensionStore = usePensionSubmissionsStore();
 const authStore = useAuthStore();
@@ -343,6 +344,17 @@ const handlePensionsSubmit = async () => {
       };
 
       await pensionStore.addSubmission(submissionData);
+    }
+
+    // Send submission received email using existing method
+    try {
+      await EmailService.sendSubmissionReceivedEmail(
+        authStore.user.email,
+        authStore.user.name
+      );
+    } catch (emailError) {
+      console.error('Failed to send confirmation email:', emailError);
+      // Continue with success message even if email fails
     }
 
     alert('Pensions submitted successfully!');

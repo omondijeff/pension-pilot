@@ -76,7 +76,7 @@ We wanted to let you know that your Know Your Customer (KYC) profile has been su
 
 Here's what you can expect next:
 
-1. Our compliance team will carefully review the information you provided to ensure it meets all necessary requirements. 
+1. Our compliance team will carefully review the information you provided to ensure it meets all necessary requirements, as you proceed adding your pension information. 
 2. Once the review is complete, you'll receive a confirmation email letting you know that your KYC verification is finalized.
 3. You can always check your current information by logging into your Pension Pilot dashboard.
 
