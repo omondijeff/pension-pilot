@@ -153,14 +153,14 @@
         </div>
       </div>
       
-      <SubmissionModal  
-    v-if="submissionModalVisible"
-    @close="closeSubmissionModal"
-    :submissions="selectedProfile?.submissions || []"
-    :user="selectedProfile?.user || null"
-    :kycProfile="selectedProfile?.kycProfile || null"
-    @update-status="handleStatusUpdate"
-  />
+      <SubmissionModal 
+  v-if="submissionModalVisible"
+  :submissions="activeSubmissions"
+  :user="activeUser!"
+  :kycProfile="activeKycProfile!"
+  @close="closeSubmissionModal"
+  @update-status="handleStatusUpdate"
+/>
     </div>
   </section>
 </template>
@@ -272,21 +272,24 @@ export default defineComponent({
       const submissions = adminStore.submissions as StoreSubmission[];
       
       submissions.forEach(item => {
-        if (!item.user?.id) return;
-        
-        if (!groups.has(item.user.id)) {
-          groups.set(item.user.id, {
-            user: {
-              id: item.user.id,
-              name: item.user.name,
-              email: item.user.email
-            },
+        if (!item.user) return;
+
+        const user: User = {
+          id: item.user.id,
+          name: item.user.name,
+          email: item.user.email
+        };
+
+        if (!groups.has(user.id)) {
+          const newGroup: SubmissionGroup = {
+            user,
             kycProfile: item.kycProfile,
             submissions: []
-          });
+          };
+          groups.set(user.id, newGroup);
         }
 
-        const group = groups.get(item.user.id);
+        const group = groups.get(user.id);
         if (group) {
           const submission: Submission = {
             ...item.submission,
@@ -297,6 +300,22 @@ export default defineComponent({
       });
 
       return Array.from(groups.values());
+    });
+    
+    const displaySubmissionModal = computed(() => {
+      return submissionModalVisible.value && selectedProfile.value !== null;
+    });
+
+    const activeUser = computed(() => {
+      return selectedProfile.value?.user;
+    });
+
+    const activeKycProfile = computed(() => {
+      return selectedProfile.value?.kycProfile;
+    });
+
+    const activeSubmissions = computed(() => {
+      return selectedProfile.value?.submissions || [];
     });
     
     const fetchSubmissions = () => {
@@ -379,7 +398,7 @@ export default defineComponent({
       totalSubmissions: computed(() => adminStore.totalSubmissions),
       pendingReviews: computed(() => adminStore.pendingReviews),
       filters,
-      submissionModalVisible,
+      submissionModalVisible: displaySubmissionModal,
       selectedProfile,
       currentPage,
       totalPages,
@@ -392,7 +411,10 @@ export default defineComponent({
       fetchSubmissions,
       onSearchInput,
       formatDate,
-      formatPhone
+      formatPhone,
+      activeUser,
+      activeKycProfile,
+      activeSubmissions
     };
   }
 });
