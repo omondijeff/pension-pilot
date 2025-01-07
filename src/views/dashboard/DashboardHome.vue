@@ -164,6 +164,8 @@
     </div>
   </section>
 </template>
+
+
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useAdminDashboardStore } from '@/stores/adminDashboard';
@@ -200,7 +202,7 @@ interface Submission {
   policy_number: string | null;
   current_employer: boolean;
   signature_provided: boolean;
-  created_at: string;  // Changed from string | null to string
+  created_at: string;
   status: SubmissionStatus;
 }
 
@@ -224,10 +226,17 @@ interface ExportData {
   type: string;
 }
 
-interface AdminStoreSubmission {
+interface StoreSubmission {
   user: User | null;
-  kycProfile: KycProfile | null;
-  submission: Submission;
+  kyc_profile: KycProfile | null;
+  id: string;
+  user_id: string;
+  provider: string;
+  policy_number: string | null;
+  current_employer: boolean;
+  signature_provided: boolean;
+  created_at: string | null;
+  status: SubmissionStatus;
 }
 
 export default defineComponent({
@@ -258,22 +267,36 @@ export default defineComponent({
     const groupedSubmissions = computed((): SubmissionGroup[] => {
       const groups = new Map<string, SubmissionGroup>();
       
-      (adminStore.submissions as AdminStoreSubmission[]).forEach(item => {
-        if (!item.user?.id) return;
+      (adminStore.submissions as StoreSubmission[]).forEach(item => {
+        if (!item.user) return;
         
         if (!groups.has(item.user.id)) {
+          // Ensure we have a valid User object
+          const user: User = {
+            id: item.user.id,
+            name: item.user.name,
+            email: item.user.email
+          };
+
+          // Initialize group with required non-null user
           groups.set(item.user.id, {
-            user: item.user,
-            kycProfile: item.kycProfile,
+            user,
+            kycProfile: item.kyc_profile,
             submissions: []
           });
         }
+
         const group = groups.get(item.user.id);
         if (group) {
-          // Ensure created_at is never null
           const submission: Submission = {
-            ...item.submission,
-            created_at: item.submission.created_at || new Date().toISOString()
+            id: item.id,
+            user_id: item.user_id,
+            provider: item.provider,
+            policy_number: item.policy_number,
+            current_employer: item.current_employer,
+            signature_provided: item.signature_provided,
+            created_at: item.created_at || new Date().toISOString(),
+            status: item.status
           };
           group.submissions.push(submission);
         }
@@ -295,7 +318,8 @@ export default defineComponent({
     const exportSubmissionsData = async (format: 'csv' | 'xlsx') => {
       try {
         const response = await adminStore.exportSubmissionsData(format, filters.value);
-        const data = response as ExportData;
+        // First cast to unknown, then to ExportData to satisfy TypeScript
+        const data = (response as unknown) as ExportData;
         const blob = new Blob([data.content], { type: data.type });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
