@@ -154,17 +154,16 @@
       </div>
       
       <SubmissionModal  
-        v-if="submissionModalVisible"
-        @close="closeSubmissionModal"
-        :submissions="selectedProfile?.submissions"
-        :user="selectedProfile?.user"
-        :kycProfile="selectedProfile?.kycProfile"
-        @update-status="handleStatusUpdate"
-      />
+    v-if="submissionModalVisible"
+    @close="closeSubmissionModal"
+    :submissions="selectedProfile?.submissions || []"
+    :user="selectedProfile?.user || null"
+    :kycProfile="selectedProfile?.kycProfile || null"
+    @update-status="handleStatusUpdate"
+  />
     </div>
   </section>
 </template>
-
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useAdminDashboardStore } from '@/stores/adminDashboard';
@@ -217,6 +216,11 @@ interface FilterOptions {
   search?: string;
 }
 
+interface ExportData {
+  content: string;
+  type: string;
+}
+
 export default defineComponent({
   name: 'AdminDashboard',
   components: {
@@ -250,10 +254,10 @@ export default defineComponent({
         
         if (!groups.has(item.user.id)) {
           groups.set(item.user.id, {
-            user: item.user,
+            user: item.user as User, // Type assertion since we check for id
             kycProfile: item.kycProfile || null,
             submissions: []
-          } as SubmissionGroup);
+          });
         }
         const group = groups.get(item.user.id);
         if (group) {
@@ -276,10 +280,8 @@ export default defineComponent({
     
     const exportSubmissionsData = async (format: 'csv' | 'xlsx') => {
       try {
-        const data = await adminStore.exportSubmissionsData(format, filters.value);
-        const blob = new Blob([data], { 
-          type: format === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-        });
+        const data = await adminStore.exportSubmissionsData(format, filters.value) as ExportData;
+        const blob = new Blob([data.content], { type: data.type });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.setAttribute('download', `submissions.${format}`);
@@ -352,7 +354,6 @@ export default defineComponent({
       exportSubmissionsData,
       showSubmissionDetails,
       closeSubmissionModal,
-      handleStatusUpdate,
       handleStatusUpdate,
       hasStatus,
       changePage,
