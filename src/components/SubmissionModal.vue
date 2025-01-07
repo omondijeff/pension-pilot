@@ -81,7 +81,7 @@
                 <td class="whitespace-nowrap px-6 py-4">
                   <select
                     :value="submission.status"
-                    @change="updateStatus(submission.id, $event.target.value)"
+                    @change="(event) => handleStatusChange(event, submission.id)"
                     class="block w-full rounded-md border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                   >
                     <option value="not_started">Not Started</option>
@@ -138,6 +138,8 @@ interface Submission {
   status: 'not_started' | 'in_process' | 'consolidated';
 }
 
+type SubmissionStatus = 'not_started' | 'in_process' | 'consolidated';
+
 export default defineComponent({
   name: 'SubmissionModal',
 
@@ -191,8 +193,9 @@ export default defineComponent({
       ).join(' ');
     };
 
-    const updateStatus = (submissionId: string, newStatus: string) => {
-      console.log('Updating status:', { submissionId, newStatus });
+    const handleStatusChange = (event: Event, submissionId: string) => {
+      const select = event.target as HTMLSelectElement;
+      const newStatus = select.value as SubmissionStatus;
       emit('update-status', submissionId, newStatus);
     };
 
@@ -201,7 +204,7 @@ export default defineComponent({
       formattedNiNumber,
       formatCreatedDate,
       formatStatus,
-      updateStatus
+      handleStatusChange
     };
   }
 });
