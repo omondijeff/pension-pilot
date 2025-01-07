@@ -19,10 +19,14 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   }
 })
 
-// Set up the auth state listener separately
 supabase.auth.onAuthStateChange((event) => {
-  if (event === 'INITIAL_SESSION' && window.location.href.includes('#access_token')) {
-    window.location.href = '/about-you'
+  // Check if this is the initial session being established after email confirmation
+  if (event === 'SIGNED_IN') {
+    const currentUrl = window.location.href
+    // Check if this is coming from an email confirmation flow
+    if (currentUrl.includes('access_token') || currentUrl.includes('confirmation')) {
+      window.location.href = '/about-you'
+    }
   }
 })
 
