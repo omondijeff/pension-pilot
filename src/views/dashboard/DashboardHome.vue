@@ -188,6 +188,9 @@ interface KycProfile {
   national_insurance: string;
   mobile_country: string;
   mobile_number: string;
+  postcode?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface Submission {
@@ -197,7 +200,7 @@ interface Submission {
   policy_number: string | null;
   current_employer: boolean;
   signature_provided: boolean;
-  created_at: string | null;
+  created_at: string;  // Changed from string | null to string
   status: SubmissionStatus;
 }
 
@@ -219,6 +222,12 @@ interface FilterOptions {
 interface ExportData {
   content: string;
   type: string;
+}
+
+interface AdminStoreSubmission {
+  user: User | null;
+  kycProfile: KycProfile | null;
+  submission: Submission;
 }
 
 export default defineComponent({
@@ -249,19 +258,24 @@ export default defineComponent({
     const groupedSubmissions = computed((): SubmissionGroup[] => {
       const groups = new Map<string, SubmissionGroup>();
       
-      adminStore.submissions.forEach(item => {
+      (adminStore.submissions as AdminStoreSubmission[]).forEach(item => {
         if (!item.user?.id) return;
         
         if (!groups.has(item.user.id)) {
           groups.set(item.user.id, {
-            user: item.user as User, // Type assertion since we check for id
-            kycProfile: item.kycProfile || null,
+            user: item.user,
+            kycProfile: item.kycProfile,
             submissions: []
           });
         }
         const group = groups.get(item.user.id);
         if (group) {
-          group.submissions.push(item.submission);
+          // Ensure created_at is never null
+          const submission: Submission = {
+            ...item.submission,
+            created_at: item.submission.created_at || new Date().toISOString()
+          };
+          group.submissions.push(submission);
         }
       });
 
@@ -280,7 +294,8 @@ export default defineComponent({
     
     const exportSubmissionsData = async (format: 'csv' | 'xlsx') => {
       try {
-        const data = await adminStore.exportSubmissionsData(format, filters.value) as ExportData;
+        const response = await adminStore.exportSubmissionsData(format, filters.value);
+        const data = response as ExportData;
         const blob = new Blob([data.content], { type: data.type });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
