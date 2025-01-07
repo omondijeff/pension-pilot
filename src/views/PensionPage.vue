@@ -48,10 +48,19 @@
               v-model="pension.provider"
               class="w-full p-3 border border-gray-300 rounded-lg"
             >
-              <option value="" disabled>Select Pension</option>
-              <option value="People's Pension">People's Pension</option>
-              <option value="Nest">Nest</option>
-              <option value="Aviva">Aviva</option>
+            <option value="" disabled>Select Pension</option>
+<option value="AJ Bell">AJ Bell</option>
+<option value="Aviva">Aviva</option>
+<option value="BestInvest">BestInvest</option>
+<option value="Creative Pension">Creative Pension</option>
+<option value="Interactive Investor">Interactive Investor</option>
+<option value="National Employment Savings Trust">National Employment Savings Trust</option>
+<option value="Nest">Nest</option>
+<option value="NOW: Pensions">NOW: Pensions</option>
+<option value="People's Pension">People's Pension</option>
+<option value="Smart Pensions">Smart Pensions</option>
+<option value="Standard Life">Standard Life</option>
+<option value="True Potential Investments">True Potential Investments</option>
             </select>
           </div>
 

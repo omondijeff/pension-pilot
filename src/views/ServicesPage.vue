@@ -32,9 +32,6 @@
         <p class="text-gray-600 font-gilroy-light mt-2">
           Ideal for those who prefer stability and preservation of capital while achieving modest growth.
         </p>
-        <button class="gradient-button w-40 px-6 py-2 rounded-lg mt-6 mx-auto">
-          Select
-        </button>
       </div>
 
       <!-- Medium Risk Plan -->
@@ -48,9 +45,6 @@
         <p class="text-gray-600 font-gilroy-light mt-2">
           Perfect for individuals looking for a balance between growth and security.
         </p>
-        <button class="gradient-button w-40 px-6 py-2 rounded-lg mt-6 mx-auto">
-          Select
-        </button>
       </div>
 
       <!-- High Risk Plan -->
@@ -64,9 +58,6 @@
         <p class="text-gray-600 font-gilroy-light mt-2">
           For those who seek high growth potential and are comfortable with greater market volatility.
         </p>
-        <button class="gradient-button w-40 px-6 py-2 rounded-lg mt-6 mx-auto">
-          Select
-        </button>
       </div>
     </div>
 
@@ -162,25 +153,5 @@
 .fees-coverage-section {
   padding-top: 4rem;
   padding-bottom: 4rem;
-}
-
-/* Gradient Button Style */
-.gradient-button {
-  background: linear-gradient(263.24deg, #4569AE 0.74%, #3F9FD7 100%);
-  color: #FFFFFF;
-  font-family: 'Gilroy-Medium';
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-  line-height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: background 0.3s ease;
-}
-
-.gradient-button:hover {
-  background: linear-gradient(263.24deg, #3F9FD7 0.74%, #4569AE 100%);
 }
 </style>

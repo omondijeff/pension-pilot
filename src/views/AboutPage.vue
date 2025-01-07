@@ -147,12 +147,12 @@
             alt="James Pattinson"
             class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
           />
-          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">James Pattinson</h3>
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">James Pattinson (49)</h3>
           <div class="flex justify-center text-gold mb-4">
             <i v-for="star in 5" :key="star" class="fas fa-star"></i>
           </div>
           <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
-            "Lobortis leo pretium facilisis amet nisl at nec. Scelerisque risus tortor donec ipsum consequat semper consequat adipiscing ultrices."
+            "I was able to combine all my pensions seamlessly, and the whole process felt straightforward and stress-free. I now feel much more confident about my financial future."
           </p>
         </div>
       </swiper-slide>
@@ -165,12 +165,12 @@
             alt="Annabelle"
             class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
           />
-          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Annabelle</h3>
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Amara (37)</h3>
           <div class="flex justify-center text-gold mb-4">
             <i v-for="star in 5" :key="star" class="fas fa-star"></i>
           </div>
           <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
-            "Vestibulum, cum nam non amet consectetur morbi aenean condimentum eget. Ultricies integer nunc neque accumsan laoreet. Viverra nibh ultrices."
+            "Being a freelancer, I often worried about keeping track of my pensions. This service made it so simple and gave me complete control over my retirement savings."
           </p>
         </div>
       </swiper-slide>
@@ -183,12 +183,12 @@
             alt="Trevor Mitchell"
             class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
           />
-          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Trevor Mitchell</h3>
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Trevor Mitchell (41)</h3>
           <div class="flex justify-center text-gold mb-4">
             <i v-for="star in 5" :key="star" class="fas fa-star"></i>
           </div>
           <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
-            "Ut tristique viverra sed porttitor senectus. A facilisis metus pretium ut habitant lorem. Velit vel bibendum eget aliquet sem nec."
+            "This platform helped me consolidate multiple pensions with no hassle. I appreciate the transparency and the regular updates I get about my savings."
           </p>
         </div>
       </swiper-slide>

@@ -1,92 +1,328 @@
 <template>
-  <section class="dashboard-home bg-gray-50 min-h-screen">
+  <section class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-6 py-8">
-      <!-- Welcome Header -->
-      <h1 class="text-3xl font-gilroy-bold text-gray-800 mb-6">Welcome to Your Dashboard</h1>
+      <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+        <p class="mt-2 text-gray-600">Manage user profiles and pension submissions</p>
+      </header>
 
-      <!-- Submissions Section -->
-      <div>
-        <h2 class="text-2xl font-gilroy-bold text-gray-800 mb-4">All Pension Submissions</h2>
-        
-        <!-- Loading State -->
-        <div v-if="loading" class="text-center py-6">
-          <p class="text-lg text-gray-600">Loading submissions...</p>
+      <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="rounded-lg bg-white p-6 shadow-lg">
+          <h3 class="text-lg font-bold text-gray-700">Total Submissions</h3>
+          <p class="mt-2 text-3xl font-bold text-blue-700">{{ totalSubmissions }}</p>
         </div>
-        
-        <!-- Submissions Grid -->
-        <div v-else-if="submissions.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
-            v-for="submission in submissions"
-            :key="submission.id"
-            class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+        <div class="rounded-lg bg-white p-6 shadow-lg">
+          <h3 class="text-lg font-bold text-gray-700">Pending Reviews</h3>
+          <p class="mt-2 text-3xl font-bold text-amber-500">{{ pendingReviews }}</p>
+        </div>
+        <div class="rounded-lg bg-white p-6 shadow-lg">
+          <button 
+            @click="exportSubmissionsData('csv')"
+            class="w-full rounded-lg bg-blue-700 px-4 py-2 text-white transition-colors hover:bg-blue-600"
+            :disabled="loading"
           >
-            <h3 class="text-xl font-semibold text-[#4569AE] mb-2">{{ submission.provider }}</h3>
-            <p class="text-gray-600 font-gilroy-light">
-              <strong>Policy Number:</strong> {{ submission.policy_number || 'N/A' }}
-            </p>
-            <p class="text-gray-600 font-gilroy-light">
-              <strong>Current Employer:</strong> {{ submission.current_employer ? 'Yes' : 'No' }}
-            </p>
-            <p class="text-gray-600 font-gilroy-light">
-              <strong>Submitted On:</strong>
-              {{ submission.created_at ? new Date(submission.created_at).toLocaleDateString() : 'Not Available' }}
-            </p>
-          </div>
-        </div>
-
-        <!-- No Submissions State -->
-        <div v-else class="text-center mt-10">
-          <p class="text-gray-600 font-gilroy-light">No pension submissions found. Start adding your pensions now!</p>
-          <router-link to="/dashboard/add-pension">
-            <button class="mt-4 px-6 py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 shadow-lg transition-transform hover:scale-105">
-              Add Pension
-            </button>
-          </router-link>
+            Export Data
+          </button>
         </div>
       </div>
+
+      <div class="mb-8 rounded-lg bg-white p-6 shadow-lg">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div>
+            <label class="mb-2 block text-sm font-bold text-gray-700">Status</label>
+            <select 
+              v-model="filters.status"
+              class="w-full rounded-lg border px-3 py-2"
+              @change="fetchSubmissions"
+            >
+              <option value="">All Statuses</option>
+              <option value="consolidated">Consolidated</option>
+              <option value="in_process">In Process</option>
+              <option value="not_started">Not Started</option>
+            </select>
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-bold text-gray-700">Date Range</label>
+            <input 
+              type="date" 
+              v-model="filters.dateRange.start"
+              class="mb-2 w-full rounded-lg border px-3 py-2"
+              @change="fetchSubmissions"
+            />
+            <input 
+              type="date" 
+              v-model="filters.dateRange.end"
+              class="w-full rounded-lg border px-3 py-2"
+              @change="fetchSubmissions"
+            />
+          </div>
+          <div>
+            <label class="mb-2 block text-sm font-bold text-gray-700">Search</label>
+            <input 
+              type="text" 
+              v-model="filters.search"
+              placeholder="Search submissions..."
+              class="w-full rounded-lg border px-3 py-2"
+              @input="onSearchInput"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-lg bg-white shadow-lg">
+        <div v-if="loading" class="py-8 text-center">
+          <div class="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-700"></div>
+        </div>
+        <div v-else-if="error" class="py-8 text-center text-red-500">
+          {{ error }}
+        </div>
+        <div v-else-if="groupedSubmissions.length === 0" class="py-8 text-center text-gray-500">
+          No submissions found.
+        </div>
+        <div v-else>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Name</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">DoB</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Gender</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">NI Number</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Email</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Phone</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Status</th>
+                  <th scope="col" class="whitespace-nowrap px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 bg-white">
+                <tr v-for="group in groupedSubmissions" :key="group.user.id">
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="text-sm text-gray-900">{{ group.user?.name }}</div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="text-sm text-gray-500">{{ formatDate(group.kycProfile) }}</div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="text-sm text-gray-500">{{ group.kycProfile?.gender }}</div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="text-sm text-gray-500">{{ group.kycProfile?.national_insurance }}</div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="text-sm text-gray-500">{{ group.user?.email }}</div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="text-sm text-gray-500">{{ formatPhone(group.kycProfile?.mobile_country, group.kycProfile?.mobile_number) }}</div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div class="flex space-x-2">
+                      <div v-if="hasStatus(group.submissions, 'not_started')"
+                           class="h-3 w-3 rounded-full bg-red-400"
+                           title="Not Started">
+                      </div>
+                      <div v-if="hasStatus(group.submissions, 'in_process')"
+                           class="h-3 w-3 rounded-full bg-amber-400"
+                           title="In Process">
+                      </div>
+                      <div v-if="hasStatus(group.submissions, 'consolidated')"
+                           class="h-3 w-3 rounded-full bg-green-400"
+                           title="Consolidated">
+                      </div>
+                    </div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <button
+                      @click="showSubmissionDetails(group)"  
+                      class="text-sm font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      View Details ({{ group.submissions.length }})
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bg-white px-6 py-4">
+            <Pagination
+              :currentPage="currentPage"
+              :totalPages="totalPages"
+              :totalItems="totalSubmissions"
+              @changePage="changePage"
+            />
+          </div>
+        </div>
+      </div>
+      
+      <SubmissionModal  
+        v-if="submissionModalVisible"
+        @close="closeSubmissionModal"
+        :submissions="selectedProfile?.submissions"
+        :user="selectedProfile?.user"
+        :kycProfile="selectedProfile?.kycProfile"
+        @update-status="handleStatusUpdate"
+      />
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { ref, onMounted } from 'vue';
-import { usePensionSubmissionsStore } from '@/stores/pensionSubmissions';
+import { defineComponent, ref, computed, onMounted } from 'vue';
+import { useAdminDashboardStore } from '@/stores/adminDashboard';
+import SubmissionModal from '@/components/SubmissionModal.vue';
+import Pagination from '@/components/Pagination.vue';
+import type { SubmissionStatus } from '@/types';
 
-export default {
-  name: 'DashboardHome',
-  setup() {
-    const pensionStore = usePensionSubmissionsStore();
-    const loading = ref(false);
-
-    onMounted(async () => {
-      loading.value = true;
-      try {
-        await pensionStore.fetchAllSubmissions(); // Fetch all submissions
-      } catch (err) {
-        console.error('Error fetching submissions:', err);
-      } finally {
-        loading.value = false;
-      }
-    });
-
-    return {
-      submissions: pensionStore.submissions,
-      loading,
-    };
+export default defineComponent({
+  name: 'AdminDashboard',
+  components: {
+    SubmissionModal,  
+    Pagination
   },
-};
+  setup() {
+    const adminStore = useAdminDashboardStore();
+
+    const filters = ref({
+      status: '',
+      dateRange: {
+        start: '',
+        end: ''
+      },  
+      search: ''
+    });
+    
+    const submissionModalVisible = ref(false);
+    const selectedProfile = ref();
+
+    const currentPage = ref(1); 
+    const pageSize = 10;
+    
+    const totalPages = computed(() => Math.ceil(adminStore.totalSubmissions / pageSize));
+
+    // Group submissions by user
+    const groupedSubmissions = computed(() => {
+      const groups = new Map();
+      
+      adminStore.submissions.forEach(item => {
+        if (!groups.has(item.user?.id)) {
+          groups.set(item.user?.id, {
+            user: item.user,
+            kycProfile: item.kycProfile,
+            submissions: []
+          });
+        }
+        groups.get(item.user?.id).submissions.push(item.submission);
+      });
+
+      return Array.from(groups.values());
+    });
+    
+    const fetchSubmissions = () => {
+      return adminStore.fetchAllSubmissionsWithProfiles(
+        currentPage.value,
+        pageSize,
+        filters.value  
+      );
+    };
+
+    onMounted(fetchSubmissions);
+    
+    const exportSubmissionsData = async (format: string) => {
+      try {
+        const data = await adminStore.exportSubmissionsData(format, filters.value);
+        const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', `submissions.${format}`);  
+        link.click();
+      } catch (err) {
+        console.error('Failed to export submissions:', err);
+      }
+    };
+
+    const showSubmissionDetails = (profile: any) => {
+      console.log('Opening submission details modal with data:', {
+        submissions: profile.submissions,
+        user: profile.user,
+        kycProfile: profile.kycProfile
+      });
+      if (!profile) {
+        console.error('No profile data provided');
+        return;
+      }
+      selectedProfile.value = {
+        submissions: profile.submissions || [],
+        user: profile.user || null,
+        kycProfile: profile.kycProfile || null
+      };
+      submissionModalVisible.value = true;
+    };
+
+    const closeSubmissionModal = () => {
+      submissionModalVisible.value = false;
+      selectedProfile.value = null;
+    };
+
+    const handleStatusUpdate = async (submissionId: string, status: SubmissionStatus) => {
+      try {
+        await adminStore.updateSubmissionStatus(submissionId, status);
+        await fetchSubmissions();
+      } catch (err) {
+        console.error('Failed to update status:', err);
+      }
+    };
+
+    const hasStatus = (submissions: any[], status: SubmissionStatus) => {
+      return submissions.some(sub => sub.status === status);
+    };
+    
+    const changePage = (page: number) => {
+      currentPage.value = page;
+      fetchSubmissions();
+    };
+    
+    let searchTimeout: number;
+    const onSearchInput = () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+      searchTimeout = setTimeout(fetchSubmissions, 300);
+    };
+    
+    const formatDate = (profile: any) => {
+      if (!profile) return '';
+      const { dob_day, dob_month, dob_year } = profile;
+      if (!dob_day || !dob_month || !dob_year) return '';
+      return `${dob_day.padStart(2, '0')}/${dob_month.padStart(2, '0')}/${dob_year}`;
+    };
+
+    const formatPhone = (country?: string | null, number?: string | null) => {
+      if (!country || !number) return '';
+      return `+${country} ${number}`;
+    };
+    
+    return {
+      submissions: computed(() => adminStore.submissions),
+      groupedSubmissions,
+      loading: computed(() => adminStore.loading),
+      error: computed(() => adminStore.error),
+      totalSubmissions: computed(() => adminStore.totalSubmissions),
+      pendingReviews: computed(() => adminStore.pendingReviews),
+      filters,
+      submissionModalVisible,
+      selectedProfile,
+      currentPage,
+      totalPages,
+      exportSubmissionsData,
+      showSubmissionDetails,
+      closeSubmissionModal,
+      handleStatusUpdate,
+      hasStatus,
+      changePage,
+      fetchSubmissions,
+      onSearchInput,
+      formatDate,
+      formatPhone
+    };
+  }
+});
 </script>
-
-<style scoped>
-.dashboard-home {
-  font-family: 'Gilroy', sans-serif;
-}
-
-button {
-  transition: transform 0.3s ease;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-</style>
