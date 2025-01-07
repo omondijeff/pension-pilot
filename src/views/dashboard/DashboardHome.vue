@@ -170,47 +170,95 @@ import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useAdminDashboardStore } from '@/stores/adminDashboard';
 import SubmissionModal from '@/components/SubmissionModal.vue';
 import Pagination from '@/components/Pagination.vue';
-import type { SubmissionStatus } from '@/types';
+
+type SubmissionStatus = 'not_started' | 'in_process' | 'consolidated';
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface KycProfile {
+  id: string;
+  user_id: string;
+  dob_day: string;
+  dob_month: string;
+  dob_year: string;
+  gender: string;
+  national_insurance: string;
+  mobile_country: string;
+  mobile_number: string;
+}
+
+interface Submission {
+  id: string;
+  user_id: string;
+  provider: string;
+  policy_number: string | null;
+  current_employer: boolean;
+  signature_provided: boolean;
+  created_at: string | null;
+  status: SubmissionStatus;
+}
+
+interface SubmissionGroup {
+  user: User;
+  kycProfile: KycProfile | null;
+  submissions: Submission[];
+}
+
+interface FilterOptions {
+  status?: SubmissionStatus;
+  dateRange: {
+    start: string;
+    end: string;
+  };
+  search?: string;
+}
 
 export default defineComponent({
   name: 'AdminDashboard',
   components: {
-    SubmissionModal,  
+    SubmissionModal,
     Pagination
   },
   setup() {
     const adminStore = useAdminDashboardStore();
 
-    const filters = ref({
-      status: '',
+    const filters = ref<FilterOptions>({
+      status: undefined,
       dateRange: {
         start: '',
         end: ''
-      },  
+      },
       search: ''
     });
     
     const submissionModalVisible = ref(false);
-    const selectedProfile = ref();
-
-    const currentPage = ref(1); 
+    const selectedProfile = ref<SubmissionGroup | null>(null);
+    const currentPage = ref(1);
     const pageSize = 10;
     
     const totalPages = computed(() => Math.ceil(adminStore.totalSubmissions / pageSize));
 
-    // Group submissions by user
-    const groupedSubmissions = computed(() => {
-      const groups = new Map();
+    const groupedSubmissions = computed((): SubmissionGroup[] => {
+      const groups = new Map<string, SubmissionGroup>();
       
       adminStore.submissions.forEach(item => {
-        if (!groups.has(item.user?.id)) {
-          groups.set(item.user?.id, {
+        if (!item.user?.id) return;
+        
+        if (!groups.has(item.user.id)) {
+          groups.set(item.user.id, {
             user: item.user,
-            kycProfile: item.kycProfile,
+            kycProfile: item.kycProfile || null,
             submissions: []
-          });
+          } as SubmissionGroup);
         }
-        groups.get(item.user?.id).submissions.push(item.submission);
+        const group = groups.get(item.user.id);
+        if (group) {
+          group.submissions.push(item.submission);
+        }
       });
 
       return Array.from(groups.values());
@@ -220,40 +268,29 @@ export default defineComponent({
       return adminStore.fetchAllSubmissionsWithProfiles(
         currentPage.value,
         pageSize,
-        filters.value  
+        filters.value
       );
     };
 
     onMounted(fetchSubmissions);
     
-    const exportSubmissionsData = async (format: string) => {
+    const exportSubmissionsData = async (format: 'csv' | 'xlsx') => {
       try {
         const data = await adminStore.exportSubmissionsData(format, filters.value);
-        const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([data], { 
+          type: format === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+        });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', `submissions.${format}`);  
+        link.setAttribute('download', `submissions.${format}`);
         link.click();
       } catch (err) {
         console.error('Failed to export submissions:', err);
       }
     };
 
-    const showSubmissionDetails = (profile: any) => {
-      console.log('Opening submission details modal with data:', {
-        submissions: profile.submissions,
-        user: profile.user,
-        kycProfile: profile.kycProfile
-      });
-      if (!profile) {
-        console.error('No profile data provided');
-        return;
-      }
-      selectedProfile.value = {
-        submissions: profile.submissions || [],
-        user: profile.user || null,
-        kycProfile: profile.kycProfile || null
-      };
+    const showSubmissionDetails = (profile: SubmissionGroup) => {
+      selectedProfile.value = profile;
       submissionModalVisible.value = true;
     };
 
@@ -271,7 +308,7 @@ export default defineComponent({
       }
     };
 
-    const hasStatus = (submissions: any[], status: SubmissionStatus) => {
+    const hasStatus = (submissions: Submission[], status: SubmissionStatus): boolean => {
       return submissions.some(sub => sub.status === status);
     };
     
@@ -280,7 +317,7 @@ export default defineComponent({
       fetchSubmissions();
     };
     
-    let searchTimeout: number;
+    let searchTimeout: ReturnType<typeof setTimeout>;
     const onSearchInput = () => {
       if (searchTimeout) {
         clearTimeout(searchTimeout);
@@ -288,7 +325,7 @@ export default defineComponent({
       searchTimeout = setTimeout(fetchSubmissions, 300);
     };
     
-    const formatDate = (profile: any) => {
+    const formatDate = (profile: KycProfile | null) => {
       if (!profile) return '';
       const { dob_day, dob_month, dob_year } = profile;
       if (!dob_day || !dob_month || !dob_year) return '';
@@ -315,6 +352,7 @@ export default defineComponent({
       exportSubmissionsData,
       showSubmissionDetails,
       closeSubmissionModal,
+      handleStatusUpdate,
       handleStatusUpdate,
       hasStatus,
       changePage,
