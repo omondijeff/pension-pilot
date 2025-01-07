@@ -8,21 +8,16 @@
 
       <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         <div class="rounded-lg bg-white p-6 shadow-lg">
-          <h3 class="text-lg font-bold text-gray-700">Total Submissions</h3>
-          <p class="mt-2 text-3xl font-bold text-blue-700">{{ totalSubmissions }}</p>
+          <h3 class="text-lg font-bold text-gray-700">Total Users</h3>
+          <p class="mt-2 text-3xl font-bold text-blue-700">{{ totalUsers || 0 }}</p>
         </div>
         <div class="rounded-lg bg-white p-6 shadow-lg">
           <h3 class="text-lg font-bold text-gray-700">Pending Reviews</h3>
-          <p class="mt-2 text-3xl font-bold text-amber-500">{{ pendingReviews }}</p>
+          <p class="mt-2 text-3xl font-bold text-amber-500">{{ pendingReviews || 0 }}</p>
         </div>
         <div class="rounded-lg bg-white p-6 shadow-lg">
-          <button 
-            @click="exportSubmissionsData('csv')"
-            class="w-full rounded-lg bg-blue-700 px-4 py-2 text-white transition-colors hover:bg-blue-600"
-            :disabled="loading"
-          >
-            Export Data
-          </button>
+          <h3 class="text-lg font-bold text-gray-700">Total Submissions</h3>
+          <p class="mt-2 text-3xl font-bold text-green-700">{{ totalSubmissions || 0 }}</p>
         </div>
       </div>
 
@@ -76,8 +71,8 @@
         <div v-else-if="error" class="py-8 text-center text-red-500">
           {{ error }}
         </div>
-        <div v-else-if="groupedSubmissions.length === 0" class="py-8 text-center text-gray-500">
-          No submissions found.
+        <div v-else-if="!groupedSubmissions.length" class="py-8 text-center text-gray-500">
+          No users found.
         </div>
         <div v-else>
           <div class="overflow-x-auto">
@@ -97,22 +92,24 @@
               <tbody class="divide-y divide-gray-200 bg-white">
                 <tr v-for="group in groupedSubmissions" :key="group.user.id">
                   <td class="whitespace-nowrap px-6 py-4">
-                    <div class="text-sm text-gray-900">{{ group.user?.name }}</div>
+                    <div class="text-sm text-gray-900">{{ group.user.name }}</div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
                     <div class="text-sm text-gray-500">{{ formatDate(group.kycProfile) }}</div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    <div class="text-sm text-gray-500">{{ group.kycProfile?.gender }}</div>
+                    <div class="text-sm text-gray-500">{{ group.kycProfile?.gender || '-' }}</div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    <div class="text-sm text-gray-500">{{ group.kycProfile?.national_insurance }}</div>
+                    <div class="text-sm text-gray-500">{{ group.kycProfile?.national_insurance || '-' }}</div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    <div class="text-sm text-gray-500">{{ group.user?.email }}</div>
+                    <div class="text-sm text-gray-500">{{ group.user.email }}</div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
-                    <div class="text-sm text-gray-500">{{ formatPhone(group.kycProfile?.mobile_country, group.kycProfile?.mobile_number) }}</div>
+                    <div class="text-sm text-gray-500">
+                      {{ formatPhone(group.kycProfile?.mobile_country, group.kycProfile?.mobile_number) }}
+                    </div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
                     <div class="flex space-x-2">
@@ -132,7 +129,7 @@
                   </td>
                   <td class="whitespace-nowrap px-6 py-4">
                     <button
-                      @click="showSubmissionDetails(group)"  
+                      @click="showSubmissionDetails(group)"
                       class="text-sm font-medium text-blue-600 hover:text-blue-700"
                     >
                       View Details ({{ group.submissions.length }})
@@ -146,7 +143,7 @@
             <Pagination
               :currentPage="currentPage"
               :totalPages="totalPages"
-              :totalItems="totalSubmissions"
+              :totalItems="totalUsers"
               @changePage="changePage"
             />
           </div>
@@ -154,13 +151,13 @@
       </div>
       
       <SubmissionModal 
-  v-if="submissionModalVisible"
-  :submissions="activeSubmissions"
-  :user="activeUser!"
-  :kycProfile="activeKycProfile!"
-  @close="closeSubmissionModal"
-  @update-status="handleStatusUpdate"
-/>
+        v-if="submissionModalVisible"
+        :submissions="activeSubmissions"
+        :user="activeUser!"
+        :kycProfile="activeKycProfile!"
+        @close="closeSubmissionModal"
+        @update-status="handleStatusUpdate"
+      />
     </div>
   </section>
 </template>
@@ -178,21 +175,23 @@ interface User {
   id: string;
   name: string;
   email: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface KycProfile {
   id: string;
   user_id: string;
-  dob_day: string;
-  dob_month: string;
-  dob_year: string;
-  gender: string;
-  national_insurance: string;
-  mobile_country: string;
-  mobile_number: string;
-  postcode?: string;
-  created_at?: string;
-  updated_at?: string;
+  dob_day: string | null;
+  dob_month: string | null;
+  dob_year: string | null;
+  gender: string | null;
+  national_insurance: string | null;
+  mobile_country: string | null;
+  mobile_number: string | null;
+  postcode: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 interface Submission {
@@ -206,10 +205,21 @@ interface Submission {
   status: SubmissionStatus;
 }
 
-interface SubmissionGroup {
+interface PensionSubmission {
+  id: string;
+  user_id: string;
+  provider: string;
+  policy_number: string | null;
+  current_employer: boolean;
+  signature_provided: boolean;
+  created_at: string | null;
+  status: SubmissionStatus;
+}
+
+interface UserGroup {
   user: User;
   kycProfile: KycProfile | null;
-  submissions: Submission[];
+  submissions: PensionSubmission[];
 }
 
 interface FilterOptions {
@@ -219,26 +229,6 @@ interface FilterOptions {
     end: string;
   };
   search?: string;
-}
-
-interface ExportData {
-  content: string;
-  type: string;
-}
-
-interface StoreSubmission {
-  submission: {
-    id: string;
-    user_id: string;
-    provider: string;
-    policy_number: string | null;
-    current_employer: boolean;
-    signature_provided: boolean;
-    created_at: string | null;
-    status: SubmissionStatus;
-  };
-  kycProfile: KycProfile | null;
-  user: User | null;
 }
 
 export default defineComponent({
@@ -260,89 +250,50 @@ export default defineComponent({
     });
     
     const submissionModalVisible = ref(false);
-    const selectedProfile = ref<SubmissionGroup | null>(null);
+    const selectedProfile = ref<UserGroup | null>(null);
     const currentPage = ref(1);
     const pageSize = 10;
     
-    const totalPages = computed(() => Math.ceil(adminStore.totalSubmissions / pageSize));
+    const totalPages = computed(() => Math.ceil((adminStore.totalUsers || 0) / pageSize));
 
-    const groupedSubmissions = computed((): SubmissionGroup[] => {
-      const groups = new Map<string, SubmissionGroup>();
+    const groupedSubmissions = computed(() => {
+      if (!adminStore.userGroups) return [];
       
-      const submissions = adminStore.submissions as StoreSubmission[];
-      
-      submissions.forEach(item => {
-        if (!item.user) return;
-
-        const user: User = {
-          id: item.user.id,
-          name: item.user.name,
-          email: item.user.email
-        };
-
-        if (!groups.has(user.id)) {
-          const newGroup: SubmissionGroup = {
-            user,
-            kycProfile: item.kycProfile,
-            submissions: []
-          };
-          groups.set(user.id, newGroup);
+      return adminStore.userGroups.filter(group => {
+        if (filters.value.status) {
+          return group.submissions.some(sub => sub.status === filters.value.status);
         }
-
-        const group = groups.get(user.id);
-        if (group) {
-          const submission: Submission = {
-            ...item.submission,
-            created_at: item.submission.created_at || new Date().toISOString()
-          };
-          group.submissions.push(submission);
-        }
+        return true;
       });
-
-      return Array.from(groups.values());
     });
     
     const displaySubmissionModal = computed(() => {
       return submissionModalVisible.value && selectedProfile.value !== null;
     });
 
-    const activeUser = computed(() => {
-      return selectedProfile.value?.user;
-    });
-
-    const activeKycProfile = computed(() => {
-      return selectedProfile.value?.kycProfile;
-    });
-
+    const activeUser = computed(() => selectedProfile.value?.user);
+    const activeKycProfile = computed(() => selectedProfile.value?.kycProfile);
     const activeSubmissions = computed(() => {
-      return selectedProfile.value?.submissions || [];
+      const submissions = selectedProfile.value?.submissions || [];
+      return submissions.map(sub => ({
+        ...sub,
+        created_at: sub.created_at || new Date().toISOString()
+      })) as Submission[];
     });
     
     const fetchSubmissions = () => {
-      return adminStore.fetchAllSubmissionsWithProfiles(
+      return adminStore.fetchAllUsersWithData(
         currentPage.value,
         pageSize,
         filters.value
       );
     };
 
-    onMounted(fetchSubmissions);
+    onMounted(() => {
+      fetchSubmissions();
+    });
     
-    const exportSubmissionsData = async (format: 'csv' | 'xlsx') => {
-      try {
-        const response = await adminStore.exportSubmissionsData(format, filters.value);
-        const data = (response as unknown) as ExportData;
-        const blob = new Blob([data.content], { type: data.type });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', `submissions.${format}`);
-        link.click();
-      } catch (err) {
-        console.error('Failed to export submissions:', err);
-      }
-    };
-
-    const showSubmissionDetails = (profile: SubmissionGroup) => {
+    const showSubmissionDetails = (profile: UserGroup) => {
       selectedProfile.value = profile;
       submissionModalVisible.value = true;
     };
@@ -361,7 +312,7 @@ export default defineComponent({
       }
     };
 
-    const hasStatus = (submissions: Submission[], status: SubmissionStatus): boolean => {
+    const hasStatus = (submissions: Array<PensionSubmission>, status: SubmissionStatus): boolean => {
       return submissions.some(sub => sub.status === status);
     };
     
@@ -379,22 +330,20 @@ export default defineComponent({
     };
     
     const formatDate = (profile: KycProfile | null) => {
-      if (!profile) return '';
-      const { dob_day, dob_month, dob_year } = profile;
-      if (!dob_day || !dob_month || !dob_year) return '';
-      return `${dob_day.padStart(2, '0')}/${dob_month.padStart(2, '0')}/${dob_year}`;
+      if (!profile?.dob_day || !profile?.dob_month || !profile?.dob_year) return '-';
+      return `${profile.dob_day.padStart(2, '0')}/${profile.dob_month.padStart(2, '0')}/${profile.dob_year}`;
     };
 
     const formatPhone = (country?: string | null, number?: string | null) => {
-      if (!country || !number) return '';
+      if (!country || !number) return '-';
       return `+${country} ${number}`;
     };
     
     return {
-      submissions: computed(() => adminStore.submissions),
       groupedSubmissions,
       loading: computed(() => adminStore.loading),
       error: computed(() => adminStore.error),
+      totalUsers: computed(() => adminStore.totalUsers),
       totalSubmissions: computed(() => adminStore.totalSubmissions),
       pendingReviews: computed(() => adminStore.pendingReviews),
       filters,
@@ -402,7 +351,6 @@ export default defineComponent({
       selectedProfile,
       currentPage,
       totalPages,
-      exportSubmissionsData,
       showSubmissionDetails,
       closeSubmissionModal,
       handleStatusUpdate,

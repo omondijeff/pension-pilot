@@ -31,10 +31,10 @@ interface KycProfile {
   updated_at: string | null;
 }
 
-interface SubmissionWithProfile {
-  submission: PensionSubmission;
+interface UserGroup {
+  user: User;
   kycProfile: KycProfile | null;
-  user: User | null;
+  submissions: PensionSubmission[];
 }
 
 const logger = {
@@ -50,13 +50,14 @@ const logger = {
 };
 
 export const useAdminDashboardStore = defineStore('adminDashboard', () => {
-  const submissions = ref<SubmissionWithProfile[]>([]);
+  const userGroups = ref<UserGroup[]>([]);
   const loading = ref<boolean>(false);
   const error = ref<string | null>(null);
+  const totalUsers = ref<number>(0);
   const totalSubmissions = ref<number>(0);
   const pendingReviews = ref<number>(0);
 
-  const fetchAllSubmissionsWithProfiles = async (
+  const fetchAllUsersWithData = async (
     page: number = 1,
     limit: number = 10,
     filters: {
@@ -69,87 +70,108 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
     error.value = null;
 
     try {
-      logger.info('Fetching submissions with profiles', { page, limit, filters });
+      logger.info('Fetching users and related data', { page, limit, filters });
 
-      let query = supabase
-        .from('pension_submissions')
-        .select<string, PensionSubmission>('*', { count: 'exact' });
-
-      if (filters.status) {
-        query = query.eq('status', filters.status);
-      }
-
-      if (filters.dateRange?.start && filters.dateRange?.end) {
-        query = query
-          .gte('created_at', filters.dateRange.start)
-          .lte('created_at', filters.dateRange.end);
-      }
-
-      if (filters.search) {
-        query = query.or(
-          `provider.ilike.%${filters.search}%,policy_number.ilike.%${filters.search}%`
-        );
-      }
-
+      // Calculate pagination
       const from = (page - 1) * limit;
       const to = from + limit - 1;
+
+      // First, fetch all users
+      const { data: users, error: usersError, count } = await supabase
+        .from('users')
+        .select('*', { count: 'exact' })
+        .range(from, to)
+        .order('created_at', { ascending: false });
+
+      if (usersError) throw new Error(usersError.message);
+      if (!users) throw new Error('No users found');
+
+      totalUsers.value = count || 0;
       
-      const { data: submissionsData, error: fetchError, count } = await query
-        .order('created_at', { ascending: false })
-        .range(from, to);
+      // Get user IDs for related data queries
+      const userIds = users.map((user: User) => user.id);
 
-      if (fetchError) {
-        logger.error('Error fetching submissions', fetchError);
-        throw new Error(fetchError.message);
-      }
-
-      if (submissionsData) {
-        const userIds = submissionsData.map(s => s.user_id);
-
-        const { data: kycProfiles } = await supabase
+      // Fetch KYC profiles and submissions in parallel
+      const [{ data: kycProfiles }, { data: submissions }] = await Promise.all([
+        supabase
           .from('kyc_profile')
-          .select<string, KycProfile>('*')
-          .in('user_id', userIds);
+          .select('*')
+          .in('user_id', userIds),
+        supabase
+          .from('pension_submissions')
+          .select('*')
+          .in('user_id', userIds)
+      ]);
 
-        const { data: users } = await supabase
-          .from('users')
-          .select<string, User>('*')
-          .in('id', userIds);
+      // Create maps for efficient lookups
+      const kycProfileMap = new Map(
+        kycProfiles?.map((profile: KycProfile) => [profile.user_id, profile]) || []
+      );
 
-        const kycProfileMap = new Map(
-          kycProfiles?.map(profile => [profile.user_id, profile]) || []
-        );
-        const userMap = new Map(
-          users?.map(user => [user.id, user]) || []
-        );
+      const submissionsMap = new Map<string, PensionSubmission[]>();
+      submissions?.forEach((submission: PensionSubmission) => {
+        const userSubmissions = submissionsMap.get(submission.user_id) || [];
+        userSubmissions.push(submission);
+        submissionsMap.set(submission.user_id, userSubmissions);
+      });
 
-        submissions.value = submissionsData.map(submission => ({
-          submission: {
-            id: submission.id,
-            user_id: submission.user_id,
-            provider: submission.provider,
-            policy_number: submission.policy_number,
-            current_employer: submission.current_employer,
-            signature_provided: submission.signature_provided,
-            created_at: submission.created_at,
-            status: submission.status
-          },
-          kycProfile: kycProfileMap.get(submission.user_id) || null,
-          user: userMap.get(submission.user_id) || null
-        }));
+      // Apply filters to submissions if needed
+      if (filters.status || filters.dateRange || filters.search) {
+        submissionsMap.forEach((userSubmissions, userId) => {
+          let filteredSubmissions = userSubmissions;
 
-        totalSubmissions.value = count || 0;
-        pendingReviews.value = submissionsData.filter(item => item.status === 'not_started').length;
-        
-        logger.info(`Fetched ${submissionsData.length} submissions`, { 
-          total: count,
-          pending: pendingReviews.value 
+          if (filters.status) {
+            filteredSubmissions = filteredSubmissions.filter(
+              sub => sub.status === filters.status
+            );
+          }
+
+          if (filters.dateRange?.start && filters.dateRange?.end) {
+            filteredSubmissions = filteredSubmissions.filter(
+              sub => sub.created_at && 
+              sub.created_at >= filters.dateRange!.start &&
+              sub.created_at <= filters.dateRange!.end
+            );
+          }
+
+          if (filters.search) {
+            const searchLower = filters.search.toLowerCase();
+            filteredSubmissions = filteredSubmissions.filter(
+              sub => sub.provider.toLowerCase().includes(searchLower) ||
+                     sub.policy_number?.toLowerCase().includes(searchLower)
+            );
+          }
+
+          submissionsMap.set(userId, filteredSubmissions);
         });
       }
+
+      // Group all data by user
+      userGroups.value = users.map((user: User) => ({
+        user,
+        kycProfile: kycProfileMap.get(user.id) || null,
+        submissions: submissionsMap.get(user.id) || []
+      }));
+
+      // Calculate totals
+      totalSubmissions.value = Array.from(submissionsMap.values())
+        .reduce((acc, submissions) => acc + submissions.length, 0);
+
+      pendingReviews.value = Array.from(submissionsMap.values())
+        .reduce((acc, submissions) => 
+          acc + submissions.filter(sub => sub.status === 'not_started').length, 0
+        );
+
+      logger.info('Successfully fetched user data', {
+        users: users.length,
+        totalSubmissions: totalSubmissions.value,
+        pendingReviews: pendingReviews.value
+      });
+
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch submissions';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch user data';
       error.value = errorMessage;
-      logger.error('Failed to fetch submissions with profiles', { error: errorMessage });
+      logger.error('Failed to fetch user data', { error: errorMessage });
     } finally {
       loading.value = false;
     }
@@ -169,25 +191,22 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
         .from('pension_submissions')
         .update({ status })
         .eq('id', submissionId)
-        .select<string, PensionSubmission>()
+        .select()
         .single();
 
-      if (updateError) {
-        logger.error('Error updating submission status', updateError);
-        throw new Error(updateError.message);
-      }
+      if (updateError) throw new Error(updateError.message);
+      if (!data) throw new Error('No data returned from update');
 
-      if (data) {
-        const index = submissions.value.findIndex(s => s.submission.id === submissionId);
-        if (index !== -1) {
-          submissions.value[index].submission = {
-            ...submissions.value[index].submission,
-            status: data.status
-          };
+      // Update local state
+      for (const group of userGroups.value) {
+        const submissionIndex = group.submissions.findIndex(s => s.id === submissionId);
+        if (submissionIndex !== -1) {
+          group.submissions[submissionIndex].status = status;
+          break;
         }
       }
 
-      logger.info('Successfully updated submission status', { submissionId, status });
+      logger.info('Successfully updated submission status');
       return data;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update submission status';
@@ -199,90 +218,14 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
     }
   };
 
-  const exportSubmissionsData = async (
-    format: 'csv' | 'xlsx' = 'csv',
-    filters: {
-      status?: SubmissionStatus;
-      dateRange?: { start: string; end: string };
-    } = {}
-  ) => {
-    loading.value = true;
-    error.value = null;
-
-    try {
-      logger.info('Exporting submissions data', { format, filters });
-
-      let query = supabase
-        .from('pension_submissions')
-        .select<string, PensionSubmission>('*');
-
-      if (filters.status) {
-        query = query.eq('status', filters.status);
-      }
-
-      if (filters.dateRange?.start && filters.dateRange?.end) {
-        query = query
-          .gte('created_at', filters.dateRange.start)
-          .lte('created_at', filters.dateRange.end);
-      }
-
-      const { data: submissionsData, error: exportError } = await query;
-
-      if (exportError) {
-        logger.error('Error exporting submissions data', exportError);
-        throw new Error(exportError.message);
-      }
-
-      if (submissionsData) {
-        const userIds = submissionsData.map(s => s.user_id);
-
-        const [{ data: kycProfiles }, { data: users }] = await Promise.all([
-          supabase
-            .from('kyc_profile')
-            .select<string, KycProfile>('*')
-            .in('user_id', userIds),
-          supabase
-            .from('users')
-            .select<string, User>('*')
-            .in('id', userIds)
-        ]);
-
-        const kycProfileMap = new Map(
-          kycProfiles?.map(profile => [profile.user_id, profile]) || []
-        );
-        const userMap = new Map(
-          users?.map(user => [user.id, user]) || []
-        );
-
-        const enrichedData = submissionsData.map(submission => ({
-          ...submission,
-          user: userMap.get(submission.user_id) || null,
-          kyc_profile: kycProfileMap.get(submission.user_id) || null
-        }));
-
-        logger.info(`Successfully exported ${enrichedData.length} submissions`);
-        return enrichedData;
-      }
-
-      return [];
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to export submissions data';
-      error.value = errorMessage;
-      logger.error('Failed to export submissions data', { error: errorMessage });
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
   return {
-    submissions,
+    userGroups,
     loading,
     error,
+    totalUsers,
     totalSubmissions,
     pendingReviews,
-    fetchAllSubmissionsWithProfiles,
-    updateSubmissionStatus,
-    exportSubmissionsData
+    fetchAllUsersWithData,
+    updateSubmissionStatus
   };
 });
