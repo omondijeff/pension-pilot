@@ -237,6 +237,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { usePensionSubmissionsStore } from '@/stores/pensionSubmissions';
 import { useAuthStore } from '@/stores/auth';
 import VueSignature from 'vue3-signature';
@@ -244,6 +245,7 @@ import { EmailService } from '@/lib/services/emailService';
 
 const pensionStore = usePensionSubmissionsStore();
 const authStore = useAuthStore();
+const router = useRouter();
 
 // Form data
 const pensions = reactive([
@@ -359,12 +361,16 @@ const handlePensionsSubmit = async () => {
 
   try {
     isSubmitting.value = true;
-    const validPensions = pensions.filter(pension => pension.provider);
+    const validPensions = pensions.filter(pension => {
+      // Only include pensions with a provider selected
+      return pension.provider && (pension.provider !== 'Others' || pension.customProvider);
+    });
 
     for (const pension of validPensions) {
       const submissionData = {
         user_id: authStore.user.id,
-        provider: pension.provider === 'Others' ? pension.customProvider : pension.provider,
+        // Use the custom provider name if "Others" is selected, otherwise use the selected provider
+        provider: pension.provider === 'Others' ? pension.customProvider.trim() : pension.provider,
         policy_number: pension.policyNumber || null,
         current_employer: Boolean(pension.currentEmployer),
         signature_provided: Boolean(signatureImage.value)
@@ -384,6 +390,8 @@ const handlePensionsSubmit = async () => {
 
     alert('Pensions submitted successfully!');
     resetForm();
+    // Redirect to profile page using Vue Router
+    router.push('/profile');
   } catch (error) {
     console.error('Error submitting pensions:', error);
     alert('Failed to submit pensions. Please try again.');
