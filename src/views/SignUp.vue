@@ -1,8 +1,8 @@
 //src/views/SignupPage.vue
 <template>
-  <section class="signup-page flex flex-col md:flex-row h-screen">
+  <section class="signup-page min-h-screen flex flex-col md:flex-row">
     <!-- Left Column (Image) -->
-    <div class="image-section w-full md:w-1/2 h-1/2 md:h-full">
+    <div class="image-section w-full md:w-1/2">
       <img
         src="@/assets/register-page.png" 
         alt="Happy people"
@@ -11,19 +11,9 @@
     </div>
 
     <!-- Right Column (Form Wrapper) -->
-    <div class="form-wrapper w-full md:w-1/2 h-full flex flex-col justify-center bg-white px-4 md:px-16">
+    <div class="form-wrapper w-full md:w-1/2 flex flex-col justify-center bg-white px-4 md:px-16 py-8">
       <!-- Form Section -->
       <div class="form-section">
-        <!-- Notification Component -->
-        <BaseNotification
-          v-model:show="showNotification"
-          :type="notificationType"
-          :message="notificationMessage"
-          :title="notificationTitle"
-          :duration="5000"
-          @dismiss="handleNotificationDismiss"
-        />
-
         <!-- Heading -->
         <h2 class="text-2xl font-gilroy-bold text-gray-800 text-center md:text-left">
           Check and combine your pensions
@@ -113,6 +103,18 @@
             </div>
           </div>
 
+          <!-- Notification Component - Moved before the submit button -->
+          <div class="notification-wrapper">
+            <BaseNotification
+              v-model:show="showNotification"
+              :type="notificationType"
+              :message="notificationMessage"
+              :title="notificationTitle"
+              :duration="5000"
+              @dismiss="handleNotificationDismiss"
+            />
+          </div>
+
           <!-- Submit Button -->
           <button
             type="submit"
@@ -135,6 +137,7 @@
 </template>
 
 <script setup lang="ts">
+// Script section remains unchanged
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
@@ -291,11 +294,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Ensure proper layout for both mobile and desktop */
+/* Main container */
 .signup-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: white;
 }
 
 @media (min-width: 768px) {
@@ -307,29 +311,41 @@ onMounted(() => {
 /* Image Section */
 .image-section {
   width: 100%;
-  height: 50%;
+  min-height: 50vh;
+  position: relative;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
   .image-section {
     width: 50%;
-    height: 100%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
   }
+}
+
+.image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Form Wrapper */
 .form-wrapper {
+  width: 100%;
+  min-height: 50vh;
+  padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
-  padding: 1rem;
   background-color: white;
 }
 
 @media (min-width: 768px) {
   .form-wrapper {
     width: 50%;
+    min-height: 100vh;
     padding: 4rem;
   }
 }
@@ -343,79 +359,69 @@ onMounted(() => {
 
 @media (min-width: 768px) {
   .form-section {
-    margin-left: 74px; /* Add left margin of 74px */
+    margin-left: 74px;
   }
 }
 
-/* Heading */
-h2 {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: #333;
+/* Notification wrapper */
+.notification-wrapper {
+  margin-bottom: 1rem;
 }
 
-/* Form Styling */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-label {
-  font-size: 0.875rem;
-  color: #555;
-  margin-bottom: 0.5rem;
-}
-
+/* Form Elements */
 input {
+  width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
 }
 
 input:focus {
+  outline: none;
   border-color: #4569ae;
   box-shadow: 0 0 0 2px rgba(69, 105, 174, 0.2);
 }
 
-/* Submit Button */
 button {
+  width: 100%;
   padding: 0.75rem;
-  background: linear-gradient(to right, #4569ae, #3f9fd7);
-  color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 0.5rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
-}
-
-button:hover:not(:disabled) {
-  background: linear-gradient(to right, #3f9fd7, #4569ae);
+  transition: opacity 0.3s ease;
 }
 
 button:disabled {
-  opacity: 0.7;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
-/* Login Link */
-p {
-  margin-top: 1rem;
+/* Typography */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #555;
+  color: #4b5563;
 }
 
-p a {
+h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+/* Links */
+a {
   color: #4569ae;
   text-decoration: none;
+  transition: text-decoration 0.3s ease;
 }
 
-p a:hover {
+a:hover {
   text-decoration: underline;
 }
 </style>

@@ -11,7 +11,7 @@
     </div>
 
     <!-- Right Column (Form Wrapper) -->
-    <div class="form-wrapper w-full md:w-1/2 h-full flex flex-col justify-center bg-white px-4 md:px-16">
+    <div class="form-wrapper w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center bg-white px-4 md:px-16 py-8 md:py-0 overflow-y-auto">
       <!-- Form Section -->
       <div class="form-section">
         <!-- Notification Component -->
@@ -253,14 +253,15 @@ const handleLogin = async () => {
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
   background-color: white;
+  overflow-y: auto;
 }
 
 @media (min-width: 768px) {
   .form-wrapper {
     width: 50%;
     padding: 4rem;
+    overflow-y: visible;
   }
 }
 
