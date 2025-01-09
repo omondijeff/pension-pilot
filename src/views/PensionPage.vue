@@ -1,4 +1,3 @@
-
 <template>
   <section class="pension-page bg-white">
     <!-- Banner Section -->
@@ -48,20 +47,35 @@
               v-model="pension.provider"
               class="w-full p-3 border border-gray-300 rounded-lg"
             >
-            <option value="" disabled>Select Pension</option>
-<option value="AJ Bell">AJ Bell</option>
-<option value="Aviva">Aviva</option>
-<option value="BestInvest">BestInvest</option>
-<option value="Creative Pension">Creative Pension</option>
-<option value="Interactive Investor">Interactive Investor</option>
-<option value="National Employment Savings Trust">National Employment Savings Trust</option>
-<option value="Nest">Nest</option>
-<option value="NOW: Pensions">NOW: Pensions</option>
-<option value="People's Pension">People's Pension</option>
-<option value="Smart Pensions">Smart Pensions</option>
-<option value="Standard Life">Standard Life</option>
-<option value="True Potential Investments">True Potential Investments</option>
+              <option value="" disabled>Select Pension</option>
+              <option value="AJ Bell">AJ Bell</option>
+              <option value="Aviva">Aviva</option>
+              <option value="BestInvest">BestInvest</option>
+              <option value="Creative Pension">Creative Pension</option>
+              <option value="Interactive Investor">Interactive Investor</option>
+              <option value="National Employment Savings Trust">National Employment Savings Trust</option>
+              <option value="Nest">Nest</option>
+              <option value="NOW: Pensions">NOW: Pensions</option>
+              <option value="People's Pension">People's Pension</option>
+              <option value="Smart Pensions">Smart Pensions</option>
+              <option value="Standard Life">Standard Life</option>
+              <option value="True Potential Investments">True Potential Investments</option>
+              <option value="Others">Others</option>
             </select>
+
+            <!-- Custom Provider Input (shows only when Others is selected) -->
+            <div v-if="pension.provider === 'Others'" class="mt-4">
+              <label class="block text-gray-600 font-gilroy-light mb-2">
+                Please specify your pension provider
+              </label>
+              <input
+                type="text"
+                v-model="pension.customProvider"
+                placeholder="Enter pension provider name"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                required
+              />
+            </div>
           </div>
 
           <!-- Policy Number -->
@@ -112,7 +126,6 @@
           Add another pension
         </button>
 
-      
         <!-- Signature Section -->
         <div class="signature-box border border-gray-300 rounded-lg p-4">
           <div class="signature-pad-container">
@@ -161,7 +174,8 @@
               Saved: {{ signatureImage ? 'Yes' : 'No' }}
             </div>
           </div>
-          
+
+          <!-- Original commented section restored -->
           <!-- <div class="flex justify-between items-center mt-2">
             <div class="text-sm text-gray-600">
               {{ hasSignature ? 'Signature detected' : 'Please sign above' }}
@@ -235,6 +249,7 @@ const authStore = useAuthStore();
 const pensions = reactive([
   {
     provider: '',
+    customProvider: '',
     policyNumber: '',
     currentEmployer: null,
   }
@@ -250,7 +265,6 @@ const signaturePad = ref(null);
 const hasSignature = ref(false);
 const signatureImage = ref(null);
 
-// Watch for signature pad events
 // Signature handlers
 const onSignatureStart = () => {
   console.log('Drawing started');
@@ -269,14 +283,12 @@ const saveCurrentSignature = () => {
   }
 
   try {
-    // Get the canvas element
     const canvas = signaturePad.value.$el.getElementsByTagName('canvas')[0];
     if (!canvas) {
       console.error('Canvas not found');
       return;
     }
 
-    // Get the image data
     const imageData = canvas.toDataURL('image/png');
     signatureImage.value = imageData;
     console.log('Signature saved:', !!imageData);
@@ -307,6 +319,7 @@ const saveSignature = () => {
 const addAnotherPension = () => {
   pensions.push({
     provider: '',
+    customProvider: '',
     policyNumber: '',
     currentEmployer: null,
   });
@@ -320,8 +333,13 @@ const removePension = (index) => {
 
 // Form validation
 const isFormValid = computed(() => {
-  const hasAtLeastOnePension = pensions.some(pension => pension.provider);
-  const hasRequiredFields = hasAtLeastOnePension && confirmAgreement.value && confirmTerms.value;
+  const hasValidPensions = pensions.every(pension => {
+    if (!pension.provider) return false;
+    if (pension.provider === 'Others' && !pension.customProvider) return false;
+    return true;
+  });
+  
+  const hasRequiredFields = hasValidPensions && confirmAgreement.value && confirmTerms.value;
   const hasValidSignature = Boolean(signatureImage.value);
 
   return hasRequiredFields && hasValidSignature;
@@ -346,7 +364,7 @@ const handlePensionsSubmit = async () => {
     for (const pension of validPensions) {
       const submissionData = {
         user_id: authStore.user.id,
-        provider: pension.provider,
+        provider: pension.provider === 'Others' ? pension.customProvider : pension.provider,
         policy_number: pension.policyNumber || null,
         current_employer: Boolean(pension.currentEmployer),
         signature_provided: Boolean(signatureImage.value)
@@ -355,7 +373,6 @@ const handlePensionsSubmit = async () => {
       await pensionStore.addSubmission(submissionData);
     }
 
-    // Send submission received email using existing method
     try {
       await EmailService.sendSubmissionReceivedEmail(
         authStore.user.email,
@@ -363,7 +380,6 @@ const handlePensionsSubmit = async () => {
       );
     } catch (emailError) {
       console.error('Failed to send confirmation email:', emailError);
-      // Continue with success message even if email fails
     }
 
     alert('Pensions submitted successfully!');
@@ -379,6 +395,7 @@ const handlePensionsSubmit = async () => {
 const resetForm = () => {
   pensions.splice(0, pensions.length, {
     provider: '',
+    customProvider: '',
     policyNumber: '',
     currentEmployer: null,
   });
