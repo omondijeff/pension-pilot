@@ -144,33 +144,45 @@ export const useAuthStore = defineStore('auth', () => {
         error.value = 'user_not_found';
         return false;
       }
-
+  
       const { data: { user: loggedInUser }, error: loginError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
+  
       if (loginError) {
-        // Handle incorrect password specifically
+        console.log('Login error details:', {
+          error: loginError,
+          code: loginError.code,
+          status: loginError.status,
+          message: loginError.message
+        });
+        
+        if (loginError.status === 400 && loginError.code === 'email_not_confirmed') {
+          console.log('Detected unverified email');
+          error.value = 'email_not_verified';
+          return false;
+        }
         if (loginError.message.includes('Invalid login credentials')) {
           error.value = 'invalid_password';
           return false;
         }
         throw new Error(loginError.message);
       }
-
+  
       const { data, error: fetchError } = await supabase
         .from('users')
         .select('*')
         .eq('id', loggedInUser?.id)
         .single();
-
+  
       if (fetchError) throw new Error(fetchError.message);
-
+  
       user.value = data;
       localStorage.setItem('user', JSON.stringify(user.value));
       return true;
     } catch (err) {
+      console.log('Caught error:', err);
       error.value = err instanceof Error ? err.message : 'Failed to log in';
       return false;
     } finally {

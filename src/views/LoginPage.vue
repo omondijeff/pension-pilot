@@ -178,6 +178,15 @@ const handleLogin = async () => {
     } else {
       // Handle specific error cases
       switch (authStore.error) {
+
+        case 'email_not_verified':
+          showNotificationMessage(
+            'warning',
+            'Email Not Verified',
+            'Please check your email inbox and verify your email address before logging in.'
+          );
+          break;
+
         case 'user_not_found':
           showNotificationMessage(
             'info',
