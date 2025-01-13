@@ -98,6 +98,7 @@
       </div>
     </section>
   </template>
+ 
   
   <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue';
@@ -120,18 +121,26 @@
            password.value === confirmPassword.value;
   });
   
-  // Check the URL parameters when the component mounts
+  // Check if we have a valid session when the component mounts
   onMounted(async () => {
-    console.log('Checking auth session for password reset...');
+    console.log('Starting password reset flow...');
     
     try {
+      // Check initial session state
+      const initialSession = await supabase.auth.getSession();
+      console.log('Initial session state:', initialSession.data.session ? 'Active' : 'None');
+  
       // Get token and type from URL parameters
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
       const type = params.get('type');
       
-      console.log('Reset flow type:', type);
-      console.log('Token from URL:', token?.substring(0, 10) + '...');
+      console.log('URL Parameters:', { 
+        type,
+        tokenPresent: !!token,
+        tokenLength: token?.length,
+        tokenStart: token?.substring(0, 10)
+      });
   
       if (!token || type !== 'recovery') {
         throw new Error('Invalid or missing token parameters');
@@ -139,11 +148,23 @@
   
       // Store the recovery token
       recoveryToken.value = token;
+      console.log('Recovery token stored');
   
       // Sign out any existing session
-      await supabase.auth.signOut();
+      console.log('Attempting to sign out existing session...');
+      const { error: signOutError } = await supabase.auth.signOut();
+      if (signOutError) {
+        console.error('Error signing out:', signOutError);
+      } else {
+        console.log('Sign out successful');
+      }
+  
+      // Verify session is cleared
+      const afterSignOut = await supabase.auth.getSession();
+      console.log('Session state after sign out:', afterSignOut.data.session ? 'Still Active' : 'Cleared');
   
       // Exchange the recovery token for a session
+      console.log('Attempting to exchange token for session...');
       const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(token);
       
       if (exchangeError) {
@@ -151,8 +172,15 @@
         throw exchangeError;
       }
   
-      console.log('Token exchanged successfully');
-  
+      // Verify new session
+      const afterExchange = await supabase.auth.getSession();
+      console.log('Session state after exchange:', afterExchange.data.session ? 'Active' : 'None');
+      
+      if (!afterExchange.data.session) {
+        console.warn('No session created after token exchange');
+      } else {
+        console.log('Token exchange successful and session created');
+      }
     } catch (err) {
       console.error('Error in session check:', err);
       invalidToken.value = true;
@@ -164,7 +192,7 @@
   
   // Handle password reset
   const handleResetPassword = async () => {
-    console.log('Starting password reset process...');
+    console.log('Starting password update process...');
     error.value = '';
     successMessage.value = '';
     
@@ -179,23 +207,51 @@
   
     try {
       // Check for active session
+      console.log('Checking for active session...');
       const { data: { session }, error: sessionError } = await supabase.auth.getSession() as { data: { session: any }, error: any };
       
+      console.log('Session check result:', {
+        hasSession: !!session,
+        hasError: !!sessionError,
+        errorMessage: sessionError?.message
+      });
+      
       if (sessionError) {
+        console.error('Session check error:', sessionError);
         throw sessionError;
       }
   
       if (!session) {
+        console.log('No active session found, attempting to recreate...');
         // Try to exchange the token for a session again if needed
         if (recoveryToken.value) {
+          console.log('Attempting to exchange recovery token again...');
           const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(recoveryToken.value);
-          if (exchangeError) throw exchangeError;
+          if (exchangeError) {
+            console.error('Error exchanging token:', exchangeError);
+            throw exchangeError;
+          }
+          console.log('Token exchange successful');
+          
+          // Verify session was created
+          const { data: { session: newSession }} = await supabase.auth.getSession();
+          console.log('New session created:', !!newSession);
         } else {
+          console.error('No recovery token available');
           throw new Error('No active session and no recovery token available');
         }
       }
   
+      // Double check we have a session before updating password
+      const { data: { session: finalSession }} = await supabase.auth.getSession();
+      console.log('Final session check before password update:', !!finalSession);
+  
+      if (!finalSession) {
+        throw new Error('Failed to establish session for password update');
+      }
+  
       // Update the user's password
+      console.log('Attempting to update password...');
       const { error: updateError } = await supabase.auth.updateUser({
         password: password.value
       });
@@ -228,6 +284,8 @@
     }
   };
   </script>
+  
+  
   
   <style scoped>
   /* Image Section */
