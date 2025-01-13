@@ -10,18 +10,18 @@
       </div>
   
       <!-- Right Column (Form Wrapper) -->
-      <div
-        class="form-wrapper w-full md:w-1/2 h-full flex flex-col justify-center bg-white px-4 md:px-16"
-      >
-        <!-- Form Section -->
+      <div class="form-wrapper w-full md:w-1/2 h-full flex flex-col justify-center bg-white px-4 md:px-16">
         <div class="form-section">
           <!-- Heading -->
           <h2 class="text-2xl font-gilroy-bold text-gray-800 text-center md:text-left">
             Reset Password
           </h2>
+  
           <!-- Instructions -->
           <p class="text-gray-600 font-gilroy-light mt-2 text-center md:text-left">
-            Please enter your new password below.
+            {{ !showResetForm 
+              ? 'Enter your email to receive a reset code.' 
+              : 'Enter the 6-digit code from your email and choose a new password.' }}
           </p>
   
           <!-- Error Message -->
@@ -34,17 +34,55 @@
             {{ successMessage }}
           </div>
   
-          <!-- Reset Password Form -->
-          <form v-if="!invalidToken" @submit.prevent="handleResetPassword" class="space-y-4 mt-6">
-            <!-- New Password Input -->
+          <!-- Email Form -->
+          <form v-if="!showResetForm" @submit.prevent="handleSendResetCode" class="space-y-4 mt-6">
+            <div>
+              <label for="email" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                v-model="email"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+                placeholder="Enter your email"
+                required
+                :disabled="loading"
+              />
+            </div>
+  
+            <button
+              type="submit"
+              class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-50"
+              :disabled="loading || !email"
+            >
+              {{ loading ? 'Sending...' : 'Send Reset Code' }}
+            </button>
+          </form>
+  
+          <!-- Reset Form with OTP -->
+          <form v-if="showResetForm" @submit.prevent="handlePasswordReset" class="space-y-4 mt-6">
+            <div>
+              <label for="otp" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Reset Code</label>
+              <input
+                type="text"
+                id="otp"
+                v-model="otpCode"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+                placeholder="Enter the 6-digit code"
+                required
+                :disabled="loading"
+                maxlength="6"
+                pattern="\d{6}"
+              />
+            </div>
+  
             <div>
               <label for="password" class="block text-sm text-gray-600 mb-2 font-gilroy-light">New Password</label>
               <input
                 type="password"
                 id="password"
+                v-model="password"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
                 placeholder="Enter new password"
-                v-model="password"
                 required
                 minlength="6"
                 :disabled="loading"
@@ -52,43 +90,39 @@
               <p class="text-xs text-gray-500 mt-1">Password must be at least 6 characters long</p>
             </div>
   
-            <!-- Confirm Password Input -->
             <div>
-              <label for="confirmPassword" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Confirm New Password</label>
+              <label for="confirmPassword" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Confirm Password</label>
               <input
                 type="password"
                 id="confirmPassword"
+                v-model="confirmPassword"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
                 placeholder="Confirm new password"
-                v-model="confirmPassword"
                 required
                 minlength="6"
                 :disabled="loading"
               />
             </div>
   
-            <!-- Submit Button -->
-            <button
-              type="submit"
-              class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-50"
-              :disabled="loading || !isValidForm"
-            >
-              {{ loading ? 'Updating Password...' : 'Update Password' }}
-            </button>
-          </form>
+            <div class="space-y-3">
+              <button
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-50"
+                :disabled="loading || !isValidForm"
+              >
+                {{ loading ? 'Updating Password...' : 'Update Password' }}
+              </button>
   
-          <!-- Invalid Token Message -->
-          <div v-if="invalidToken" class="mt-6 text-center">
-            <p class="text-gray-600 mb-4">
-              This password reset link has expired or is invalid.
-            </p>
-            <RouterLink 
-              to="/forgot-password"
-              class="inline-block py-2 px-4 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90"
-            >
-              Request New Reset Link
-            </RouterLink>
-          </div>
+              <button
+                type="button"
+                class="w-full py-2 text-blue-600 hover:underline"
+                @click="handleBack"
+                :disabled="loading"
+              >
+                Back to Email Entry
+              </button>
+            </div>
+          </form>
   
           <!-- Back to Login Link -->
           <p class="text-center mt-4 text-gray-600 font-gilroy-light">
@@ -98,170 +132,127 @@
       </div>
     </section>
   </template>
- 
- <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
-import { supabase } from '@/lib/supabase';
-
-const router = useRouter();
-
-const password = ref('');
-const confirmPassword = ref('');
-const error = ref('');
-const loading = ref(false);
-const successMessage = ref('');
-const invalidToken = ref(false);
-const recoveryToken = ref('');
-
-// Computed property for form validation
-const isValidForm = computed(() => {
-  return password.value.length >= 6 && 
-         password.value === confirmPassword.value;
-});
-
-// Function to establish auth session with recovery token
-const establishSession = async (token: string) => {
-  console.log('Attempting to establish auth session...');
   
-  try {
-    // First sign out any existing session
-    const { error: signOutError } = await supabase.auth.signOut();
-    if (signOutError) {
-      console.error('Error signing out:', signOutError);
-      return false;
-    }
-    
-    // Check if token starts with 'pkce_'
-    if (!token.startsWith('pkce_')) {
-      throw new Error('Invalid recovery token format');
-    }
-
-    // Get the current session state
-    const { data: { session: initialSession } } = await supabase.auth.getSession();
-    console.log('Initial session state:', initialSession ? 'Active' : 'None');
-
-    // Try to set the session with the recovery token
-    const { data: { session }, error: setSessionError } = await supabase.auth.setSession({
-      access_token: token,
-      refresh_token: token
-    });
-
-    if (setSessionError) {
-      console.error('Session establishment error:', setSessionError);
-      return false;
-    }
-
-    if (!session) {
-      console.error('No session established after token processing');
-      return false;
-    }
-
-    console.log('Successfully established auth session');
-    return true;
-
-  } catch (err) {
-    console.error('Error establishing session:', err);
-    return false;
-  }
-};
-
-// Check if we have a valid session when the component mounts
-onMounted(async () => {
-  console.log('Starting password reset flow...');
+  <script setup lang="ts">
+  import { ref, computed } from 'vue';
+  import { RouterLink, useRouter } from 'vue-router';
+  import { supabase } from '@/lib/supabase';
   
-  try {
-    // Get token and type from URL parameters
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    const type = params.get('type');
-    
-    console.log('Reset flow type:', type);
-    console.log('Token from URL:', token?.substring(0, 10) + '...');
-
-    if (!token || type !== 'recovery') {
-      throw new Error('Invalid or missing token parameters');
-    }
-
-    // Store the recovery token
-    recoveryToken.value = token;
-    
-    // Try to establish session with recovery token
-    const sessionEstablished = await establishSession(token);
-    
-    if (!sessionEstablished) {
-      throw new Error('Unable to establish session with recovery token');
-    }
-
-  } catch (err) {
-    console.error('Error in initialization:', err);
-    invalidToken.value = true;
-    error.value = err instanceof Error 
-      ? err.message 
-      : 'This password reset link has expired or is invalid. Please request a new one.';
-  }
-});
-
-// Handle password reset
-const handleResetPassword = async () => {
-  console.log('Starting password reset process...');
-  error.value = '';
-  successMessage.value = '';
+  const router = useRouter();
   
-  if (!isValidForm.value) {
-    error.value = password.value !== confirmPassword.value 
-      ? 'Passwords do not match' 
-      : 'Password must be at least 6 characters long';
-    return;
-  }
-
-  loading.value = true;
-
-  try {
-    // Check if we have an active session
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      // Try to re-establish session if needed
-      if (!recoveryToken.value || !await establishSession(recoveryToken.value)) {
-        throw new Error('No valid session for password update');
+  // Form states
+  const email = ref('');
+  const otpCode = ref('');
+  const password = ref('');
+  const confirmPassword = ref('');
+  const showResetForm = ref(false);
+  const loading = ref(false);
+  const error = ref('');
+  const successMessage = ref('');
+  
+  // Form validation
+  const isValidForm = computed(() => {
+    return otpCode.value.length === 6 &&
+           /^\d{6}$/.test(otpCode.value) &&
+           password.value.length >= 6 && 
+           password.value === confirmPassword.value;
+  });
+  
+  // Send reset code
+  const handleSendResetCode = async () => {
+    error.value = '';
+    successMessage.value = '';
+    loading.value = true;
+  
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.value);
+  
+      if (resetError) throw resetError;
+  
+      successMessage.value = 'An email has been sent with your reset code.';
+      showResetForm.value = true;
+      
+    } catch (err) {
+      console.error('Error sending reset code:', err);
+      error.value = err instanceof Error 
+        ? err.message 
+        : 'Failed to send reset code. Please try again.';
+    } finally {
+      loading.value = false;
+    }
+  };
+  
+  // Handle password reset with OTP
+  const handlePasswordReset = async () => {
+    error.value = '';
+    successMessage.value = '';
+    loading.value = true;
+  
+    try {
+      if (!email.value || !otpCode.value || !password.value) {
+        throw new Error('Please fill in all fields');
       }
-    }
-
-    // Update the user's password
-    console.log('Attempting to update password...');
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: password.value
-    });
-
-    if (updateError) {
-      console.error('Password update error:', updateError);
-      throw updateError;
-    }
-
-    console.log('Password updated successfully');
-    successMessage.value = 'Password successfully updated!';
-    
-    // Wait a moment before redirecting
-    setTimeout(() => {
-      router.push({ 
-        name: 'Login',
-        query: { 
-          message: 'Password successfully reset. Please log in with your new password.'
-        }
+  
+      if (password.value !== confirmPassword.value) {
+        throw new Error('Passwords do not match');
+      }
+  
+      // First verify the OTP
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email: email.value,
+        token: otpCode.value,
+        type: 'recovery'
       });
-    }, 2000);
-
-  } catch (err) {
-    console.error('Error in password reset:', err);
-    error.value = err instanceof Error 
-      ? err.message 
-      : 'Failed to update password. Please try again.';
-  } finally {
-    loading.value = false;
-  }
-};
-</script>
+  
+      if (verifyError) {
+        throw verifyError;
+      }
+  
+      // Then update the password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: password.value
+      });
+  
+      if (updateError) {
+        throw updateError;
+      }
+  
+      successMessage.value = 'Password successfully updated!';
+      
+      // Wait a moment before redirecting
+      setTimeout(() => {
+        router.push({ 
+          name: 'Login',
+          query: { 
+            message: 'Password successfully reset. Please log in with your new password.'
+          }
+        });
+      }, 2000);
+  
+    } catch (err) {
+      console.error('Error resetting password:', err);
+      error.value = err instanceof Error 
+        ? err.message 
+        : 'Failed to reset password. Please try again.';
+    } finally {
+      loading.value = false;
+    }
+  };
+  
+  // Handle back button
+  const handleBack = () => {
+    showResetForm.value = false;
+    otpCode.value = '';
+    password.value = '';
+    confirmPassword.value = '';
+    error.value = '';
+    successMessage.value = '';
+  };
+  </script>
+  
+  <style scoped>
+  /* Previous styles remain the same */
+  </style>
   <style scoped>
   /* Image Section */
   .image-section {
