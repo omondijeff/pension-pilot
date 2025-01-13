@@ -225,13 +225,10 @@ export const useAuthStore = defineStore('auth', () => {
         return false;
       }
   
-      // Get the current URL's origin for the redirect
-      const origin = window.location.origin;
-      const redirectUrl = `${origin}/reset-password`;
-      console.log('Reset password redirect URL:', redirectUrl);
+     
   
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectUrl
+         redirectTo: 'https://www.pension-pilot.co.uk/reset-password' 
       });
   
       console.log('Reset password response:', resetError ? 'Error' : 'Success');
