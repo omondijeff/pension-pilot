@@ -72,40 +72,57 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted,onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { supabase } from '@/lib/supabase';
 
 const authStore = useAuthStore();
 
-const email = ref('');
-const error = ref('');
+const email = ref<string>(''); // Explicitly type the ref as string
+const error = ref<string>('');
 const loading = ref(false);
-const successMessage = ref('');
+const successMessage = ref<string>('');
 
 // Set up auth state change listener
 onMounted(() => {
   console.log('Setting up auth state change listener');
+  let subscription: any;
   
-  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-    console.log('Auth state change:', event, session ? 'Session exists' : 'No session');
+  try {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state change:', event, session ? 'Session exists' : 'No session');
+      
+      if (event === 'PASSWORD_RECOVERY') {
+        console.log('Password recovery event detected');
+        window.location.href = '/reset-password';
+      }
+    });
     
-    if (event === 'PASSWORD_RECOVERY') {
-      console.log('Password recovery event detected');
-      // You might want to handle this in your router instead
-      window.location.href = '/reset-password';
-    }
-  });
+    subscription = data.subscription;
+  } catch (err) {
+    console.error('Error setting up auth listener:', err);
+  }
 
   // Cleanup subscription on component unmount
   onUnmounted(() => {
-    console.log('Cleaning up auth state subscription');
-    subscription.unsubscribe();
+    if (subscription) {
+      console.log('Cleaning up auth state subscription');
+      try {
+        subscription.unsubscribe();
+      } catch (err) {
+        console.error('Error unsubscribing:', err);
+      }
+    }
   });
 });
 
 const handleForgotPassword = async () => {
+  if (!email.value) {
+    error.value = 'Please enter your email address';
+    return;
+  }
+
   console.log('Starting forgot password flow for:', email.value);
   
   error.value = '';
