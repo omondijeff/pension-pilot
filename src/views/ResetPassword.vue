@@ -99,193 +99,161 @@
     </section>
   </template>
  
-  
-  <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue';
-  import { RouterLink, useRouter } from 'vue-router';
-  import { supabase } from '@/lib/supabase';
-  
-  const router = useRouter();
-  
-  const password = ref('');
-  const confirmPassword = ref('');
-  const error = ref('');
-  const loading = ref(false);
-  const successMessage = ref('');
-  const invalidToken = ref(false);
-  const recoveryToken = ref('');
-  
-  // Computed property for form validation
-  const isValidForm = computed(() => {
-    return password.value.length >= 6 && 
-           password.value === confirmPassword.value;
-  });
-  
-  // Check if we have a valid session when the component mounts
-  onMounted(async () => {
-    console.log('Starting password reset flow...');
-    
-    try {
-      // Check initial session state
-      const initialSession = await supabase.auth.getSession();
-      console.log('Initial session state:', initialSession.data.session ? 'Active' : 'None');
-  
-      // Get token and type from URL parameters
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('token');
-      const type = params.get('type');
-      
-      console.log('URL Parameters:', { 
-        type,
-        tokenPresent: !!token,
-        tokenLength: token?.length,
-        tokenStart: token?.substring(0, 10)
-      });
-  
-      if (!token || type !== 'recovery') {
-        throw new Error('Invalid or missing token parameters');
-      }
-  
-      // Store the recovery token
-      recoveryToken.value = token;
-      console.log('Recovery token stored');
-  
-      // Sign out any existing session
-      console.log('Attempting to sign out existing session...');
-      const { error: signOutError } = await supabase.auth.signOut();
-      if (signOutError) {
-        console.error('Error signing out:', signOutError);
-      } else {
-        console.log('Sign out successful');
-      }
-  
-      // Verify session is cleared
-      const afterSignOut = await supabase.auth.getSession();
-      console.log('Session state after sign out:', afterSignOut.data.session ? 'Still Active' : 'Cleared');
-  
-      // Exchange the recovery token for a session
-      console.log('Attempting to exchange token for session...');
-      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(token);
-      
-      if (exchangeError) {
-        console.error('Token exchange error:', exchangeError);
-        throw exchangeError;
-      }
-  
-      // Verify new session
-      const afterExchange = await supabase.auth.getSession();
-      console.log('Session state after exchange:', afterExchange.data.session ? 'Active' : 'None');
-      
-      if (!afterExchange.data.session) {
-        console.warn('No session created after token exchange');
-      } else {
-        console.log('Token exchange successful and session created');
-      }
-    } catch (err) {
-      console.error('Error in session check:', err);
-      invalidToken.value = true;
-      error.value = err instanceof Error 
-        ? err.message 
-        : 'This password reset link has expired or is invalid. Please request a new one.';
-    }
-  });
-  
-  // Handle password reset
-  const handleResetPassword = async () => {
-    console.log('Starting password update process...');
-    error.value = '';
-    successMessage.value = '';
-    
-    if (!isValidForm.value) {
-      error.value = password.value !== confirmPassword.value 
-        ? 'Passwords do not match' 
-        : 'Password must be at least 6 characters long';
-      return;
-    }
-  
-    loading.value = true;
-  
-    try {
-      // Check for active session
-      console.log('Checking for active session...');
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession() as { data: { session: any }, error: any };
-      
-      console.log('Session check result:', {
-        hasSession: !!session,
-        hasError: !!sessionError,
-        errorMessage: sessionError?.message
-      });
-      
-      if (sessionError) {
-        console.error('Session check error:', sessionError);
-        throw sessionError;
-      }
-  
-      if (!session) {
-        console.log('No active session found, attempting to recreate...');
-        // Try to exchange the token for a session again if needed
-        if (recoveryToken.value) {
-          console.log('Attempting to exchange recovery token again...');
-          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(recoveryToken.value);
-          if (exchangeError) {
-            console.error('Error exchanging token:', exchangeError);
-            throw exchangeError;
-          }
-          console.log('Token exchange successful');
-          
-          // Verify session was created
-          const { data: { session: newSession }} = await supabase.auth.getSession();
-          console.log('New session created:', !!newSession);
-        } else {
-          console.error('No recovery token available');
-          throw new Error('No active session and no recovery token available');
-        }
-      }
-  
-      // Double check we have a session before updating password
-      const { data: { session: finalSession }} = await supabase.auth.getSession();
-      console.log('Final session check before password update:', !!finalSession);
-  
-      if (!finalSession) {
-        throw new Error('Failed to establish session for password update');
-      }
-  
-      // Update the user's password
-      console.log('Attempting to update password...');
-      const { error: updateError } = await supabase.auth.updateUser({
-        password: password.value
-      });
-  
-      if (updateError) {
-        console.error('Password update error:', updateError);
-        throw updateError;
-      }
-  
-      console.log('Password updated successfully');
-      successMessage.value = 'Password successfully updated!';
-      
-      // Wait a moment before redirecting
-      setTimeout(() => {
-        router.push({ 
-          name: 'Login',
-          query: { 
-            message: 'Password successfully reset. Please log in with your new password.'
-          }
-        });
-      }, 2000);
-  
-    } catch (err) {
-      console.error('Error in password reset:', err);
-      error.value = err instanceof Error 
-        ? err.message 
-        : 'Failed to update password. Please try again.';
-    } finally {
-      loading.value = false;
-    }
-  };
-  </script>
-  
-  
+ <script setup lang="ts">
+ import { ref, computed, onMounted } from 'vue';
+ import { RouterLink, useRouter } from 'vue-router';
+ import { supabase } from '@/lib/supabase';
+ 
+ const router = useRouter();
+ 
+ const password = ref('');
+ const confirmPassword = ref('');
+ const error = ref('');
+ const loading = ref(false);
+ const successMessage = ref('');
+ const invalidToken = ref(false);
+ const recoveryToken = ref('');
+ 
+ // Computed property for form validation
+ const isValidForm = computed(() => {
+   return password.value.length >= 6 && 
+          password.value === confirmPassword.value;
+ });
+ 
+ // Function to ensure we have a valid session
+ const ensureSession = async (token: string) => {
+   console.log('Ensuring valid session...');
+   
+   // First check if we already have a session
+   const { data: { session: currentSession } } = await supabase.auth.getSession();
+   
+   if (currentSession) {
+     console.log('Found existing session');
+     return true;
+   }
+ 
+   try {
+     console.log('No existing session, attempting to exchange token...');
+     
+     // Try to get session from the recovery token
+     const { data, error: sessionError } = await supabase.auth.refreshSession({
+       refresh_token: token
+     });
+ 
+     if (sessionError) {
+       console.error('Session refresh error:', sessionError);
+       return false;
+     }
+ 
+     if (data.session) {
+       console.log('Successfully created new session');
+       return true;
+     }
+ 
+     return false;
+   } catch (err) {
+     console.error('Error ensuring session:', err);
+     return false;
+   }
+ };
+ 
+ // Check if we have a valid session when the component mounts
+ onMounted(async () => {
+   console.log('Starting password reset flow...');
+   
+   try {
+     // Get token and type from URL parameters
+     const params = new URLSearchParams(window.location.search);
+     const token = params.get('token');
+     const type = params.get('type');
+     
+     console.log('Reset flow type:', type);
+     console.log('Token from URL:', token?.substring(0, 10) + '...');
+ 
+     if (!token || type !== 'recovery') {
+       throw new Error('Invalid or missing token parameters');
+     }
+ 
+     // Store the recovery token
+     recoveryToken.value = token;
+     
+     // Try to establish session
+     const sessionEstablished = await ensureSession(token);
+     
+     if (!sessionEstablished) {
+       throw new Error('Unable to establish session with recovery token');
+     }
+ 
+   } catch (err) {
+     console.error('Error in initialization:', err);
+     invalidToken.value = true;
+     error.value = err instanceof Error 
+       ? err.message 
+       : 'This password reset link has expired or is invalid. Please request a new one.';
+   }
+ });
+ 
+ // Handle password reset
+ const handleResetPassword = async () => {
+   console.log('Starting password reset process...');
+   error.value = '';
+   successMessage.value = '';
+   
+   if (!isValidForm.value) {
+     error.value = password.value !== confirmPassword.value 
+       ? 'Passwords do not match' 
+       : 'Password must be at least 6 characters long';
+     return;
+   }
+ 
+   loading.value = true;
+ 
+   try {
+     // Ensure we have a valid session before proceeding
+     if (!recoveryToken.value) {
+       throw new Error('No recovery token available');
+     }
+ 
+     const sessionValid = await ensureSession(recoveryToken.value);
+     if (!sessionValid) {
+       throw new Error('Unable to establish session for password update');
+     }
+ 
+     // Update the user's password
+     console.log('Attempting to update password...');
+     const { error: updateError } = await supabase.auth.updateUser({
+       password: password.value
+     });
+ 
+     if (updateError) {
+       console.error('Password update error:', updateError);
+       throw updateError;
+     }
+ 
+     console.log('Password updated successfully');
+     successMessage.value = 'Password successfully updated!';
+     
+     // Wait a moment before redirecting
+     setTimeout(() => {
+       router.push({ 
+         name: 'Login',
+         query: { 
+           message: 'Password successfully reset. Please log in with your new password.'
+         }
+       });
+     }, 2000);
+ 
+   } catch (err) {
+     console.error('Error in password reset:', err);
+     error.value = err instanceof Error 
+       ? err.message 
+       : 'Failed to update password. Please try again.';
+   } finally {
+     loading.value = false;
+   }
+ };
+ </script>
+ 
   
   <style scoped>
   /* Image Section */
