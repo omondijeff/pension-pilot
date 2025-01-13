@@ -134,7 +134,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed } from 'vue';
   import { RouterLink, useRouter } from 'vue-router';
   import { supabase } from '@/lib/supabase';
   
@@ -156,53 +156,6 @@
            /^\d{6}$/.test(otpCode.value) &&
            password.value.length >= 6 && 
            password.value === confirmPassword.value;
-  });
-  
-  // Check session and redirect if needed
-  const checkSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      router.push('/profile');
-      return true;
-    }
-    return false;
-  };
-  
-  // Handle navigation after success
-  const handleSuccessNavigation = () => {
-    successMessage.value = 'Password successfully updated!';
-    
-    setTimeout(async () => {
-      const hasSession = await checkSession();
-      if (!hasSession) {
-        router.push({
-          path: '/login',
-          query: { 
-            message: 'Password successfully reset. Please log in with your new password.'
-          }
-        });
-      }
-    }, 2000);
-  };
-  
-  // Initialize component
-  onMounted(async () => {
-    // First check if user is already logged in
-    const hasSession = await checkSession();
-    if (hasSession) return;
-  
-    // Check for recovery token in URL
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
-    const type = params.get('type');
-    const userEmail = params.get('email');
-  
-    if (token && type === 'recovery') {
-      showResetForm.value = true;
-      if (userEmail) {
-        email.value = userEmail;
-      }
-    }
   });
   
   // Send reset code
@@ -264,7 +217,17 @@
         throw updateError;
       }
   
-      handleSuccessNavigation();
+      successMessage.value = 'Password successfully updated!';
+      
+      // Wait a moment before redirecting
+      setTimeout(() => {
+        router.push({ 
+          name: 'Login',
+          query: { 
+            message: 'Password successfully reset. Please log in with your new password.'
+          }
+        });
+      }, 2000);
   
     } catch (err) {
       console.error('Error resetting password:', err);
