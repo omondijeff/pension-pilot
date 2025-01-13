@@ -112,6 +112,7 @@
   const loading = ref(false);
   const successMessage = ref('');
   const invalidToken = ref(false);
+  const recoveryToken = ref('');
   
   // Computed property for form validation
   const isValidForm = computed(() => {
@@ -136,12 +137,21 @@
         throw new Error('Invalid or missing token parameters');
       }
   
-      // Check if there's an existing session and sign out if needed
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        console.log('Signing out existing session...');
-        await supabase.auth.signOut();
+      // Store the recovery token
+      recoveryToken.value = token;
+  
+      // Sign out any existing session
+      await supabase.auth.signOut();
+  
+      // Exchange the recovery token for a session
+      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(token);
+      
+      if (exchangeError) {
+        console.error('Token exchange error:', exchangeError);
+        throw exchangeError;
       }
+  
+      console.log('Token exchanged successfully');
   
     } catch (err) {
       console.error('Error in session check:', err);
@@ -168,6 +178,23 @@
     loading.value = true;
   
     try {
+      // Check for active session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession() as { data: { session: any }, error: any };
+      
+      if (sessionError) {
+        throw sessionError;
+      }
+  
+      if (!session) {
+        // Try to exchange the token for a session again if needed
+        if (recoveryToken.value) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(recoveryToken.value);
+          if (exchangeError) throw exchangeError;
+        } else {
+          throw new Error('No active session and no recovery token available');
+        }
+      }
+  
       // Update the user's password
       const { error: updateError } = await supabase.auth.updateUser({
         password: password.value
