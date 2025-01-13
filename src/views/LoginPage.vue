@@ -29,6 +29,12 @@
           Log In
         </h2>
 
+           <!-- Sign Up Link -->
+           <p class="text-center mt-4 text-gray-600 font-gilroy-light">
+          Don't have an account? 
+          <a href="/signup" class="text-blue-600 hover:underline">Sign Up</a>
+        </p>
+
         <!-- Login Form -->
         <form @submit.prevent="handleLogin" class="space-y-4 mt-6">
           <!-- Email Input -->
@@ -87,11 +93,7 @@
           </button>
         </form>
 
-        <!-- Sign Up Link -->
-        <p class="text-center mt-4 text-gray-600 font-gilroy-light">
-          Don't have an account? 
-          <a href="/signup" class="text-blue-600 hover:underline">Sign Up</a>
-        </p>
+       
       </div>
     </div>
   </section>

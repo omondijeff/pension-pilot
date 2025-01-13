@@ -58,6 +58,12 @@ const routes = [
         component: () => import('@/views/ForgotPassword.vue'),
         meta: { requiresGuest: true }
       },
+      {
+        path: 'reset-password',
+        name: 'ResetPassword',
+        component: () => import('@/views/ResetPassword.vue'),
+        meta: { requiresGuest: true }
+      },
       { 
         path: 'about-you', 
         name: 'AboutYou', 

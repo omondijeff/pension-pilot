@@ -210,6 +210,68 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const forgotPassword = async (email: string): Promise<boolean> => {
+    loading.value = true;
+    error.value = null;
+    try {
+      console.log('Starting password reset process for:', email);
+      
+      // First check if user exists
+      const userExists = await checkUserExists(email);
+      console.log('User exists check:', userExists);
+      
+      if (!userExists) {
+        error.value = 'user_not_found';
+        return false;
+      }
+  
+      // Get the current URL's origin for the redirect
+      const origin = window.location.origin;
+      const redirectUrl = `${origin}/reset-password`;
+      console.log('Reset password redirect URL:', redirectUrl);
+  
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl
+      });
+  
+      console.log('Reset password response:', resetError ? 'Error' : 'Success');
+      
+      if (resetError) {
+        console.error('Reset password error:', resetError);
+        throw new Error(resetError.message);
+      }
+  
+      return true;
+    } catch (err) {
+      console.error('Error in forgotPassword:', err);
+      error.value = err instanceof Error ? err.message : 'Failed to send password reset email';
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+      // Update password with reset token
+  const updatePasswordWithToken = async (newPassword: string): Promise<boolean> => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (updateError) throw new Error(updateError.message);
+
+      return true;
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update password';
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+
   return {
     user,
     error,
@@ -221,5 +283,7 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     login,
     logout,
+    forgotPassword,
+    updatePasswordWithToken,
   };
 });
