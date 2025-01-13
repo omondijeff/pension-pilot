@@ -1,5 +1,5 @@
 <template>
-  <section class="reset-password-page flex flex-col md:flex-row h-screen">
+  <section class="forgot-password-page flex flex-col md:flex-row h-screen">
     <!-- Left Column (Image) -->
     <div class="image-section w-full md:w-1/2 h-1/2 md:h-full">
       <img
@@ -10,120 +10,58 @@
     </div>
 
     <!-- Right Column (Form Wrapper) -->
-    <div class="form-wrapper w-full md:w-1/2 h-full flex flex-col justify-center bg-white px-4 md:px-16">
+    <div
+      class="form-wrapper w-full md:w-1/2 h-full flex flex-col justify-center bg-white px-4 md:px-16"
+    >
+      <!-- Form Section -->
       <div class="form-section">
         <!-- Heading -->
         <h2 class="text-2xl font-gilroy-bold text-gray-800 text-center md:text-left">
-          Reset Password
+          Forgot Password
         </h2>
-
         <!-- Instructions -->
         <p class="text-gray-600 font-gilroy-light mt-2 text-center md:text-left">
-          {{ !showResetForm 
-            ? 'Enter your email to receive a reset code.' 
-            : 'Enter the 6-digit code from your email and choose a new password.' }}
+          Enter your email address below, and we'll send you a link to reset your password.
         </p>
+
+          <!-- Success Message with Enhanced Instructions -->
+    <div v-if="successMessage" class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <p class="text-green-600 font-gilroy-medium mb-2">{{ successMessage }}</p>
+      <ul class="text-sm text-green-700 font-gilroy-light list-disc pl-4 space-y-1">
+        <li>Check your email for the password reset link</li>
+        <li>Click the link to set a new password</li>
+        <li>The link will expire in 24 hours</li>
+      </ul>
+    </div>
 
         <!-- Error Message -->
         <div v-if="error" class="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-gilroy-light text-center">
           {{ error }}
         </div>
 
-        <!-- Success Message -->
-        <div v-if="successMessage" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-gilroy-light text-center">
-          {{ successMessage }}
-        </div>
-
-        <!-- Email Form -->
-        <form v-if="!showResetForm" @submit.prevent="handleSendResetCode" class="space-y-4 mt-6">
+        <!-- Forgot Password Form -->
+        <form @submit.prevent="handleForgotPassword" class="space-y-4 mt-6">
+          <!-- Email Input -->
           <div>
             <label for="email" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Email Address</label>
             <input
               type="email"
               id="email"
-              v-model="email"
               class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
-              placeholder="Enter your email"
+              placeholder="Email Address"
+              v-model="email"
               required
-              :disabled="loading"
             />
           </div>
-
+          <!-- Submit Button -->
           <button
             type="submit"
             class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-50"
-            :disabled="loading || !email"
+            :disabled="loading"
           >
-            {{ loading ? 'Sending...' : 'Send Reset Code' }}
+            {{ loading ? 'Sending Reset Link...' : 'Send Reset Link' }}
           </button>
         </form>
-
-        <!-- Reset Form with OTP -->
-        <form v-if="showResetForm" @submit.prevent="handlePasswordReset" class="space-y-4 mt-6">
-          <div>
-            <label for="otp" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Reset Code</label>
-            <input
-              type="text"
-              id="otp"
-              v-model="otpCode"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
-              placeholder="Enter the 6-digit code"
-              required
-              :disabled="loading"
-              maxlength="6"
-              pattern="\d{6}"
-            />
-          </div>
-
-          <div>
-            <label for="password" class="block text-sm text-gray-600 mb-2 font-gilroy-light">New Password</label>
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
-              placeholder="Enter new password"
-              required
-              minlength="6"
-              :disabled="loading"
-            />
-            <p class="text-xs text-gray-500 mt-1">Password must be at least 6 characters long</p>
-          </div>
-
-          <div>
-            <label for="confirmPassword" class="block text-sm text-gray-600 mb-2 font-gilroy-light">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              v-model="confirmPassword"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
-              placeholder="Confirm new password"
-              required
-              minlength="6"
-              :disabled="loading"
-            />
-          </div>
-
-          <div class="space-y-3">
-            <button
-              type="submit"
-              class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-50"
-              :disabled="loading || !isValidForm"
-            >
-              {{ loading ? 'Updating Password...' : 'Update Password' }}
-            </button>
-
-            <button
-              type="button"
-              class="w-full py-2 text-blue-600 hover:underline"
-              @click="handleBack"
-              :disabled="loading"
-            >
-              Back to Email Entry
-            </button>
-          </div>
-        </form>
-
         <!-- Back to Login Link -->
         <p class="text-center mt-4 text-gray-600 font-gilroy-light">
           Remember your password? <RouterLink to="/login" class="text-blue-600 hover:underline">Log In</RouterLink>
@@ -134,143 +72,94 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { RouterLink } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 import { supabase } from '@/lib/supabase';
 
-const router = useRouter();
+const authStore = useAuthStore();
 
-// Form states
-const email = ref('');
-const otpCode = ref('');
-const password = ref('');
-const confirmPassword = ref('');
-const showResetForm = ref(false);
+const email = ref<string>(''); // Explicitly type the ref as string
+const error = ref<string>('');
 const loading = ref(false);
-const error = ref('');
-const successMessage = ref('');
+const successMessage = ref<string>('');
 
-// Form validation
-const isValidForm = computed(() => {
-  const isValidOtp = /^[0-9]{6}$/.test(otpCode.value);
-  const isValidPassword = password.value.length >= 6;
-  const passwordsMatch = password.value === confirmPassword.value;
+// Set up auth state change listener
+onMounted(() => {
+  console.log('Setting up auth state change listener');
+  let subscription: any;
   
-  return isValidOtp && isValidPassword && passwordsMatch;
-});
-
-// Check session and redirect if needed
-const checkSession = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    router.push('/profile');
-    return true;
-  }
-  return false;
-};
-
-// Handle navigation after success
-const handleSuccessNavigation = () => {
-  successMessage.value = 'Password successfully updated!';
-  
-  setTimeout(() => {
-    router.push({
-      path: '/login',
-      query: { 
-        message: 'Password successfully reset. Please log in with your new password.'
+  try {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state change:', event, session ? 'Session exists' : 'No session');
+      
+      if (event === 'PASSWORD_RECOVERY') {
+        console.log('Password recovery event detected');
+        window.location.href = '/reset-password';
       }
     });
-  }, 2000);
-};
-
-// Initialize component
-onMounted(async () => {
-  // Check if user is already logged in
-  const hasSession = await checkSession();
-  if (hasSession) {
-    router.push('/profile');
+    
+    subscription = data.subscription;
+  } catch (err) {
+    console.error('Error setting up auth listener:', err);
   }
+
+  // Cleanup subscription on component unmount
+  onUnmounted(() => {
+    if (subscription) {
+      console.log('Cleaning up auth state subscription');
+      try {
+        subscription.unsubscribe();
+      } catch (err) {
+        console.error('Error unsubscribing:', err);
+      }
+    }
+  });
 });
 
-// Send reset code
-const handleSendResetCode = async () => {
+const handleForgotPassword = async () => {
+  if (!email.value) {
+    error.value = 'Please enter your email address';
+    return;
+  }
+
+  console.log('Starting forgot password flow for:', email.value);
+  
   error.value = '';
   successMessage.value = '';
   loading.value = true;
-
+  
   try {
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.value);
-
-    if (resetError) throw resetError;
-
-    successMessage.value = 'An email has been sent with your reset code.';
-    showResetForm.value = true;
+    const success = await authStore.forgotPassword(email.value);
+    console.log('Forgot password result:', success);
     
+    if (success) {
+      successMessage.value = 'Password reset link sent!';
+      email.value = ''; // Clear the form
+    } else {
+      error.value = getErrorMessage(authStore.error);
+    }
   } catch (err) {
-    console.error('Error sending reset code:', err);
-    error.value = err instanceof Error 
-      ? err.message 
-      : 'Failed to send reset code. Please try again.';
+    console.error('Unexpected error:', err);
+    error.value = 'An unexpected error occurred. Please try again.';
   } finally {
     loading.value = false;
   }
 };
 
-// Handle password reset with OTP
-const handlePasswordReset = async () => {
-  error.value = '';
-  successMessage.value = '';
-  loading.value = true;
-
-  try {
-    if (!email.value || !otpCode.value || !password.value) {
-      throw new Error('Please fill in all fields');
-    }
-
-    if (password.value !== confirmPassword.value) {
-      throw new Error('Passwords do not match');
-    }
-
-    // First verify the OTP
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email: email.value,
-      token: otpCode.value,
-      type: 'recovery'
-    });
-
-    if (verifyError) {
-      throw verifyError;
-    }
-
-    // Then update the password
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: password.value
-    });
-
-    if (updateError) {
-      throw updateError;
-    }
-
-    handleSuccessNavigation();
-
-  } catch (err) {
-    console.error('Error resetting password:', err);
-    error.value = err instanceof Error 
-      ? err.message 
-      : 'Failed to reset password. Please try again.';
-  } finally {
-    loading.value = false;
+const getErrorMessage = (errorCode: string | null): string => {
+  console.log('Getting error message for:', errorCode);
+  
+  switch (errorCode) {
+    case 'user_not_found':
+      return 'No account found with this email address.';
+    case 'rate_limit_exceeded':
+      return 'Too many attempts. Please try again later.';
+    case 'email_not_verified':
+      return 'Please verify your email address first.';
+    default:
+      return authStore.error || 'Failed to send reset link. Please try again.';
   }
-};
-
-// Handle back button
-const handleBack = () => {
-  showResetForm.value = false;
-  otpCode.value = '';
-  password.value = '';
-  confirmPassword.value = '';
-  error.value = '';
-  successMessage.value = '';
 };
 </script>
 <style scoped>
