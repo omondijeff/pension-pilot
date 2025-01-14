@@ -79,7 +79,7 @@
     </div>
 
     <!-- Location Section -->
-    <div class="location-section max-w-5xl mx-auto mt-12 px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <!-- <div class="location-section max-w-5xl mx-auto mt-12 px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <img src="@/assets/location-map.png" alt="Location Map" class="w-full rounded-lg" />
       <div class="text-gray-600 font-gilroy-light">
         <p class="text-lg font-gilroy-bold text-gray-800">PensionPilot</p>
@@ -88,7 +88,7 @@
         <p>Zip code: CF72 4HN</p>
         <p>Country: United Kingdom</p>
       </div>
-    </div>
+    </div> -->
   </section>
 </template>
 

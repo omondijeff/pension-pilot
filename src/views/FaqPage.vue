@@ -39,7 +39,7 @@
             class="faq-question flex justify-between items-center cursor-pointer"
             @click="toggleFaq(faq)"
           >
-            <p class="text-lg font-gilroy-medium text-gray-800">{{ faq.question }}</p>
+            <p class="text-lg font-gilroy-light text-gray-800">{{ faq.question }}</p>
             <svg
               :class="{'rotate-180': faq.open}"
               class="w-6 h-6 transition-transform duration-300"
