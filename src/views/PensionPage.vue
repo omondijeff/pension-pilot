@@ -212,10 +212,10 @@
 
         <!-- Confirmations -->
         <div class="mt-6">
-          <label class="flex items-start space-x-2 text-gray-600 font-gilroy-light cursor-pointer">
+          <!-- <label class="flex items-start space-x-2 text-gray-600 font-gilroy-light cursor-pointer">
             <input type="checkbox" v-model="confirmAgreement" class="mt-1" />
             <span>I agree to transfer the pension balance(s) to the PensionPilot Tailored Plan. I'm aware I can change my plan at any time.</span>
-          </label>
+          </label> -->
           <label class="flex items-start space-x-2 text-gray-600 font-gilroy-light mt-4 cursor-pointer">
             <input type="checkbox" v-model="confirmTerms" class="mt-1" />
             <span>I confirm that I've read, understand, and agree to the Terms, including the Declarations, Data Protection, and Transfer authorizations contained therein.</span>
@@ -259,7 +259,7 @@ const pensions = reactive([
 
 // UI state
 const isSubmitting = ref(false);
-const confirmAgreement = ref(false);
+const confirmAgreement = ref(true);
 const confirmTerms = ref(false);
 
 // Signature Section
@@ -341,7 +341,7 @@ const isFormValid = computed(() => {
     return true;
   });
   
-  const hasRequiredFields = hasValidPensions && confirmAgreement.value && confirmTerms.value;
+  const hasRequiredFields = hasValidPensions && confirmTerms.value;
   const hasValidSignature = Boolean(signatureImage.value);
 
   return hasRequiredFields && hasValidSignature;
@@ -407,7 +407,7 @@ const resetForm = () => {
     policyNumber: '',
     currentEmployer: null,
   });
-  confirmAgreement.value = false;
+  confirmAgreement.value = true;
   confirmTerms.value = false;
   signatureImage.value = null;
   hasSignature.value = false;

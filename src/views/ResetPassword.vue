@@ -222,7 +222,7 @@
       // Wait a moment before redirecting
       setTimeout(() => {
         router.push({ 
-          name: 'Login',
+          name: 'LogIn',
           query: { 
             message: 'Password successfully reset. Please log in with your new password.'
           }
@@ -250,9 +250,7 @@
   };
   </script>
   
-  <style scoped>
-  /* Previous styles remain the same */
-  </style>
+ 
   <style scoped>
   /* Image Section */
   .image-section {

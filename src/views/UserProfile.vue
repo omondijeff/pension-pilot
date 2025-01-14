@@ -119,9 +119,105 @@
           </div>
 
           <form @submit.prevent="handleSubmit" class="space-y-6">
-            <!-- Form fields remain the same -->
-            <!-- ... -->
-          </form>
+  <!-- Date of Birth -->
+  <div class="space-y-2">
+    <label class="block text-sm font-gilroy-bold text-gray-700">Date of Birth</label>
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <input
+          type="text"
+          v-model="form.dob.day"
+          placeholder="DD"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          maxlength="2"
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          v-model="form.dob.month"
+          placeholder="MM"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          maxlength="2"
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          v-model="form.dob.year"
+          placeholder="YYYY"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          maxlength="4"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Gender -->
+  <div class="space-y-2">
+    <label class="block text-sm font-gilroy-bold text-gray-700">Gender</label>
+    <select
+      v-model="form.gender"
+      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    >
+      <option value="">Select gender</option>
+      <option value="Male">Male</option>
+      <option value="Femal">Female</option>
+      <option value="Other">Other</option>
+      <option value="Prefer_Not_To_Say">Prefer not to say</option>
+    </select>
+  </div>
+
+  <!-- Mobile Number -->
+  <div class="space-y-2">
+      <label class="block text-sm font-gilroy-bold text-gray-700">Mobile Number</label>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <select
+            v-model="form.mobile.country"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            @change="validateAndFormatPhone"
+          >
+            <option 
+              v-for="country in countries" 
+              :key="country.code" 
+              :value="country.code"
+            >
+              {{ country.flag }} {{ country.code }} ({{ country.dialCode }})
+            </option>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <input
+            type="tel"
+            v-model="form.mobile.number"
+            placeholder="Mobile number"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            :class="{ 'border-red-500': phoneError }"
+            @input="validateAndFormatPhone"
+          />
+          <p v-if="phoneError" class="mt-1 text-sm text-red-500">{{ phoneError }}</p>
+        </div>
+      </div>
+    </div>
+
+  <!-- Submit Button -->
+  <div class="flex justify-end space-x-4">
+    <button
+      type="button"
+      @click="closeEditModal"
+      class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+    >
+      Cancel
+    </button>
+    <button
+      type="submit"
+      class="px-4 py-2 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-200 ease-in-out hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+    >
+      Save Changes
+    </button>
+  </div>
+</form>
         </div>
       </div>
     </div>
@@ -142,6 +238,12 @@ import { usePensionSubmissionsStore } from '@/stores/pensionSubmissions';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import bannerImage from '@/assets/profile-banner.png';
+import { 
+  countries, 
+  formatPhoneNumber, 
+  validatePhoneNumberForCountry,
+  findCountryByCode
+} from '@/utils/countryData';
 
 // Type definitions
 interface KycProfile {
@@ -192,6 +294,7 @@ const isLoading = ref(true);
 const userProfile = ref<KycProfile | null>(null);
 const pensions = ref<PensionSubmission[]>([]);
 const userName = ref('User');
+const phoneError = ref('');
 
 // Computed
 const profileInfo = computed(() => [
@@ -234,6 +337,26 @@ const form = reactive<ProfileForm>({
 });
 
 // Methods
+function validateAndFormatPhone() {
+  const country = findCountryByCode(form.mobile.country);
+  if (!country) {
+    phoneError.value = 'Invalid country code';
+    return false;
+  }
+
+  const formattedNumber = formatPhoneNumber(form.mobile.number, form.mobile.country);
+  form.mobile.number = formattedNumber;
+
+  const isValid = validatePhoneNumberForCountry(formattedNumber, form.mobile.country);
+  if (!isValid) {
+    phoneError.value = `Invalid phone number format for ${country.name}`;
+    return false;
+  }
+
+  phoneError.value = '';
+  return true;
+}
+
 function formatDate(date: string | null): string {
   if (!date) return 'N/A';
   return new Date(date).toLocaleDateString('en-GB', {
@@ -282,6 +405,19 @@ function openEditModal() {
 function closeEditModal() {
   showModal.value = false;
 }
+
+// async function validateAndSubmit() {
+//   if (!validateAndFormatPhone()) {
+//     return;
+//   }
+
+//   // Validate other fields if needed
+//   if (!form.dob.day || !form.dob.month || !form.dob.year) {
+//     return; // Add appropriate error handling
+//   }
+
+//   await handleSubmit();
+// }
 
 async function handleSubmit() {
   if (!authStore.user?.id || !userProfile.value) return;

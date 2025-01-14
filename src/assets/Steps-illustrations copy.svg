@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 500 846.6">
+  <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: url(#linear-gradient2);
+      }
+
+      .st1 {
+        fill: url(#linear-gradient1);
+      }
+
+      .st2 {
+        fill: url(#linear-gradient3);
+      }
+
+      .st3 {
+        fill: url(#linear-gradient6);
+      }
+
+      .st4 {
+        fill: url(#linear-gradient5);
+      }
+
+      .st5 {
+        fill: url(#linear-gradient4);
+      }
+
+      .st6 {
+        fill: #0196c7;
+        font-family: Gilroy-Bold, Gilroy-Bold;
+        font-size: 12px;
+      }
+
+      .st6, .st7 {
+        font-weight: 700;
+      }
+
+      .st8 {
+        opacity: .7;
+      }
+
+      .st8, .st9 {
+        mix-blend-mode: multiply;
+      }
+
+      .st7 {
+        font-family: Gilroy-ExtraBold, Gilroy;
+        font-size: 46.2px;
+      }
+
+      .st7, .st10 {
+        fill: #fff;
+      }
+
+      .st11 {
+        fill: url(#radial-gradient);
+      }
+
+      .st12 {
+        fill: url(#linear-gradient);
+      }
+
+      .st13 {
+        isolation: isolate;
+      }
+
+      .st14 {
+        font-family: Gilroy-Medium, Gilroy-Medium;
+        font-size: 7px;
+        font-weight: 500;
+      }
+
+      .st14, .st15 {
+        fill: #333;
+      }
+
+      .st9 {
+        fill: #be360c;
+        opacity: .3;
+      }
+
+      .st16 {
+        fill: url(#radial-gradient1);
+      }
+
+      .st17 {
+        fill: url(#radial-gradient3);
+      }
+
+      .st18 {
+        fill: url(#radial-gradient2);
+      }
+
+      .st19 {
+        fill: url(#radial-gradient5);
+      }
+
+      .st20 {
+        fill: url(#radial-gradient4);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="294.3" y1="164.4" x2="494.2" y2="286" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#262e66"/>
+      <stop offset=".2" stop-color="#13649d"/>
+      <stop offset=".4" stop-color="#0590ca"/>
+      <stop offset=".4" stop-color="#00a1dc"/>
+    </linearGradient>
+    <radialGradient id="radial-gradient" cx="346.4" cy="162" fx="346.4" fy="162" r="140.6" gradientTransform="translate(185.2 601.5) rotate(-90)" gradientUnits="userSpaceOnUse">
+      <stop offset=".4" stop-color="#fff"/>
+      <stop offset=".6" stop-color="#fafbfb"/>
+      <stop offset=".7" stop-color="#edeff2"/>
+      <stop offset=".8" stop-color="#d8dce2"/>
+      <stop offset="1" stop-color="#bac2cd"/>
+      <stop offset="1" stop-color="#b5bdc9"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient1" x1="293.2" y1="344.6" x2="493.1" y2="466.1" xlink:href="#linear-gradient"/>
+    <radialGradient id="radial-gradient1" cy="343.3" fy="343.3" r="140.6" gradientTransform="translate(3.9 782.7) rotate(-90)" xlink:href="#radial-gradient"/>
+    <linearGradient id="linear-gradient2" x1="69.5" y1="76.2" x2="269.4" y2="197.7" xlink:href="#linear-gradient"/>
+    <radialGradient id="radial-gradient2" cx="121.5" cy="74.3" fx="121.5" fy="74.3" r="140.6" gradientTransform="translate(48 288.7) rotate(-90)" xlink:href="#radial-gradient"/>
+    <linearGradient id="linear-gradient3" x1="66.7" y1="256.8" x2="266.6" y2="378.3" xlink:href="#linear-gradient"/>
+    <radialGradient id="radial-gradient3" cx="121.5" cy="255.5" fx="121.5" fy="255.5" r="140.6" gradientTransform="translate(-133.2 470) rotate(-90)" xlink:href="#radial-gradient"/>
+    <linearGradient id="linear-gradient4" x1="293.2" y1="513.9" x2="493.1" y2="635.4" xlink:href="#linear-gradient"/>
+    <radialGradient id="radial-gradient4" cy="512.6" fy="512.6" r="140.6" gradientTransform="translate(-165.4 952) rotate(-90)" xlink:href="#radial-gradient"/>
+    <linearGradient id="linear-gradient5" x1="68.2" y1="426.1" x2="268.1" y2="547.7" xlink:href="#linear-gradient"/>
+    <radialGradient id="radial-gradient5" cx="121.5" cy="424.8" fx="121.5" fy="424.8" r="140.6" gradientTransform="translate(-302.6 639.3) rotate(-90)" xlink:href="#radial-gradient"/>
+    <linearGradient id="linear-gradient6" x1="245.1" y1="127" x2="266.5" y2="551.1" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#262e66"/>
+      <stop offset=".4" stop-color="#13649d"/>
+      <stop offset=".8" stop-color="#0590ca"/>
+      <stop offset="1" stop-color="#00a1dc"/>
+    </linearGradient>
+  </defs>
+  <g class="st13">
+    <g id="Objects">
+      <g>
+        <g>
+          <g>
+            <image class="st8" width="174" height="59" transform="translate(281 244)" xlink:href="Steps-illustrations-1.png"/>
+            <rect class="st12" x="281.2" y="153.7" width="173.5" height="111" rx="16.8" ry="16.8"/>
+            <g>
+              <path class="st9" d="M354.6,150.8h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(602.6 -184.1) rotate(90)"/>
+              <path class="st11" d="M354.6,149.7h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(601.5 -185.2) rotate(90)"/>
+            </g>
+            <text class="st7" transform="translate(296.3 223.3)"><tspan x="0" y="0">2</tspan></text>
+          </g>
+          <g>
+            <text class="st6" transform="translate(357.2 171.7)"><tspan x="0" y="0">Personalised</tspan><tspan x="-16.6" y="11">recommendations.</tspan></text>
+            <text class="st14" transform="translate(352.4 195.1)"><tspan x="0" y="0">Once we’ve gathered your </tspan><tspan x="-1.3" y="8.4">information, we’ll suggest a </tspan><tspan x="-8.1" y="16.8">tailored plan that matches your </tspan><tspan x="-6" y="25.2">retirement goals. Whether you </tspan><tspan x="4" y="33.6">prioritize growth, ethical </tspan><tspan x="-8" y="42">investing, or low-risk strategies, </tspan><tspan x=".1" y="50.4">we have options to fit your </tspan><tspan x="32.3" y="58.8">needs.</tspan></text>
+          </g>
+        </g>
+        <g>
+          <g>
+            <image class="st8" width="174" height="59" transform="translate(281 425)" xlink:href="Steps-illustrations-2.png"/>
+            <rect class="st1" x="280.2" y="333.9" width="173.5" height="111" rx="16.8" ry="16.8"/>
+            <g>
+              <path class="st9" d="M354.6,332.1h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(783.8 -2.8) rotate(90)"/>
+              <path class="st16" d="M354.6,331h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(782.7 -3.9) rotate(90)"/>
+            </g>
+            <text class="st7" transform="translate(296.3 404.5)"><tspan x="0" y="0">4</tspan></text>
+          </g>
+          <text class="st6" transform="translate(350.2 364.1)"><tspan x="0" y="0">Stay in control </tspan></text>
+          <text class="st14" transform="translate(350.7 374.3)"><tspan x="0" y="0">Access your consolidated </tspan><tspan x="-2" y="8.4">pension anytime through a </tspan><tspan x="-3.2" y="16.8">simple, intuitive dashboard. </tspan><tspan x="-2.7" y="25.2">Track your savings, monitor </tspan><tspan x="2.4" y="33.6">performance, and make </tspan><tspan x="1.4" y="42">contributions—all at your </tspan><tspan x="25.4" y="50.4">fingertips.</tspan></text>
+        </g>
+        <g>
+          <g>
+            <image class="st8" width="174" height="59" transform="translate(56 156)" xlink:href="Steps-illustrations-3.png"/>
+            <rect class="st0" x="56.4" y="65.5" width="173.5" height="111" rx="16.8" ry="16.8"/>
+            <g>
+              <path class="st9" d="M129.7,63.1h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(289.8 -46.9) rotate(90)"/>
+              <path class="st18" d="M129.7,62h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(288.7 -48) rotate(90)"/>
+            </g>
+            <text class="st7" transform="translate(71.5 135.5)"><tspan x="0" y="0">1</tspan></text>
+          </g>
+          <g>
+            <text class="st6" transform="translate(128 91.6)"><tspan x="0" y="0">Discover your</tspan><tspan x="14.4" y="11">pension.</tspan></text>
+            <text class="st14" transform="translate(119.6 115.1)"><tspan x="0" y="0">Start by letting us know about </tspan><tspan x="-.7" y="8.4">your existing pensions. Provide </tspan><tspan x="2.5" y="16.8">some basic details, and we’ll </tspan><tspan x="-2.3" y="25.2">get to work locating all your old </tspan><tspan x="3.2" y="33.6">and scattered pension pots.</tspan></text>
+          </g>
+        </g>
+        <g>
+          <image class="st8" width="174" height="59" transform="translate(56 338)" xlink:href="Steps-illustrations-4.png"/>
+          <rect class="st2" x="53.6" y="246.1" width="173.5" height="111" rx="16.8" ry="16.8"/>
+          <g>
+            <path class="st9" d="M129.7,244.3h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(471.1 134.3) rotate(90)"/>
+            <path class="st17" d="M129.7,243.2h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(470 133.2) rotate(90)"/>
+          </g>
+          <text class="st7" transform="translate(71.4 316.8)"><tspan x="0" y="0">3</tspan></text>
+          <g>
+            <text class="st6" transform="translate(126.9 273.1)"><tspan x="0" y="0">Combine your</tspan><tspan x="12.6" y="11">pensions.</tspan></text>
+            <text class="st14" transform="translate(119.7 296.6)"><tspan x="0" y="0">After you’ve chosen your plan, </tspan><tspan x="-.3" y="8.4">we’ll handle the entire transfer </tspan><tspan x="7" y="16.8">process for you. Our team </tspan><tspan x="1.4" y="25.2">ensures a smooth and secure </tspan><tspan x=".3" y="33.6">transfer of your funds into one </tspan><tspan x="5.2" y="42">easy-to-manage account.</tspan></text>
+          </g>
+        </g>
+        <g>
+          <g>
+            <image class="st8" width="174" height="59" transform="translate(281 595)" xlink:href="Steps-illustrations-5.png"/>
+            <rect class="st5" x="280.2" y="503.2" width="173.5" height="111" rx="16.8" ry="16.8"/>
+            <g>
+              <path class="st9" d="M354.6,501.4h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(953.1 166.5) rotate(90)"/>
+              <path class="st20" d="M354.6,500.3h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(952 165.4) rotate(90)"/>
+            </g>
+            <text class="st7" transform="translate(296.3 573.9)"><tspan x="0" y="0">6</tspan></text>
+          </g>
+          <text class="st6" transform="translate(371.9 526)"><tspan x="0" y="0">Plan for</tspan><tspan x="-9.2" y="11">your future</tspan></text>
+          <text class="st14" transform="translate(353.8 548.9)"><tspan x="0" y="0">Use our tools and expert </tspan><tspan x="-11.5" y="8.4">insights to keep your retirement </tspan><tspan x="-10.1" y="16.8">goals on track. Whether you’re </tspan><tspan x="-3.7" y="25.2">years away from retiring or </tspan><tspan x="-10.8" y="33.6">already planning, we’re here to </tspan><tspan x="-10.7" y="42">help you every step of the way.</tspan></text>
+        </g>
+        <g>
+          <g>
+            <image class="st8" width="174" height="59" transform="translate(56 507)" xlink:href="Steps-illustrations-6.png"/>
+            <rect class="st4" x="55.1" y="415.4" width="173.5" height="111" rx="16.8" ry="16.8"/>
+            <g>
+              <path class="st9" d="M129.7,413.6h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(640.4 303.7) rotate(90)"/>
+              <path class="st19" d="M129.7,412.5h77.4c7.7,0,14,6.3,14,14v88.8c0,7.7-6.3,14-14,14h-77.4c-7.7,0-14-6.3-14-14v-88.8c0-7.7,6.3-14,14-14Z" transform="translate(639.3 302.6) rotate(90)"/>
+            </g>
+            <text class="st7" transform="translate(71.4 486.1)"><tspan x="0" y="0">5</tspan></text>
+          </g>
+          <text class="st6" transform="translate(138.2 438.6)"><tspan x="0" y="0">Invest with</tspan><tspan x="-.8" y="11">confidence</tspan></text>
+          <text class="st14" transform="translate(124.7 461.5)"><tspan x="0" y="0">Your money is invested in a </tspan><tspan x="-1.2" y="8.4" xml:space="preserve">diverse range of companies  </tspan><tspan x="-1.5" y="16.8">aligned with your goals. Our </tspan><tspan x="-5.6" y="25.2">transparent approach ensures </tspan><tspan x="-4.4" y="33.6">you’re always informed about </tspan><tspan x="-4" y="42">where and how your money is </tspan><tspan x="29.7" y="50.4">growing.</tspan></text>
+        </g>
+        <path class="st3" d="M255.1,258.1l3.9-3.9c2.7-2.7,4.2-6.4,4.2-10.2v-61.4c0-4-1.6-7.8-4.5-10.5l-3.4-3.2c-2.3-2.2-3.6-5.3-3.6-8.5v-34.5h-2.8v34.5c0,4,1.6,7.8,4.5,10.5l3.4,3.2c2.3,2.2,3.6,5.3,3.6,8.5v61.4c0,3.1-1.2,6-3.4,8.2l-3.9,3.9c-2.7,2.7-4.2,6.4-4.2,10.2v68.8c0,4,1.7,7.8,4.6,10.6l3.3,3.1c2.3,2.2,3.7,5.3,3.7,8.5v63.5c0,3.9-1.9,7.5-5.2,9.7-4,2.7-6.4,7.2-6.4,12v64.3c0,4,1.6,7.8,4.5,10.5l3.4,3.2c2.3,2.2,3.6,5.3,3.6,8.5v38.6c.9-.1,1.9-.2,2.8-.2v-38.4c0-4-1.6-7.8-4.5-10.5l-3.4-3.2c-2.3-2.2-3.6-5.3-3.6-8.5v-64.3c0-3.9,1.9-7.5,5.2-9.7,4-2.7,6.4-7.2,6.4-12v-63.5c0-4-1.7-7.8-4.6-10.6l-3.3-3.1c-2.3-2.2-3.7-5.3-3.7-8.5v-68.8c0-3.1,1.2-6,3.4-8.2Z"/>
+        <g>
+          <path class="st10" d="M268.1,211.3c0,3.3-2.7,6-6,6s-6-2.7-6-6,2.7-6,6-6,6,2.7,6,6Z"/>
+          <path class="st15" d="M262,218.7c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4,7.4,3.3,7.4,7.4-3.3,7.4-7.4,7.4ZM262,206.7c-2.5,0-4.6,2.1-4.6,4.6s2.1,4.6,4.6,4.6,4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z"/>
+        </g>
+        <g>
+          <path class="st10" d="M256.6,302.9c0,3.3-2.7,6-6,6s-6-2.7-6-6,2.7-6,6-6,6,2.7,6,6Z"/>
+          <path class="st15" d="M250.6,310.4c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4,7.4,3.3,7.4,7.4-3.3,7.4-7.4,7.4ZM250.6,298.3c-2.5,0-4.6,2.1-4.6,4.6s2.1,4.6,4.6,4.6,4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z"/>
+        </g>
+        <g>
+          <path class="st10" d="M256.6,470.9c0,3.3-2.7,6-6,6s-6-2.7-6-6,2.7-6,6-6,6,2.7,6,6Z"/>
+          <path class="st15" d="M250.6,478.4c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4,7.4,3.3,7.4,7.4-3.3,7.4-7.4,7.4ZM250.6,466.3c-2.5,0-4.6,2.1-4.6,4.6s2.1,4.6,4.6,4.6,4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z"/>
+        </g>
+        <g>
+          <path class="st10" d="M268.1,390.1c0,3.3-2.7,6-6,6s-6-2.7-6-6,2.7-6,6-6,6,2.7,6,6Z"/>
+          <path class="st15" d="M262,397.5c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4,7.4,3.3,7.4,7.4-3.3,7.4-7.4,7.4ZM262,385.5c-2.5,0-4.6,2.1-4.6,4.6s2.1,4.6,4.6,4.6,4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z"/>
+        </g>
+        <g>
+          <path class="st10" d="M268.1,567.6c0,3.3-2.7,6-6,6s-6-2.7-6-6,2.7-6,6-6,6,2.7,6,6Z"/>
+          <path class="st15" d="M262,575c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4,7.4,3.3,7.4,7.4-3.3,7.4-7.4,7.4ZM262,563c-2.5,0-4.6,2.1-4.6,4.6s2.1,4.6,4.6,4.6,4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z"/>
+        </g>
+        <g>
+          <path class="st10" d="M256.6,120.2c0,3.3-2.7,6-6,6s-6-2.7-6-6,2.7-6,6-6,6,2.7,6,6Z"/>
+          <path class="st15" d="M250.5,127.6c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4,7.4,3.3,7.4,7.4-3.3,7.4-7.4,7.4ZM250.5,115.6c-2.5,0-4.6,2.1-4.6,4.6s2.1,4.6,4.6,4.6,4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

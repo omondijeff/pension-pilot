@@ -61,17 +61,17 @@
       </div>
     </div>
 
-    <!-- How It Works Section -->
-    <div class="how-it-works-section py-20">
-      <div class="max-w-5xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-gilroy-bold text-gray-800 mb-8">How It Works</h2>
-        <img
-          src="@/assets/how-it-works-illustration.png"
-          alt="How It Works Steps Illustration"
-          class="w-full h-auto rounded-lg shadow-lg"
-        />
-      </div>
-    </div>
+ <!-- How It Works Section -->
+<div class="how-it-works-section py-20">
+  <div class="max-w-5xl mx-auto px-4 text-center">
+    <h2 class="text-4xl font-gilroy-bold text-gray-800 mb-8">How It Works</h2>
+    <img
+      src="@/assets/pension-pilot-steps.svg" 
+      alt="How It Works Steps Illustration"
+      class="w-full h-auto rounded-lg shadow-lg"
+    />
+  </div>
+</div>
 
     <!-- CTA Section -->
     <section 
@@ -147,7 +147,7 @@
             alt="James Pattinson"
             class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
           />
-          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">James Pattinson (49)</h3>
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">James Pattinson</h3>
           <div class="flex justify-center text-gold mb-4">
             <i v-for="star in 5" :key="star" class="fas fa-star"></i>
           </div>
@@ -165,7 +165,7 @@
             alt="Annabelle"
             class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
           />
-          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Amara (37)</h3>
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Amara</h3>
           <div class="flex justify-center text-gold mb-4">
             <i v-for="star in 5" :key="star" class="fas fa-star"></i>
           </div>
@@ -183,7 +183,7 @@
             alt="Trevor Mitchell"
             class="mx-auto w-24 h-24 rounded-full object-cover mb-4"
           />
-          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Trevor Mitchell (41)</h3>
+          <h3 class="text-lg font-gilroy-bold text-gray-800 mb-2">Trevor Mitchell</h3>
           <div class="flex justify-center text-gold mb-4">
             <i v-for="star in 5" :key="star" class="fas fa-star"></i>
           </div>

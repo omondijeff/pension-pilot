@@ -103,7 +103,25 @@
             </div>
           </div>
 
-          <!-- Notification Component - Moved before the submit button -->
+          <!-- Terms and Conditions Checkbox -->
+          <div class="flex items-start space-x-2">
+            <div class="flex items-center h-5">
+              <input
+                id="terms"
+                type="checkbox"
+                v-model="acceptedTerms"
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                :disabled="isLoading"
+                required
+              />
+            </div>
+            <label for="terms" class="text-sm text-gray-600 font-gilroy-light">
+              I have read and agree to the 
+              <a href="/terms-conditions" target="_blank" class="text-blue-600 hover:underline">Terms and Conditions</a>
+            </label>
+          </div>
+
+          <!-- Notification Component -->
           <div class="notification-wrapper">
             <BaseNotification
               v-model:show="showNotification"
@@ -119,7 +137,7 @@
           <button
             type="submit"
             class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="isLoading"
+            :disabled="isLoading || !acceptedTerms"
           >
             <span v-if="isLoading">Creating your account...</span>
             <span v-else>Sign Up</span>
@@ -137,7 +155,6 @@
 </template>
 
 <script setup lang="ts">
-// Script section remains unchanged
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
@@ -152,6 +169,7 @@ const name = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const acceptedTerms = ref(false);
 
 // UI state
 const showPassword = ref(false);
@@ -213,6 +231,16 @@ const handleSignUp = async () => {
   try {
     // Reset any previous notifications
     showNotification.value = false;
+
+    // Validate terms acceptance
+    if (!acceptedTerms.value) {
+      showNotificationMessage(
+        'error',
+        'Terms Not Accepted',
+        'Please accept the terms and conditions to continue.'
+      );
+      return;
+    }
 
     // Validate password match
     if (password.value !== confirmPassword.value) {

@@ -75,7 +75,7 @@
               </div>
             </div>
             <a 
-              href="/forgot-password" 
+              href="/reset-password" 
               class="text-sm text-blue-600 hover:underline mt-2 block"
             >
               Forgot Password?

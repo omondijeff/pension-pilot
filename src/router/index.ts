@@ -36,6 +36,11 @@ const routes = [
         component: () => import('@/views/ContactPage.vue') 
       },
       { 
+        path: 'terms-conditions', 
+        name: 'Terms', 
+        component: () => import('@/views/TermsAndConditions.vue') 
+      },
+      { 
         path: 'login', 
         name: 'LogIn', 
         component: () => import('@/views/LoginPage.vue'),
@@ -62,7 +67,7 @@ const routes = [
         path: 'reset-password',
         name: 'ResetPassword',
         component: () => import('@/views/ResetPassword.vue'),
-        meta: { requiresGuest: true }
+        
       },
       { 
         path: 'about-you', 

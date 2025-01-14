@@ -85,7 +85,7 @@
               alt="Standard Plan"
               class="w-20 h-20 mx-auto"
             />
-            <p class="text-gray-600 font-gilroy-light mt-2">&lt; £100k</p>
+            <p class="text-gray-600 font-gilroy-light mt-2">1% &lt; £100k</p>
             <p class="text-sm font-bold text-gray-700">Standard</p>
           </div>
           <!-- Premium Plan -->
@@ -95,7 +95,7 @@
               alt="Premium Plan"
               class="w-20 h-20 mx-auto"
             />
-            <p class="text-gray-600 font-gilroy-light mt-2">&gt; £500k</p>
+            <p class="text-gray-600 font-gilroy-light mt-2">0.75% &gt; £500k</p>
             <p class="text-sm font-bold text-gray-700">Premium</p>
           </div>
           <!-- Exclusive Plan -->
@@ -105,7 +105,7 @@
               alt="Exclusive Plan"
               class="w-20 h-20 mx-auto"
             />
-            <p class="text-gray-600 font-gilroy-light mt-2">&gt; £1m</p>
+            <p class="text-gray-600 font-gilroy-light mt-2">0.5% &gt; £1m</p>
             <p class="text-sm font-bold text-gray-700">Exclusive</p>
           </div>
         </div>
