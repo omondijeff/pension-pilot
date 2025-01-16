@@ -16,8 +16,8 @@
         <p class="text-gray-600 font-gilroy-light text-base mt-4">
           Email, call, or complete the form to learn how PensionPilot can solve your pension problem.
         </p>
-        <p class="text-gray-600 font-gilroy-light text-base mt-4">info@pensionpilot.co.uk</p>
-        <p class="text-gray-600 font-gilroy-light text-base">123-123-123</p>
+        <p class="text-gray-600 font-gilroy-light text-base mt-4"><a href="mailto:info@pensionpilot.co.uk" class="text-blue-600 hover:underline"> info@pensionpilot.co.uk</a></p>
+        <!-- <p class="text-gray-600 font-gilroy-light text-base">123-123-123</p> -->
 
         <div class="socials mt-8">
           <h2 class="text-lg font-gilroy-bold text-gray-800">Socials</h2>

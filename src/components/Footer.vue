@@ -28,10 +28,10 @@
         <div>
           <h3 class="text-xl font-gilroy-bold mb-4">Contact Us</h3>
           <p class="text-sm leading-relaxed font-gilroy-light">
-            Email: <a href="mailto:support@pensionpilot.com" class="text-primary hover:text-gray-600">support@pensionpilot.com</a>
+            Email: <a href="mailto:info@pensionpilot.com" class="text-primary hover:text-gray-600">info@pensionpilot.com</a>
           </p>
           <p class="text-sm leading-relaxed font-gilroy-light">
-            Phone: <a href="tel:+1234567890" class="text-primary hover:text-gray-600">+1 (234) 567-890</a>
+            <!-- Phone: <a href="tel:+1234567890" class="text-primary hover:text-gray-600">+1 (234) 567-890</a> -->
           </p>
         </div>
 

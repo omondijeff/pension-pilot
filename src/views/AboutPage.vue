@@ -66,9 +66,9 @@
   <div class="max-w-5xl mx-auto px-4 text-center">
     <h2 class="text-4xl font-gilroy-bold text-gray-800 mb-8">How It Works</h2>
     <img
-      src="@/assets/pension-pilot-steps.svg" 
+      src="@/assets/teps-illustrations.png" 
       alt="How It Works Steps Illustration"
-      class="w-full h-auto rounded-lg shadow-lg"
+      class="w-full h-auto"
     />
   </div>
 </div>

@@ -1,102 +1,104 @@
 <!-- src/views/LoginPage.vue -->
 <template>
-  <section class="login-page flex flex-col md:flex-row h-screen">
-    <!-- Left Column (Image) -->
-    <div class="image-section w-full md:w-1/2 h-1/2 md:h-full">
-      <img
-        src="@/assets/login-page.png"
-        alt="Happy people"
-        class="w-full h-full object-cover"
-      />
-    </div>
-
-    <!-- Right Column (Form Wrapper) -->
-    <div class="form-wrapper w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center bg-white px-4 md:px-16 py-8 md:py-0 overflow-y-auto">
-      <!-- Form Section -->
-      <div class="form-section">
-        <!-- Notification Component -->
-        <BaseNotification
-          v-model:show="showNotification"
-          :type="notificationType"
-          :message="notificationMessage"
-          :title="notificationTitle"
-          :duration="5000"
-          @dismiss="handleNotificationDismiss"
+  <div class="min-h-screen bg-white">
+    <div class="block md:grid md:grid-cols-2">
+      <!-- Left Column (Image) -->
+      <div class="h-64 md:h-screen">
+        <img
+          src="@/assets/login-page.png"
+          alt="Happy people"
+          class="w-full h-full object-cover"
         />
+      </div>
 
-        <!-- Heading -->
-        <h2 class="text-2xl font-gilroy-bold text-gray-800 text-center md:text-left">
-          Log In
-        </h2>
-
-           <!-- Sign Up Link -->
-           <p class="text-center mt-4 text-gray-600 font-gilroy-light">
-          Don't have an account? 
-          <a href="/signup" class="text-blue-600 hover:underline">Sign Up</a>
-        </p>
-
-        <!-- Login Form -->
-        <form @submit.prevent="handleLogin" class="space-y-4 mt-6">
-          <!-- Email Input -->
-          <div>
-            <label for="email" class="block text-sm text-gray-600 mb-2 font-gilroy-light">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
-              placeholder="Email Address"
-              v-model="email"
-              required
+      <!-- Right Column (Form Wrapper) -->
+      <div class="h-auto min-h-[calc(100vh-16rem)] md:min-h-screen bg-white px-4 md:px-16 py-8 md:py-0 flex items-center">
+        <div class="w-full max-w-[400px] mx-auto md:ml-[74px] md:mr-auto">
+          <!-- Form Section -->
+          <div class="form-section">
+            <!-- Notification Component -->
+            <BaseNotification
+              v-model:show="showNotification"
+              :type="notificationType"
+              :message="notificationMessage"
+              :title="notificationTitle"
+              :duration="5000"
+              @dismiss="handleNotificationDismiss"
             />
-          </div>
 
-          <!-- Password Input -->
-          <div>
-            <label for="password" class="block text-sm text-gray-600 mb-2 font-gilroy-light">
-              Password
-            </label>
-            <div class="relative">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                id="password"
-                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200 pr-10"
-                placeholder="Password"
-                v-model="password"
-                required
-              />
-              <div
-                @click="togglePassword"
-                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
-              >
-                <EyeIcon v-if="!showPassword" class="h-5 w-5" />
-                <EyeSlashIcon v-else class="h-5 w-5" />
+            <!-- Heading -->
+            <h2 class="text-2xl font-gilroy-bold text-gray-800 text-center md:text-left">
+              Log In
+            </h2>
+
+            <!-- Sign Up Link -->
+            <p class="text-center md:text-left mt-4 text-gray-600 font-gilroy-light">
+              Don't have an account? 
+              <a href="/signup" class="text-blue-600 hover:underline">Sign Up</a>
+            </p>
+
+            <!-- Login Form -->
+            <form @submit.prevent="handleLogin" class="space-y-4 mt-6">
+              <!-- Email Input -->
+              <div>
+                <label for="email" class="block text-sm text-gray-600 mb-2 font-gilroy-light">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+                  placeholder="Email Address"
+                  v-model="email"
+                  required
+                />
               </div>
-            </div>
-            <a 
-              href="/reset-password" 
-              class="text-sm text-blue-600 hover:underline mt-2 block"
-            >
-              Forgot Password?
-            </a>
+
+              <!-- Password Input -->
+              <div>
+                <label for="password" class="block text-sm text-gray-600 mb-2 font-gilroy-light">
+                  Password
+                </label>
+                <div class="relative">
+                  <input
+                    :type="showPassword ? 'text' : 'password'"
+                    id="password"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200 pr-10"
+                    placeholder="Password"
+                    v-model="password"
+                    required
+                  />
+                  <div
+                    @click="togglePassword"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+                  >
+                    <EyeIcon v-if="!showPassword" class="h-5 w-5" />
+                    <EyeSlashIcon v-else class="h-5 w-5" />
+                  </div>
+                </div>
+                <a 
+                  href="/reset-password" 
+                  class="text-sm text-blue-600 hover:underline mt-2 block"
+                >
+                  Forgot Password?
+                </a>
+              </div>
+
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+                :disabled="isLoading"
+              >
+                <span v-if="isLoading">Logging in...</span>
+                <span v-else>Log In</span>
+              </button>
+            </form>
           </div>
-
-          <!-- Submit Button -->
-          <button
-            type="submit"
-            class="w-full py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90"
-            :disabled="isLoading"
-          >
-            <span v-if="isLoading">Logging in...</span>
-            <span v-else>Log In</span>
-          </button>
-        </form>
-
-       
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">

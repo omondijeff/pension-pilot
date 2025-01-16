@@ -218,7 +218,7 @@
           </label> -->
           <label class="flex items-start space-x-2 text-gray-600 font-gilroy-light mt-4 cursor-pointer">
             <input type="checkbox" v-model="confirmTerms" class="mt-1" />
-            <span>I confirm that I've read, understand, and agree to the Terms, including the Declarations, Data Protection, and Transfer authorizations contained therein.</span>
+            <span>I confirm that I've read, understand, and agree to the <a href="/terms-conditions" target="_blank" class="text-blue-600 hover:underline">Terms and Conditions</a>, including the Declarations, Data Protection, and Transfer authorizations contained therein.</span>
           </label>
         </div>
 
