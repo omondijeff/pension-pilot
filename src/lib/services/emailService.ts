@@ -155,7 +155,7 @@ Thank you for providing your pension details. We're thrilled to have you on boar
 
 We've begun the process of consolidating your pension, and while this typically takes up to 12 weeks, it's possible we'll complete it sooner. Rest assured, we're committed to keeping you informed every step of the way.
 
-If we require any additional information or documents from you, we'll reach out promptly. In the meantime, if you have any questions or would like an update, feel free to contact us at info@pension-pilot.co.uk or 0800 123 4567.
+If we require any additional information or documents from you, we'll reach out promptly. In the meantime, if you have any questions or would like an update, feel free to contact us at info@pension-pilot.co.uk.
 
 Thank you for trusting us with your pension journey. We look forward to helping you simplify your retirement planning.
 
