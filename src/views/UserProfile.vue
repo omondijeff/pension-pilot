@@ -162,7 +162,7 @@
     >
       <option value="">Select gender</option>
       <option value="Male">Male</option>
-      <option value="Femal">Female</option>
+      <option value="Female">Female</option>
       <option value="Other">Other</option>
       <option value="Prefer_Not_To_Say">Prefer not to say</option>
     </select>
