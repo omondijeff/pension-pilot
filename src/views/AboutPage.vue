@@ -14,35 +14,33 @@
     </div>
 
     <!-- Features Section -->
-    <div class="features-section max-w-5xl mx-auto mt-20 px-4 grid grid-cols-1 sm:grid-cols-3 gap-12">
-      <div class="feature text-center shadow-md rounded-lg">
-        <img src="@/assets/feature-icon-1.png" alt="Feature 1" class="w-full h-40 object-cover rounded-t-lg" />
-        <div class="p-6">
-          <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Combine Pensions</h3>
-          <p class="text-gray-600 font-gilroy-light text-base mt-2">
-            Easily bring all your pensions together in just a few clicks. Save time, reduce hassle, and get a clear view of your retirement savings—all in minutes.
-          </p>
-        </div>
-      </div>
-      <div class="feature text-center shadow-md rounded-lg">
-        <img src="@/assets/feature-icon-2.png" alt="Feature 2" class="w-full h-40 object-cover rounded-t-lg" />
-        <div class="p-6">
-          <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Grow Your Pot</h3>
-          <p class="text-gray-600 font-gilroy-light text-base mt-2">
-            Boost your pension with seamless contributions and the expertise of our dedicated investment team. Watch your savings grow with strategies tailored to your future goals.
-          </p>
-        </div>
-      </div>
-      <div class="feature text-center shadow-md rounded-lg">
-        <img src="@/assets/feature-icon-3.png" alt="Feature 3" class="w-full h-40 object-cover rounded-t-lg" />
-        <div class="p-6">
-          <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Withdraw with Ease</h3>
-          <p class="text-gray-600 font-gilroy-light text-base mt-2">
-            Access your pension whenever you need it, with a simple and hassle-free withdrawal process.
-          </p>
-        </div>
-      </div>
+<!-- Features Section -->
+<div class="features-section max-w-5xl mx-auto mt-20 px-4 grid grid-cols-1 sm:grid-cols-2 gap-12">
+  
+  <!-- Feature 1: Combine Pensions -->
+  <div class="feature text-center shadow-md rounded-lg">
+    <img src="@/assets/feature-icon-1.png" alt="Feature 1" class="w-full h-40 object-cover rounded-t-lg" />
+    <div class="p-6">
+      <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Combine Pensions</h3>
+      <p class="text-gray-600 font-gilroy-light text-base mt-2">
+        Easily bring all your pensions together in just a few clicks. Save time, reduce hassle, and get a clear view of your retirement savings—all in minutes.
+      </p>
     </div>
+  </div>
+
+  <!-- Feature 2: Withdraw with Ease -->
+  <div class="feature text-center shadow-md rounded-lg">
+    <img src="@/assets/feature-icon-3.png" alt="Feature 3" class="w-full h-40 object-cover rounded-t-lg" />
+    <div class="p-6">
+      <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Withdraw with Ease</h3>
+      <p class="text-gray-600 font-gilroy-light text-base mt-2">
+        Access your pension whenever you need it, with a simple and hassle-free withdrawal process.
+      </p>
+    </div>
+  </div>
+
+</div>
+
 
     <!-- About Section -->
     <div class="about-section max-w-5xl mx-auto mt-20 px-4">
