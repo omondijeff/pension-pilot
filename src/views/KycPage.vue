@@ -88,6 +88,15 @@
             >
               Female
             </button>
+            <button
+              type="button"
+              :class="form.gender === 'Prefer Not To Say' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'"
+              @click="form.gender = 'Prefer Not To Say'"
+              class="p-3 w-full rounded-lg border"
+            >
+              Prefer Not To Say
+            </button>
+            
           </div>
           <p v-if="formErrors.gender" class="text-red-500 text-sm mt-1">
             {{ formErrors.gender }}
