@@ -147,7 +147,7 @@ router.beforeEach(async (to, _from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!authStore.isLoggedIn) {
         next({
-          name: 'LogIn',
+          name: 'SignUp',
           query: { redirect: to.fullPath }
         });
         return;

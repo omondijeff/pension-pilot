@@ -62,7 +62,8 @@
 
       <!-- Footer Bottom -->
       <div class="mt-12 text-center">
-        <p class="text-sm font-gilroy-light">&copy; 2024 PensionPilot. All rights reserved.</p>
+        <p class="text-sm font-gilroy-light">&copy; {{ currentYear }} PensionPilot. All rights reserved.</p>
+
         <div class="mt-4 space-x-6">
           <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
             <i class="fab fa-facebook-f"></i>
@@ -70,10 +71,10 @@
           <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
             <i class="fab fa-twitter"></i>
           </a>
-          <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+          <a href="https://www.linkedin.com/company/pension-pilot/" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
             <i class="fab fa-linkedin-in"></i>
           </a>
-          <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+          <a href="https://www.instagram.com/pension_pilot" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
             <i class="fab fa-instagram"></i>
           </a>
         </div>
@@ -83,8 +84,13 @@
 </template>
 
 <script setup>
+import '@fortawesome/fontawesome-free/css/all.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 // Data for the subscription form
 let subscriberEmail = '';
+
+const currentYear = new Date().getFullYear();
+
 
 // Handle the subscription form submission
 const handleSubscription = () => {
