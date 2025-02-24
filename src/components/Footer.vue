@@ -65,11 +65,11 @@
         <p class="text-sm font-gilroy-light">&copy; {{ currentYear }} PensionPilot. All rights reserved.</p>
 
         <div class="mt-4 space-x-6">
-          <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+          <a href="https://www.facebook.com/profile.php?id=61573726583927" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
             <i class="fab fa-facebook-f"></i>
           </a>
-          <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
-            <i class="fab fa-twitter"></i>
+          <a href="https://x.com/PensionPilot" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+            <i class="fab fa-x-twitter"></i>
           </a>
           <a href="https://www.linkedin.com/company/pension-pilot/" class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
             <i class="fab fa-linkedin-in"></i>
