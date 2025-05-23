@@ -18,8 +18,7 @@
         </h1>
         <!-- Paragraph -->
         <p class="text-right text-sm sm:text-lg md:text-xl font-gilroy-light mt-4 md:mt-6">
-          Combine, manage, and grow your pensions effortlessly. Whether you’re planning, saving, 
-          or withdrawing, PensionPilot empowers you to take control of your financial future.
+          Easily locate your old pension pots, <strong>consolidate</strong> them into one clear account, and <strong>invest</strong> with confidence through trusted experts.
         </p>
         <!-- Buttons -->
         <div class="flex flex-row flex-wrap justify-end mt-6 md:mt-10 gap-4">
