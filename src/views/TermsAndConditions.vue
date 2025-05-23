@@ -35,6 +35,16 @@
             </ul>
           </div>
         </div>
+
+        <!-- Fees Section -->
+        <div class="terms-section mb-12">
+          <h2 class="text-2xl font-gilroy-bold text-gray-800 mb-6">2. Fees</h2>
+          <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+            <p class="text-gray-600 font-gilroy-light mb-4">
+              Pension Pilot offers complimentary pension consolidation when you choose to invest your pension assets with one of our trusted partner providers. However, if you prefer to manage your investments independently, a flat fee of £220 will apply, which will be deducted from your pension pot.
+            </p>
+          </div>
+        </div>
   
         <!-- Fees and Charges -->
         <div class="terms-section mb-12">
