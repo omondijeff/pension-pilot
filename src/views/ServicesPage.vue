@@ -91,42 +91,11 @@
     <!-- Fees Coverage Section -->
     <div class="fees-coverage-section max-w-5xl mx-auto mt-24 px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div>
-        <h2 class="text-3xl font-gilroy-bold text-gray-900 mb-8">Fees Coverage</h2>
-        <div class="space-y-6">
-          <div class="flex items-start space-x-4">
-            <div class="flex-shrink-0">
-              <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-gilroy-medium text-gray-700">No charges for:</h4>
-              <ul class="list-disc list-inside text-gray-600 font-gilroy-light space-y-2">
-                <li>Consolidating your pension</li>
-                <li>Transferring your pension</li>
-                <li>Switching plans</li>
-                <li>Adding funds</li>
-              </ul>
-            </div>
-          </div>
-          <div class="bg-white rounded-xl p-8 shadow-sm">
-            <h3 class="text-xl font-gilroy-bold text-gray-900 mb-4">Fees</h3>
-            <p class="text-gray-600 font-gilroy-light mb-6">
-              One-time fee of £220 for independent investment management
-            </p>
-            <div class="flex items-center justify-between">
-              <div>
-                <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-              <div class="text-right">
-                <p class="text-gray-600 font-gilroy-light">Free consolidation</p>
-                <p class="text-sm font-bold text-gray-700">Partner Investment</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h2 class="text-3xl font-gilroy-bold text-gray-900 mb-8">One Time Fee</h2>
+        <p class="text-gray-600 font-gilroy-light">
+
+          Pension Pilot offers complimentary pension consolidation when you choose to invest your pension assets with one of our trusted partner providers. However, if you prefer to manage your investments independently, a flat fee of £220 will apply, which will be deducted from your pension pot.
+        </p>
       </div>
       <div>
         <img
@@ -134,6 +103,15 @@
           alt="Fees Illustration"
           class="w-full h-auto rounded-lg"
         />
+      </div>
+    </div>
+
+    <div class="contact-section bg-white py-24 px-4">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-3xl font-gilroy-bold text-gray-900 mb-8 text-center">Ready to Consolidate Your Pensions?</h2>
+        <p class="text-gray-600 font-gilroy-light text-center mb-12">
+          Contact us today to start consolidating your pensions and take control of your retirement savings.
+        </p>
       </div>
     </div>
   </section>
