@@ -60,7 +60,7 @@
   <div class="max-w-5xl mx-auto px-4 text-center">
     <h2 class="text-4xl font-gilroy-bold text-gray-800 mb-8">How It Works</h2>
     <img
-      src="@/assets/teps-illustrations.png" 
+      src="@/assets/ssteps.svg" 
       alt="How It Works Steps Illustration"
       class="w-full h-auto"
     />
