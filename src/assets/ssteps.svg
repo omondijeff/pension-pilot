@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="1000" viewBox="0 0 1200 1000">
+  <defs>
+    <!-- Your primary gradient -->
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(263.24)">
+      <stop offset="0.74%" style="stop-color:#4569AE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3F9FD7;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.95" />
+    </linearGradient>
+    
+    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4569AE;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#3F9FD7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4569AE;stop-opacity:0.8" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="rgba(69, 105, 174, 0.08)"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(69, 105, 174, 0.04)"/>
+    </filter>
+    
+    <filter id="circleShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(69, 105, 174, 0.15)"/>
+    </filter>
+  </defs>
+
+  <style>
+    .step-card {
+      fill: url(#cardGradient);
+      stroke: rgba(69, 105, 174, 0.1);
+      stroke-width: 2;
+      filter: url(#cardShadow);
+    }
+
+    .step-title {
+      font-family: 'Gilroy-Bold', sans-serif;
+      font-size: 24px;
+      fill: #4569AE;
+      font-weight: bold;
+    }
+
+    .step-body {
+      font-family: 'Gilroy-Regular', sans-serif;
+      font-size: 16px;
+      fill: #343A40;
+      line-height: 1.5;
+    }
+
+    .step-circle {
+      fill: url(#primaryGradient);
+      filter: url(#circleShadow);
+    }
+
+    .step-number {
+      font-family: 'Gilroy-Bold', sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      fill: #FFFFFF;
+    }
+
+    .timeline-line {
+      stroke: url(#lineGradient);
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    .connection-line {
+      stroke: rgba(69, 105, 174, 0.3);
+      stroke-width: 2;
+      stroke-dasharray: 8,4;
+    }
+
+    .icon-bg {
+      fill: rgba(69, 105, 174, 0.1);
+    }
+
+    .icon {
+      stroke: #4569AE;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
+
+  <!-- Background -->
+  <rect width="1200" height="1000" fill="#FFFFFF"/>
+
+  <!-- Main Timeline -->
+  <line x1="600" y1="80" x2="600" y2="920" class="timeline-line"/>
+
+  <!-- Step 1: Discover your pension -->
+  <circle cx="600" cy="120" r="28" class="step-circle"/>
+  <text x="600" y="128" text-anchor="middle" class="step-number">1</text>
+  
+  <line x1="572" y1="120" x2="540" y2="120" class="connection-line"/>
+  
+  <rect x="80" y="70" width="460" height="180" rx="6" class="step-card"/>
+  <circle cx="130" cy="120" r="24" class="icon-bg"/>
+  <!-- Search icon (Lucide) -->
+  <g class="icon" transform="translate(118, 108)">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="21 21-4.35-4.35"/>
+  </g>
+  
+  <text x="170" y="115" class="step-title">Discover your pension</text>
+  <foreignObject x="170" y="135" width="340" height="100">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Gilroy-Regular', sans-serif; font-size: 16px; color: #343A40; line-height: 1.5;">
+      Start by letting us know about your existing pensions. Provide some basic details, and we'll get to work locating all your old and scattered pension pots.
+    </div>
+  </foreignObject>
+
+  <!-- Step 2: Combine your pensions -->
+  <circle cx="600" cy="320" r="28" class="step-circle"/>
+  <text x="600" y="328" text-anchor="middle" class="step-number">2</text>
+  
+  <line x1="628" y1="320" x2="660" y2="320" class="connection-line"/>
+  
+  <rect x="660" y="270" width="460" height="200" rx="6" class="step-card"/>
+  <circle cx="710" cy="320" r="24" class="icon-bg"/>
+  <!-- Merge icon (Lucide GitMerge) -->
+  <g class="icon" transform="translate(698, 308)">
+    <circle cx="18" cy="18" r="3"/>
+    <circle cx="6" cy="6" r="3"/>
+    <path d="M6 21V9a9 9 0 0 0 9 9"/>
+  </g>
+  
+  <text x="750" y="315" class="step-title">Combine your pensions</text>
+  <foreignObject x="750" y="335" width="340" height="120">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Gilroy-Regular', sans-serif; font-size: 16px; color: #343A40; line-height: 1.5;">
+      Once we have located and highlighted your pensions, our panel of trusted Independent Financial Advisers (IFAs) will review your pensions and provide a personalised suitability report, outlining the best way to consolidate your savings.
+    </div>
+  </foreignObject>
+
+  <!-- Step 3: Stay in control -->
+  <circle cx="600" cy="520" r="28" class="step-circle"/>
+  <text x="600" y="528" text-anchor="middle" class="step-number">3</text>
+  
+  <line x1="572" y1="520" x2="540" y2="520" class="connection-line"/>
+  
+  <rect x="80" y="470" width="460" height="200" rx="6" class="step-card"/>
+  <circle cx="130" cy="520" r="24" class="icon-bg"/>
+  <!-- Monitor icon (Lucide) -->
+  <g class="icon" transform="translate(118, 508)">
+    <rect width="20" height="14" x="2" y="3" rx="2"/>
+    <line x1="8" x2="16" y1="21" y2="21"/>
+    <line x1="12" x2="12" y1="17" y2="21"/>
+  </g>
+  
+  <text x="170" y="515" class="step-title">Stay in control</text>
+  <foreignObject x="170" y="535" width="340" height="120">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Gilroy-Regular', sans-serif; font-size: 16px; color: #343A40; line-height: 1.5;">
+      Once you're happy with the plan, the IFA will handle the secure transfer of your funds into one easy-to-manage account — keeping you in control every step of the way.
+    </div>
+  </foreignObject>
+
+  <!-- Step 4: Invest with confidence -->
+  <circle cx="600" cy="720" r="28" class="step-circle"/>
+  <text x="600" y="728" text-anchor="middle" class="step-number">4</text>
+  
+  <line x1="628" y1="720" x2="660" y2="720" class="connection-line"/>
+  
+  <rect x="660" y="670" width="460" height="200" rx="6" class="step-card"/>
+  <circle cx="710" cy="720" r="24" class="icon-bg"/>
+  <!-- TrendingUp icon (Lucide) -->
+  <g class="icon" transform="translate(698, 708)">
+    <polyline points="22,6 12,16 8,12 2,18"/>
+    <polyline points="16,6 22,6 22,12"/>
+  </g>
+  
+  <text x="750" y="715" class="step-title">Invest with confidence</text>
+  <foreignObject x="750" y="735" width="340" height="120">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Gilroy-Regular', sans-serif; font-size: 16px; color: #343A40; line-height: 1.5;">
+      Once your pensions are consolidated, you'll have the option to invest your consolidated pension through one of our trusted partners, with a strategy tailored to your goals and risk level — low, medium, or high.
+    </div>
+  </foreignObject>
+
+  <!-- Subtle decorative elements using your brand colors -->
+  <circle cx="100" cy="100" r="2" fill="rgba(69, 105, 174, 0.2)"/>
+  <circle cx="1100" cy="300" r="3" fill="rgba(63, 159, 215, 0.15)"/>
+  <circle cx="150" cy="800" r="2" fill="rgba(69, 105, 174, 0.2)"/>
+  <circle cx="1050" cy="800" r="2.5" fill="rgba(63, 159, 215, 0.18)"/>
+</svg>

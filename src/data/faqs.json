@@ -1,27 +1,52 @@
 [
   {
-    "question": "What is PensionPilot?",
-    "answer": "PensionPilot is a platform designed to help you manage, consolidate, and grow your pensions effortlessly.",
+    "question": "What does Pension Pilot do?",
+    "answer": "Pension Pilot helps you find, track, and consolidate all your pension pots into one simple, easy-to-manage account. We also offer access to personalised financial advice and investment options through our trusted partners.",
     "category": "General"
   },
   {
-    "question": "How do I transfer my pension?",
-    "answer": "To transfer your pension, simply log in to your account, go to 'Add Pension,' and follow the instructions.",
-    "category": "General"
+    "question": "How does the pension consolidation process work?",
+    "answer": "Once you provide a few basic details, we'll locate your existing pensions—even dormant or forgotten ones. A qualified Independent Financial Adviser (IFA) from our panel will then assess your pensions and provide a personalised suitability report. If you're happy with the recommendation, the IFA will handle the secure transfer of your funds into one account.",
+    "category": "Process"
   },
   {
-    "question": "Is PensionPilot secure?",
-    "answer": "Yes, we prioritize the security of your personal and financial information. All data is encrypted and handled with care.",
-    "category": "Security"
-  },
-  {
-    "question": "Are there any fees?",
-    "answer": "We charge a simple annual fee based on your pension savings. For more details, please check our Fees Coverage section.",
+    "question": "Is the service free?",
+    "answer": "Pension Pilot offers complimentary pension consolidation when you choose to invest through one of our trusted partner providers. If you prefer to manage your investments independently, a flat fee of £220 will be deducted from your pension pot.",
     "category": "Fees"
   },
   {
-    "question": "Can I change my investment plan later?",
-    "answer": "Yes, you can switch your plan at any time without additional charges.",
-    "category": "Plans"
+    "question": "Who provides the financial advice?",
+    "answer": "All advice is provided by FCA-regulated, qualified Independent Financial Advisers (IFAs) from our approved panel. You'll receive a suitability report tailored to your financial goals and risk profile.",
+    "category": "Advice"
+  },
+  {
+    "question": "What investment options are available?",
+    "answer": "Once your pensions are consolidated, you can choose to invest through one of our trusted partners. You'll be offered an investment strategy aligned to your risk tolerance—low, medium, or high.",
+    "category": "Investment"
+  },
+  {
+    "question": "Can I still use Pension Pilot if I don't want to invest?",
+    "answer": "Yes. You can still consolidate your pensions and opt not to invest through our partners. In this case, a one-time fee of £220 will apply, deducted from your pension pot.",
+    "category": "Options"
+  },
+  {
+    "question": "Is my money safe?",
+    "answer": "Yes. All transfers and advice are handled by FCA-regulated advisers, and we only work with trusted investment providers. Your funds remain protected throughout the process.",
+    "category": "Security"
+  },
+  {
+    "question": "How long does the process take?",
+    "answer": "The timeline can vary depending on your pension providers, but most consolidations are completed within a maximum of 12 weeks. We'll keep you informed at every step.",
+    "category": "Process"
+  },
+  {
+    "question": "Do I need to contact my old pension providers?",
+    "answer": "No. Once you've given us your details and consent, we'll handle all communication with your old providers and manage the entire consolidation process for you.",
+    "category": "Process"
+  },
+  {
+    "question": "What if I have multiple pensions with different providers?",
+    "answer": "That's exactly what Pension Pilot is for. We specialise in helping you track and consolidate multiple pensions into a single account, so you can manage everything in one place.",
+    "category": "General"
   }
 ]
