@@ -1,29 +1,32 @@
 <template>
-  <section class="our-plans-page bg-white">
+  <section class="our-plans-page relative bg-gradient-to-br from-white to-gray-50 overflow-hidden">
     <!-- Banner Section -->
-    <div class="banner w-full h-48 md:h-64">
+    <div class="banner w-full h-48 md:h-64 relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 opacity-50"></div>
       <img
         src="@/assets/plans-banner.png"
         alt="Our Plans Banner"
-        class="w-full h-full object-cover"
+        class="w-full h-full object-cover mix-blend-multiply"
       />
     </div>
 
     <!-- Why Choose Pension Pilot? Section -->
-    <div class="why-choose-section max-w-5xl mx-auto mt-12 px-4">
-      <h1 class="text-4xl font-gilroy-bold text-gray-800 mb-8">
+    <div class="why-choose-section max-w-5xl mx-auto mt-16 px-4">
+      <h1 class="text-4xl font-gilroy-bold text-gray-900 mb-12">
         Why Choose Pension Pilot?
       </h1>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
         <!-- Benefit Cards -->
-        <div class="plan-card text-center">
-          <img
-            src="@/assets/low-risk-icon.png"
-            alt="Pension Tracking Icon"
-            class="w-20 h-20 mx-auto"
-          />
-          <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Pension Tracking & Discovery</h3>
-          <p class="text-gray-600 font-gilroy-light mt-2">
+        <div class="plan-card group text-center bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-8">
+          <div class="w-20 h-20 mx-auto mb-6">
+            <img
+              src="@/assets/low-risk-icon.png"
+              alt="Pension Tracking Icon"
+              class="w-full h-full object-contain"
+            />
+          </div>
+          <h3 class="text-xl font-gilroy-bold text-gray-900 mb-4">Pension Tracking & Discovery</h3>
+          <p class="text-gray-600 font-gilroy-light text-base leading-relaxed">
             We help locate all your existing pensions, including dormant or forgotten accounts.
           </p>
         </div>
@@ -86,31 +89,42 @@
     </div>
 
     <!-- Fees Coverage Section -->
-    <div class="fees-coverage-section max-w-5xl mx-auto mt-20 px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+    <div class="fees-coverage-section max-w-5xl mx-auto mt-24 px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div>
-        <h2 class="text-3xl font-gilroy-bold text-gray-800 mb-6">Fees Coverage</h2>
-        <p class="text-gray-600 font-gilroy-light text-lg mb-4">
-          Joining PensionPilot is completely free! We charge a simple and highly competitive annual fee based on your pension savings.
-        </p>
-        <ul class="list-disc pl-5 text-gray-600 font-gilroy-light space-y-2">
-          <li><strong>No charges for:</strong></li>
-          <li>Consolidating your pension.</li>
-          <li>Transferring your pension to PensionPilot or moving it elsewhere.</li>
-          <li>Switching to a different plan within the PensionPilot.</li>
-          <li>Adding funds to your pension.</li>
-        </ul>
-        <h3 class="text-xl font-gilroy-bold text-gray-800 mt-6">Fees</h3>
-        <p class="text-gray-600 font-gilroy-light mb-4">One-time fee of £220 for independent investment management</p>
-        <div class="fees-categories flex space-x-6 items-center">
-          <!-- Standard Plan -->
-          <div class="text-center">
-            <img
-              src="@/assets/standard-fee-icon.png"
-              alt="Standard Plan"
-              class="w-20 h-20 mx-auto"
-            />
-            <p class="text-gray-600 font-gilroy-light mt-2">Free consolidation</p>
-            <p class="text-sm font-bold text-gray-700">Partner Investment</p>
+        <h2 class="text-3xl font-gilroy-bold text-gray-900 mb-8">Fees Coverage</h2>
+        <div class="space-y-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-gilroy-medium text-gray-700">No charges for:</h4>
+              <ul class="list-disc list-inside text-gray-600 font-gilroy-light space-y-2">
+                <li>Consolidating your pension</li>
+                <li>Transferring your pension</li>
+                <li>Switching plans</li>
+                <li>Adding funds</li>
+              </ul>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl p-8 shadow-sm">
+            <h3 class="text-xl font-gilroy-bold text-gray-900 mb-4">Fees</h3>
+            <p class="text-gray-600 font-gilroy-light mb-6">
+              One-time fee of £220 for independent investment management
+            </p>
+            <div class="flex items-center justify-between">
+              <div>
+                <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="text-right">
+                <p class="text-gray-600 font-gilroy-light">Free consolidation</p>
+                <p class="text-sm font-bold text-gray-700">Partner Investment</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -118,7 +132,7 @@
         <img
           src="@/assets/fees-coverage-illustration.png"
           alt="Fees Illustration"
-          class="w-full h-auto"
+          class="w-full h-auto rounded-lg"
         />
       </div>
     </div>
