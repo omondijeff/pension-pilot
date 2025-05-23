@@ -27,9 +27,11 @@
         Easily bring all your pensions together in just a few clicks. Save time, reduce hassle, and get a clear view of your retirement savings.
       </p>
       <div class="mt-6">
-        <button class="px-6 py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-300">
-          Get Started
-        </button>
+        <router-link to="/add-pension">
+          <button class="px-6 py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-300">
+            Get Started
+          </button>
+        </router-link>
       </div>
     </div>
   </div>
