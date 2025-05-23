@@ -61,35 +61,42 @@
 
           <ul v-if="pensions.length" class="space-y-6">
             <li
-              v-for="pension in pensions"
-              :key="pension.id"
-              class="border-b border-gray-200 last:border-none pb-4 transition-all duration-300"
-            >
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between">
-                <div class="space-y-2">
-                  <h3 class="text-lg font-gilroy-bold text-gray-700">
-                    {{ pension.provider }}
-                  </h3>
-                  <div class="space-y-1 text-sm text-gray-600">
-                    <p><span class="font-medium">Policy Number:</span> {{ pension.policy_number || 'N/A' }}</p>
-                    <p><span class="font-medium">Current Employer:</span> {{ pension.current_employer ? 'Yes' : 'No' }}</p>
-                    <p><span class="font-medium">Submitted:</span> {{ formatDate(pension.created_at) }}</p>
-                  </div>
-                </div>
-                <div class="mt-4 sm:mt-0">
-                  <span 
-                    :class="[
-                      'px-3 py-1 rounded-full text-sm',
-                      pension.current_employer 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-gray-100 text-gray-800'
-                    ]"
-                  >
-                    {{ pension.current_employer ? 'Active' : 'Previous' }}
-                  </span>
-                </div>
-              </div>
-            </li>
+  v-for="pension in pensions"
+  :key="pension.id"
+  class="border-b border-gray-200 last:border-none pb-4 transition-all duration-300"
+>
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+    <div class="space-y-2">
+      <h3 class="text-lg font-gilroy-bold text-gray-700">
+        {{ pension.provider }}
+      </h3>
+      <div class="space-y-1 text-sm text-gray-600">
+        <p><span class="font-medium">Policy Number:</span> {{ pension.policy_number || 'N/A' }}</p>
+        <p><span class="font-medium">Current Employer:</span> {{ pension.current_employer ? 'Yes' : 'No' }}</p>
+        <p><span class="font-medium">Submitted:</span> {{ formatDate(pension.created_at) }}</p>
+      </div>
+    </div>
+    <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+      <span 
+        :class="[
+          'px-3 py-1 rounded-full text-sm',
+          pension.current_employer 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-gray-100 text-gray-800'
+        ]"
+      >
+        {{ pension.current_employer ? 'Active' : 'Previous' }}
+      </span>
+      <button
+        @click="openPensionModal(pension)"
+        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-200 ease-in-out hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        <PencilIcon class="h-4 w-4 mr-2" />
+        Edit
+      </button>
+    </div>
+  </div>
+</li>
           </ul>
 
           <div v-else class="text-center py-8 text-gray-500">
@@ -99,6 +106,80 @@
         </div>
       </div>
     </div>
+
+    <!-- Edit Pension Modal -->
+<div
+  v-if="showPensionModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  @click.self="closePensionModal"
+>
+  <div class="bg-white rounded-lg shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-gilroy-bold text-gray-800">Edit Pension</h2>
+        <button 
+          @click="closePensionModal"
+          class="text-gray-500 hover:text-gray-700"
+        >
+          <XMarkIcon class="h-6 w-6" />
+        </button>
+      </div>
+
+      <form @submit.prevent="handlePensionSubmit" class="space-y-6">
+        <!-- Provider -->
+        <div class="space-y-2">
+          <label class="block text-sm font-gilroy-bold text-gray-700">Provider</label>
+          <input
+            type="text"
+            v-model="pensionForm.provider"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <!-- Policy Number -->
+        <div class="space-y-2">
+          <label class="block text-sm font-gilroy-bold text-gray-700">Policy Number</label>
+          <input
+            type="text"
+            v-model="pensionForm.policy_number"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Optional"
+          />
+        </div>
+
+        <!-- Current Employer -->
+        <div class="space-y-2">
+          <label class="block text-sm font-gilroy-bold text-gray-700">Current Employer Contributing?</label>
+          <select
+            v-model="pensionForm.current_employer"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option :value="true">Yes</option>
+            <option :value="false">No</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end space-x-4">
+          <button
+            type="button"
+            @click="closePensionModal"
+            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-200 ease-in-out hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
     <!-- Edit Profile Modal -->
     <div
@@ -288,6 +369,9 @@ const pensionStore = usePensionSubmissionsStore();
 const authStore = useAuthStore();
 const router = useRouter();
 
+const showPensionModal = ref(false);
+const editingPension = ref<PensionSubmission | null>(null);
+
 // State
 const showModal = ref(false);
 const isLoading = ref(true);
@@ -334,6 +418,12 @@ const form = reactive<ProfileForm>({
   gender: '',
   mobile: { country: 'UK', number: '' },
   postcode: ''
+});
+
+const pensionForm = reactive({
+  provider: '',
+  policy_number: '',
+  current_employer: true
 });
 
 // Methods
@@ -449,6 +539,52 @@ async function handleSubmit() {
     console.error('Failed to update profile:', error);
   }
 }
+
+function openPensionModal(pension: PensionSubmission) {
+  editingPension.value = pension;
+  pensionForm.provider = pension.provider;
+  pensionForm.policy_number = pension.policy_number || '';
+  pensionForm.current_employer = pension.current_employer;
+  showPensionModal.value = true;
+}
+
+function closePensionModal() {
+  showPensionModal.value = false;
+  editingPension.value = null;
+  // Reset form
+  pensionForm.provider = '';
+  pensionForm.policy_number = '';
+  pensionForm.current_employer = true;
+}
+
+async function handlePensionSubmit() {
+  if (!editingPension.value || !authStore.user?.id) return;
+
+  try {
+    // Assuming you have an update method in your pension store
+    const updatedPension = {
+      ...editingPension.value,
+      provider: pensionForm.provider,
+      policy_number: pensionForm.policy_number || null,
+      current_employer: pensionForm.current_employer
+    };
+
+    // Update in store (you'll need to implement this method in your pensionStore)
+    await pensionStore.updateSubmission(editingPension.value.id, updatedPension);
+    
+    // Update local state
+    const index = pensions.value.findIndex(p => p.id === editingPension.value!.id);
+    if (index !== -1) {
+      pensions.value[index] = updatedPension;
+    }
+    
+    closePensionModal();
+  } catch (error) {
+    console.error('Failed to update pension:', error);
+    // You might want to show an error message to the user
+  }
+}
+
 
 // Lifecycle
 onMounted(async () => {
