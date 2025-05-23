@@ -15,42 +15,36 @@
 
     <!-- Features Section -->
 <!-- Features Section -->
-<div class="features-section max-w-5xl mx-auto mt-20 px-4 grid grid-cols-1 sm:grid-cols-2 gap-12">
-  
-  <!-- Feature 1: Combine Pensions -->
-  <div class="feature text-center shadow-md rounded-lg">
-    <img src="@/assets/feature-icon-1.png" alt="Feature 1" class="w-full h-40 object-cover rounded-t-lg" />
-    <div class="p-6">
-      <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Combine Pensions</h3>
-      <p class="text-gray-600 font-gilroy-light text-base mt-2">
-        Easily bring all your pensions together in just a few clicks. Save time, reduce hassle, and get a clear view of your retirement savings—all in minutes.
+<div class="features-section max-w-5xl mx-auto mt-20 px-4">
+  <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div class="relative">
+      <img src="@/assets/feature-icon-1.png" alt="Combine Pensions" class="w-full h-70 object-fit" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+    </div>
+    <div class="p-8 text-center">
+      <h3 class="text-2xl font-gilroy-bold text-gray-900 mb-4">Combine Pensions</h3>
+      <p class="text-gray-600 font-gilroy-light text-lg leading-relaxed">
+        Easily bring all your pensions together in just a few clicks. Save time, reduce hassle, and get a clear view of your retirement savings.
       </p>
+      <div class="mt-6">
+        <button class="px-6 py-3 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-300">
+          Get Started
+        </button>
+      </div>
     </div>
   </div>
-
-  <!-- Feature 2: Withdraw with Ease -->
-  <div class="feature text-center shadow-md rounded-lg">
-    <img src="@/assets/feature-icon-3.png" alt="Feature 3" class="w-full h-40 object-cover rounded-t-lg" />
-    <div class="p-6">
-      <h3 class="text-xl font-gilroy-bold text-gray-800 mt-4">Withdraw with Ease</h3>
-      <p class="text-gray-600 font-gilroy-light text-base mt-2">
-        Access your pension whenever you need it, with a simple and hassle-free withdrawal process.
-      </p>
-    </div>
-  </div>
-
 </div>
 
 
     <!-- About Section -->
-    <div class="about-section max-w-5xl mx-auto mt-20 px-4">
+    <div class="about-section max-w-5xl mx-auto mt-24 px-4">
       <div class="text-center mb-12">
         <h2 class="text-4xl font-gilroy-bold text-gray-800">About PensionPilot</h2>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
           <p class="text-gray-600 font-gilroy-light text-base">
-            We're here to make your financial future simpler and brighter. By uncovering your existing pensions and consolidating them into one easy-to-manage plan, we take the hassle out of managing your retirement savings. Our platform empowers you as an investor, giving you access to a diverse range of top-performing companies, so your money grows intelligently and transparently.
+            We're here to make your financial future simpler. Pension Pilot helps you locate and combine your scattered pension pots into one easy-to-manage account. Just share a few basic details, and we'll find your old pensions. Pension Pilot removes the complexity of retirement planning. You'll receive expert guidance through FCA-regulated advisers and have the option to invest your savings with one of our trusted partners. With tailored strategies aligned to your goals and risk profile, you can feel confident your money is working smarter — now and for the future.
           </p>
         </div>
         <div>
