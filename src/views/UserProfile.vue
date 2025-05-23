@@ -89,9 +89,9 @@
       </span>
       <button
         @click="openPensionModal(pension)"
-        class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#4569AE] to-[#3F9FD7] text-white rounded-lg font-gilroy-bold hover:opacity-90 transition-all duration-200 ease-in-out hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
-        <PencilIcon class="h-4 w-4 mr-1" />
+        <PencilIcon class="h-4 w-4 mr-2" />
         Edit
       </button>
     </div>
@@ -150,7 +150,7 @@
 
         <!-- Current Employer -->
         <div class="space-y-2">
-          <label class="block text-sm font-gilroy-bold text-gray-700">Current Employer</label>
+          <label class="block text-sm font-gilroy-bold text-gray-700">Current Employer Contributing?</label>
           <select
             v-model="pensionForm.current_employer"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
